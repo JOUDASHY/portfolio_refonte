@@ -8,7 +8,7 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
 
   return (
-    <section id="contact" className="relative bg-white-var py-24">
+    <section id="contact" className="relative bg-background py-24">
       <div className="pointer-events-none absolute inset-0 opacity-50" aria-hidden>
         <div className="absolute left-0 top-1/4 h-64 w-64 -translate-x-1/2 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute right-0 top-1/3 h-64 w-64 translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
@@ -68,7 +68,7 @@ export default function Contact() {
             <div className="rounded-2xl bg-white-var p-6 ring-1 ring-black/5 shadow-sm">
               <div>
                 <p className="text-navy font-semibold">Contact direct</p>
-                <p className="mt-2 text-navy/80">Email: <a className="underline" href="mailto:you@example.com">you@example.com</a></p>
+                <p className="mt-2 text-navy/80">Email: <a className="underline text-accent" href="mailto:you@example.com">you@example.com</a></p>
               </div>
               <div className="mt-4">
                 <p className="text-navy font-semibold">Réseaux</p>

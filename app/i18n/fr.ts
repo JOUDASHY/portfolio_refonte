@@ -76,9 +76,22 @@ const fr = {
     title: "Expérience professionnelle",
     subtitle: "Parcours en tant que développeur",
   },
+  login: {
+    title: "Se connecter",
+    subtitle: "Accéder à votre compte",
+    email: "Email",
+    password: "Mot de passe",
+    remember: "Se souvenir de moi",
+    forgot: "Mot de passe oublié ?",
+    submit: "Connexion",
+  },
   footer: {
     copyright: "Tous droits réservés",
     built: "Conçu et développé avec",
+    contact: "Contact",
+    email: "Email",
+    location: "Localisation",
+    follow: "Suivre",
   },
 } as const;
 

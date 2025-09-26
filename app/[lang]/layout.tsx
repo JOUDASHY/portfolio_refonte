@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Navbar from "../ux/Navbar";
-import Footer from "../ux/Footer";
+import ConditionalNavbar from "../components/ConditionalNavbar";
+import ConditionalFooter from "../components/ConditionalFooter";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { LanguageProvider } from "../hooks/LanguageProvider";
 
@@ -20,9 +20,9 @@ export default function LangLayout({
   return (
     <ThemeProvider>
       <LanguageProvider initialLang={initialLang}>
-        <Navbar />
+        <ConditionalNavbar />
         {children}
-        <Footer />
+        <ConditionalFooter />
       </LanguageProvider>
     </ThemeProvider>
   );

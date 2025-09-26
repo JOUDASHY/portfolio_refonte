@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
+import Particles from "./Particles";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -10,7 +12,7 @@ export default function Hero() {
       id="home"
       className="relative isolate flex items-center min-h-[calc(100vh-4rem)] pt-16 overflow-hidden bg-background"
     >
-      <BackgroundNetwork />
+      <Particles />
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
         <div className="flex flex-col justify-center py-12">
@@ -21,7 +23,7 @@ export default function Hero() {
             {t("hero.im")} <span className="text-cyan-300">{t("hero.name")}</span>
           </p>
           <p className="mt-6 text-xl sm:text-2xl text-foreground/90">
-            {t("hero.passion")} <span className="text-accent">{t("hero.webdev")}</span>
+            {t("hero.passion")} <TypingText className="text-accent" text={t("hero.webdev")} />
           </p>
 
           <div className="mt-10">
@@ -62,31 +64,29 @@ export default function Hero() {
   );
 }
 
-function BackgroundNetwork() {
+// old BackgroundNetwork SVG removed; replaced by Particles
+
+function TypingText({ text, className }: { text: string; className?: string }) {
+  const [displayed, setDisplayed] = useState("");
+
+  useEffect(() => {
+    setDisplayed("");
+    let index = 0;
+    const interval = setInterval(() => {
+      index += 1;
+      setDisplayed(text.slice(0, index));
+      if (index >= text.length) {
+        clearInterval(interval);
+      }
+    }, 80);
+    return () => clearInterval(interval);
+  }, [text]);
+
   return (
-    <svg
-      className="pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-30"
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="none"
-      viewBox="0 0 1200 800"
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id="g" x1="0" x2="1">
-          <stop offset="0%" stopColor="#0f172a" />
-          <stop offset="100%" stopColor="#020617" />
-        </linearGradient>
-      </defs>
-      <rect width="1200" height="800" fill="url(#g)" />
-      <g stroke="#ffffff" strokeOpacity="0.12">
-        {Array.from({ length: 60 }).map((_, i) => (
-          <path key={i} d={`M${i * 20} 0 L${(i * 37) % 1200} 800`} />
-        ))}
-        {Array.from({ length: 40 }).map((_, i) => (
-          <path key={`h-${i}`} d={`M0 ${i * 20} L1200 ${(i * 53) % 800}`} />
-        ))}
-      </g>
-    </svg>
+    <span className={className}>
+      {displayed}
+      <span className="ml-1 inline-block w-[1ch] animate-pulse">|</span>
+    </span>
   );
 }
 

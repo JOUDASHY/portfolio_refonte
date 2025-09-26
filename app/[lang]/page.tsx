@@ -5,6 +5,7 @@ import Education from "../ux/Education";
 import Projects from "../ux/Projects";
 import Experience from "../ux/Experience";
 import Contact from "../ux/Contact";
+import Banner from "../ux/Banner";
 
 export default function Home() {
   return (
@@ -14,7 +15,21 @@ export default function Home() {
       <Skills />
       <Education />
       <Projects />
+      <Banner
+        bgSrc="https://img.freepik.com/photos-gratuite/beaux-bureaux-dans-style-dessins-animes_23-2151043338.jpg?semt=ais_hybrid&w=740&q=80"
+        title="Construisons quelque chose d'exceptionnel"
+        subtitle="Disponible pour des missions et collaborations"
+        align="center"
+        overlayClass="bg-black/30"
+      />
       <Experience />
+      <Banner
+        bgSrc="https://img.freepik.com/photos-gratuite/beaux-bureaux-dans-style-dessins-animes_23-2151043338.jpg?semt=ais_hybrid&w=740&q=80"
+        title="Construisons quelque chose d'exceptionnel"
+        subtitle="Disponible pour des missions et collaborations"
+        align="center"
+        overlayClass="bg-black/30"
+      />
       <Contact />
     </div>
   );

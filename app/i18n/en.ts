@@ -76,9 +76,22 @@ const en = {
     title: "Professional Experience",
     subtitle: "Developer roles and journey",
   },
+  login: {
+    title: "Sign in",
+    subtitle: "Access your account",
+    email: "Email",
+    password: "Password",
+    remember: "Remember me",
+    forgot: "Forgot password?",
+    submit: "Sign in",
+  },
   footer: {
     copyright: "All rights reserved",
     built: "Designed & built with",
+    contact: "Contact",
+    email: "Email",
+    location: "Location",
+    follow: "Follow",
   },
 } as const;
 

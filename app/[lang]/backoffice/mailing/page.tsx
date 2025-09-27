@@ -6,6 +6,7 @@ import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Table from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
+import SearchBar from "../../../ux/ui/SearchBar";
 
 interface EmailHistory {
   id: string;
@@ -202,7 +203,7 @@ export default function MailingHistoryPage() {
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row">
-        <Input
+        <SearchBar
           placeholder={t("mailing.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}

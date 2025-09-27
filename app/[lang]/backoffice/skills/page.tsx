@@ -5,6 +5,7 @@ import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
+import SearchBar from "../../../ux/ui/SearchBar";
 
 type Skill = {
   id: string;
@@ -83,11 +84,9 @@ export default function SkillsPage() {
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Compétences</h1>
         <div className="flex items-center gap-2">
-          <Input
-            placeholder="Rechercher…"
+          <SearchBar
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-56"
           />
           <Button
             variant="secondary"
@@ -124,9 +123,7 @@ export default function SkillsPage() {
         title={editingId ? "Modifier la compétence" : "Ajouter une compétence"}
         footer={
           <>
-            {editingId ? (
-              <Button variant="secondary" onClick={resetForm}>Annuler</Button>
-            ) : null}
+            <Button variant="secondary" onClick={resetForm}>Annuler</Button>
             <Button onClick={handleSubmit}>{editingId ? "Enregistrer" : "Ajouter"}</Button>
           </>
         }

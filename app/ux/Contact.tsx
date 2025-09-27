@@ -16,66 +16,66 @@ export default function Contact() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-navy">{t("contact.title")}</h2>
-          <p className="mt-2 text-lg text-navy/70">{t("contact.subtitle")}</p>
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-navy">{t("contact.title")}</h2>
+          <p className="mt-2 text-sm sm:text-lg text-navy/70">{t("contact.subtitle")}</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <form
-              className="rounded-2xl bg-white-var p-8 ring-1 ring-black/5 shadow-sm"
+              className="rounded-2xl bg-white-var p-4 sm:p-8 ring-1 ring-black/5 shadow-sm"
               onSubmit={(e) => {
                 e.preventDefault();
                 setSent(true);
               }}
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-navy/80" htmlFor="name">{t("contact.name")}</label>
-                  <div className="mt-2 relative">
-                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-navy/40">👤</span>
-                    <input id="name" name="name" type="text" className="mt-0 w-full rounded-lg border border-black/10 bg-white-var pl-9 pr-4 py-2.5 text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="John Doe" />
+                  <label className="block text-xs sm:text-sm font-medium text-navy/80" htmlFor="name">{t("contact.name")}</label>
+                  <div className="mt-1 sm:mt-2 relative">
+                    <span className="pointer-events-none absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-navy/40 text-sm sm:text-base">👤</span>
+                    <input id="name" name="name" type="text" className="mt-0 w-full rounded-lg border border-black/10 bg-white-var pl-7 sm:pl-9 pr-3 sm:pr-4 py-1.5 sm:py-2.5 text-xs sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="John Doe" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-navy/80" htmlFor="email">{t("contact.email")}</label>
-                  <div className="mt-2 relative">
-                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-navy/40">✉️</span>
-                    <input id="email" name="email" type="email" className="mt-0 w-full rounded-lg border border-black/10 bg-white-var pl-9 pr-4 py-2.5 text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="john@example.com" />
+                  <label className="block text-xs sm:text-sm font-medium text-navy/80" htmlFor="email">{t("contact.email")}</label>
+                  <div className="mt-1 sm:mt-2 relative">
+                    <span className="pointer-events-none absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-navy/40 text-sm sm:text-base">✉️</span>
+                    <input id="email" name="email" type="email" className="mt-0 w-full rounded-lg border border-black/10 bg-white-var pl-7 sm:pl-9 pr-3 sm:pr-4 py-1.5 sm:py-2.5 text-xs sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="john@example.com" />
                   </div>
                 </div>
               </div>
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-navy/80" htmlFor="message">{t("contact.message")}</label>
-                <div className="mt-2 relative">
-                  <textarea id="message" name="message" rows={6} className="w-full rounded-lg border border-black/10 bg-white-var px-4 py-3 text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Hello..." />
-                  <span className="pointer-events-none absolute right-3 bottom-3 text-navy/30 text-xs">max 1000</span>
+              <div className="mt-4 sm:mt-6">
+                <label className="block text-xs sm:text-sm font-medium text-navy/80" htmlFor="message">{t("contact.message")}</label>
+                <div className="mt-1 sm:mt-2 relative">
+                  <textarea id="message" name="message" rows={4} className="w-full rounded-lg border border-black/10 bg-white-var px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Hello..." />
+                  <span className="pointer-events-none absolute right-2 sm:right-3 bottom-2 sm:bottom-3 text-navy/30 text-xs">max 1000</span>
                 </div>
               </div>
 
-              <div className="mt-6 flex items-center gap-3">
-                <button type="submit" className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 font-medium text-navy hover:brightness-110">
+              <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3">
+                <button type="submit" className="inline-flex items-center gap-1 sm:gap-2 rounded-full bg-accent px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-medium text-navy hover:brightness-110">
                   {t("contact.send")}
                 </button>
                 {sent && (
-                  <span className="text-sm text-navy/70">{t("contact.success")}</span>
+                  <span className="text-xs sm:text-sm text-navy/70">{t("contact.success")}</span>
                 )}
               </div>
             </form>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="rounded-2xl bg-white-var p-6 ring-1 ring-black/5 shadow-sm">
+            <div className="rounded-2xl bg-white-var p-4 sm:p-6 ring-1 ring-black/5 shadow-sm">
               <div>
-                <p className="text-navy font-semibold">Contact direct</p>
-                <p className="mt-2 text-navy/80">Email: <a className="underline text-accent" href="mailto:you@example.com">you@example.com</a></p>
+                <p className="text-sm sm:text-base text-navy font-semibold">Contact direct</p>
+                <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-navy/80">Email: <a className="underline text-accent" href="mailto:you@example.com">you@example.com</a></p>
               </div>
-              <div className="mt-4">
-                <p className="text-navy font-semibold">Réseaux</p>
-                <div className="mt-2 flex items-center gap-3">
-                  <a href="#" className="rounded-full bg-navy text-white px-3 py-1 text-sm hover:opacity-90">LinkedIn</a>
-                  <a href="#" className="rounded-full bg-navy text-white px-3 py-1 text-sm hover:opacity-90">GitHub</a>
-                  <a href="#" className="rounded-full bg-navy text-white px-3 py-1 text-sm hover:opacity-90">X</a>
+              <div className="mt-3 sm:mt-4">
+                <p className="text-sm sm:text-base text-navy font-semibold">Réseaux</p>
+                <div className="mt-1 sm:mt-2 flex items-center gap-2 sm:gap-3">
+                  <a href="#" className="rounded-full bg-navy text-white px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm hover:opacity-90">LinkedIn</a>
+                  <a href="#" className="rounded-full bg-navy text-white px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm hover:opacity-90">GitHub</a>
+                  <a href="#" className="rounded-full bg-navy text-white px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm hover:opacity-90">X</a>
                 </div>
               </div>
             </div>

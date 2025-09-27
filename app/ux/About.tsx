@@ -15,11 +15,11 @@ export default function About() {
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-accent/30 bg-navy p-6 sm:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
-          <div className="flex items-center gap-3 text-xs font-medium text-white/90">
+          <div className="flex items-center gap-3 font-medium text-white/90">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15">
               <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-accent"><path d="M12 2l2.39 4.84L20 8l-3.5 3.41L17.48 18 12 15.6 6.52 18 7.5 11.41 4 8l5.61-1.16L12 2z"/></svg>
             </span>
-            <span className="tracking-wider">INNOVATIVE DEVELOPER</span>
+            <span className="text-var-caption tracking-wider font-medium">INNOVATIVE DEVELOPER</span>
           </div>
 
           <div className="mt-4 flex items-center gap-3">

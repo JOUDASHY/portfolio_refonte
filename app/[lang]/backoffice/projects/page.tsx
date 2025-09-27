@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
+import SearchBar from "../../../ux/ui/SearchBar";
 
 type Project = {
   id: string;
@@ -44,11 +45,9 @@ export default function ProjectsPage() {
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Projects</h1>
         <div className="flex items-center gap-2">
-          <Input
-            placeholder="Rechercher…"
+          <SearchBar
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-56"
           />
           <Button variant="secondary">Nouveau projet</Button>
         </div>

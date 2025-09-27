@@ -32,36 +32,36 @@ export default function Projects() {
     <section id="projects" className="relative bg-background py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground">{t("projects.title")}</h2>
-          <p className="mt-2 text-lg text-foreground/70">{t("projects.subtitle")}</p>
+          <h2 className="text-var-title sm:text-4xl font-extrabold text-foreground">{t("projects.title")}</h2>
+          <p className="mt-2 text-var-body sm:text-lg text-foreground/70">{t("projects.subtitle")}</p>
         </div>
 
-        <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {defaultProjects.map((p) => (
             <li
               key={p.id}
               className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
             >
-              <div className="relative h-48 w-full">
+              <div className="relative h-32 sm:h-48 w-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
                 <Image src={p.image} alt={p.title} fill sizes="400px" className="object-contain p-6" />
-                <div className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-1 text-sm text-white backdrop-blur">
-                  <span className="inline-flex items-center gap-1"><StarIcon className="h-4 w-4 text-accent" /> {stars[p.id] ?? 0}</span>
+                <div className="absolute left-2 top-2 sm:left-4 sm:top-4 rounded-full bg-black/40 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm text-white backdrop-blur">
+                  <span className="inline-flex items-center gap-0.5 sm:gap-1"><StarIcon className="h-3 w-3 sm:h-4 sm:w-4 text-accent" /> {stars[p.id] ?? 0}</span>
                 </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-foreground font-semibold tracking-wide">{p.title}</h3>
-                <div className="mt-4 flex items-center justify-between">
+              <div className="p-3 sm:p-6">
+                <h3 className="text-var-body sm:text-base text-foreground font-semibold tracking-wide">{p.title}</h3>
+                <div className="mt-2 sm:mt-4 flex items-center justify-between">
                   <Stars value={stars[p.id] ?? 0} />
                   <button
-                    className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-navy hover:brightness-110"
+                    className="inline-flex items-center gap-1 sm:gap-2 rounded-full bg-accent px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-medium text-navy hover:brightness-110"
                     onClick={() => addStar(p.id)}
                   >
-                    <StarIcon className="h-4 w-4" /> {t("projects.addStar")}
+                    <StarIcon className="h-3 w-3 sm:h-4 sm:w-4" /> {t("projects.addStar")}
                   </button>
                 </div>
-                <div className="mt-5">
-                  <a href={p.href || "#"} className="text-foreground/80 hover:text-foreground underline">
+                <div className="mt-3 sm:mt-5">
+                  <a href={p.href || "#"} className="text-var-caption sm:text-sm text-foreground/80 hover:text-foreground underline">
                     {t("projects.view")}
                   </a>
                 </div>
@@ -77,11 +77,11 @@ export default function Projects() {
 function Stars({ value = 0, max = 5 }: { value?: number; max?: number }) {
   const filled = Math.min(max, Math.round((value % (max + 1))));
   return (
-    <div className="flex items-center gap-1" aria-label={`${value} stars`}>
+    <div className="flex items-center gap-0.5 sm:gap-1" aria-label={`${value} stars`}>
       {Array.from({ length: max }).map((_, i) => (
-        <StarIcon key={i} className={`h-5 w-5 ${i < filled ? "text-accent" : "text-foreground/30"}`} filled={i < filled} />
+        <StarIcon key={i} className={`h-3 w-3 sm:h-5 sm:w-5 ${i < filled ? "text-accent" : "text-foreground/30"}`} filled={i < filled} />
       ))}
-      <span className="ml-2 text-foreground/70 text-sm">{value}</span>
+      <span className="ml-1 sm:ml-2 text-foreground/70 text-var-caption sm:text-sm">{value}</span>
     </div>
   );
 }

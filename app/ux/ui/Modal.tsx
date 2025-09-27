@@ -88,7 +88,7 @@ export default function Modal({
         <div className="px-5 py-4 text-navy">{children}</div>
 
         {footer ? (
-          <div className="flex items-center justify-end gap-2 border-t border-black/10 px-5 py-4">
+          <div className="flex items-center justify-between gap-2 border-t border-black/10 px-5 py-4">
             {footer}
           </div>
         ) : null}

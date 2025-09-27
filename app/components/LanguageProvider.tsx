@@ -23,8 +23,8 @@ const LanguageContext = createContext<LanguageContextValue | undefined>(
 );
 
 function getFromDict(dict: Dictionary, path: string): string | undefined {
-  return path.split(".").reduce<any>((acc, key) => {
-    if (acc && typeof acc === "object") return acc[key];
+  return path.split(".").reduce<unknown>((acc, key) => {
+    if (acc && typeof acc === "object") return (acc as Record<string, unknown>)[key];
     return undefined;
   }, dict) as string | undefined;
 }

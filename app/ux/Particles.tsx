@@ -41,7 +41,7 @@ export default function Particles({ className = "" }: { className?: string }) {
 
     const rand = (min: number, max: number) => Math.random() * (max - min) + min;
     const initParticles = () => {
-      const count = Math.min(100, Math.floor((canvas.clientWidth * canvas.clientHeight) / 12000));
+      const count = Math.min(260, Math.floor((canvas.clientWidth * canvas.clientHeight) / 6000));
       particlesRef.current = Array.from({ length: count }).map(() => ({
         x: rand(0, canvas.clientWidth),
         y: rand(0, canvas.clientHeight),

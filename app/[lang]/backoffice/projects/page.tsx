@@ -60,7 +60,7 @@ export default function ProjectsPage() {
         rowKey={(row) => (row as Project).id}
         emptyText="Aucun projet trouvé"
         actionsHeader="Actions"
-        actions={(row) => (
+        actions={() => (
           <div className="inline-flex items-center gap-2">
             <Button variant="ghost" className="px-2 py-1 text-sm">Éditer</Button>
             <Button variant="ghost" className="px-2 py-1 text-sm">Archiver</Button>

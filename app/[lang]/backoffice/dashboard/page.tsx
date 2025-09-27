@@ -39,7 +39,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map((k) => (
-          <div key={k.label} className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+          <div key={k.label} className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
             <div className="text-sm text-foreground/60">{k.label}</div>
             <div className="mt-1 text-2xl font-semibold text-foreground">{k.value}</div>
           </div>
@@ -47,12 +47,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 lg:col-span-2">
+        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10 lg:col-span-2">
           <div className="mb-3 text-sm text-foreground/70">Trafic hebdomadaire</div>
           <BarChart data={barData} />
         </div>
 
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
           <div className="mb-3 text-sm text-foreground/70">Répartition projets</div>
           <div className="flex items-center justify-center">
             <DonutChart data={donutData} />

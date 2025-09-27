@@ -9,14 +9,15 @@ export const metadata: Metadata = {
   description: "Nilsen Portfolio",
 };
 
-export default function LangLayout({
+export default async function LangLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: "en" | "fr" };
+  params: Promise<{ lang: string }>;
 }) {
-  const initialLang = params.lang === "fr" ? "fr" : "en";
+  const { lang } = await params;
+  const initialLang = lang === "fr" ? "fr" : "en";
   return (
     <ThemeProvider>
       <LanguageProvider initialLang={initialLang}>

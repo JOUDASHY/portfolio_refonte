@@ -27,7 +27,7 @@ export default function Table<Row extends Record<string, unknown>>({
   actions,
 }: TableProps<Row>) {
   return (
-    <div className="overflow-x-auto rounded-2xl bg-white/5 ring-1 ring-white/10">
+    <div className="overflow-x-auto rounded-2xl bg-white/5 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
       <table className="min-w-full text-left text-sm">
         <thead className="text-foreground/60">
           <tr>

@@ -10,6 +10,20 @@
   /* Semantic tokens used across the app */
   --background: var(--blue);
   --foreground: #e6edf6;
+
+  /* Typographic scale (editable in one place) */
+  --fs-title: 1rem;        /* small titles (e.g., profile name) */
+  --fs-body: 0.9rem;       /* navigation labels */
+  --fs-caption: 0.75rem;   /* helper texts, badges */
+}
+
+/* Make text variables smaller on mobile screens */
+@media (max-width: 640px) {
+  :root {
+    --fs-title: 0.85rem;
+    --fs-body: 0.8rem;
+    --fs-caption: 0.7rem;
+  }
 }
 
 @theme inline {
@@ -60,3 +74,8 @@ body {
 .text-black-var { color: var(--black); }
 .bg-white-var { background-color: var(--white); }
 .bg-black-var { background-color: var(--black); }
+
+/* Text size utilities backed by variables */
+.text-var-title { font-size: var(--fs-title); }
+.text-var-body { font-size: var(--fs-body); }
+.text-var-caption { font-size: var(--fs-caption); }

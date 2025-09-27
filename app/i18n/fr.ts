@@ -93,6 +93,75 @@ const fr = {
     location: "Localisation",
     follow: "Suivre",
   },
+  mailing: {
+    title: "Historique Mailing",
+    subtitle: "Gérez et consultez l'historique de tous vos emails envoyés",
+    newEmail: "Nouveau Email",
+    export: "Exporter",
+    search: "Rechercher par destinataire ou sujet...",
+    allStatuses: "Tous les statuts",
+    status: {
+      sent: "Envoyé",
+      delivered: "Livré",
+      opened: "Ouvert",
+      clicked: "Cliqué",
+      bounced: "Rejeté",
+      failed: "Échec"
+    },
+    columns: {
+      recipient: "Destinataire",
+      subject: "Sujet",
+      status: "Statut",
+      sentAt: "Envoyé le",
+      template: "Template",
+      campaign: "Campagne",
+      actions: "Actions"
+    },
+    actions: {
+      view: "Voir",
+      delete: "Supprimer"
+    },
+    details: {
+      title: "Détails de l'email",
+      recipient: "Destinataire",
+      subject: "Sujet",
+      status: "Statut",
+      template: "Template",
+      campaign: "Campagne",
+      sentAt: "Envoyé le",
+      openedAt: "Ouvert le",
+      clickedAt: "Cliqué le"
+    },
+    delete: {
+      title: "Supprimer l'email",
+      confirm: "Êtes-vous sûr de vouloir supprimer cet email de l'historique ?",
+      cancel: "Annuler",
+      confirmDelete: "Supprimer"
+    },
+    empty: "Aucun email trouvé",
+    sendForm: {
+      title: "Envoyer un nouvel email",
+      name: "Nom du destinataire",
+      namePlaceholder: "Entrez le nom du destinataire",
+      email: "Email de destination",
+      emailPlaceholder: "exemple@email.com",
+      location: "Lieu",
+      locationPlaceholder: "Ville, Pays (optionnel)",
+      subject: "Sujet",
+      subjectPlaceholder: "Sujet de l'email",
+      message: "Message",
+      messagePlaceholder: "Tapez votre message ici...",
+      template: "Template",
+      templateCustom: "Personnalisé",
+      templateWelcome: "Bienvenue",
+      templateCV: "Mise à jour CV",
+      templateJob: "Candidature",
+      templateNewsletter: "Newsletter",
+      templateCollaboration: "Collaboration",
+      cancel: "Annuler",
+      send: "Envoyer l'email"
+    }
+  },
 } as const;
 
 export type FrDict = typeof fr;

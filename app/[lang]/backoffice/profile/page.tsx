@@ -135,7 +135,7 @@ export default function ProfilePage() {
 
         {/* Profile Form */}
         <div className="lg:col-span-2">
-          <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+    <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
             <h2 className="mb-4 text-lg font-medium text-foreground">Informations personnelles</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Input

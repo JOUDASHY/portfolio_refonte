@@ -93,6 +93,75 @@ const en = {
     location: "Location",
     follow: "Follow",
   },
+  mailing: {
+    title: "Mailing History",
+    subtitle: "Manage and view the history of all your sent emails",
+    newEmail: "New Email",
+    export: "Export",
+    search: "Search by recipient or subject...",
+    allStatuses: "All statuses",
+    status: {
+      sent: "Sent",
+      delivered: "Delivered",
+      opened: "Opened",
+      clicked: "Clicked",
+      bounced: "Bounced",
+      failed: "Failed"
+    },
+    columns: {
+      recipient: "Recipient",
+      subject: "Subject",
+      status: "Status",
+      sentAt: "Sent at",
+      template: "Template",
+      campaign: "Campaign",
+      actions: "Actions"
+    },
+    actions: {
+      view: "View",
+      delete: "Delete"
+    },
+    details: {
+      title: "Email Details",
+      recipient: "Recipient",
+      subject: "Subject",
+      status: "Status",
+      template: "Template",
+      campaign: "Campaign",
+      sentAt: "Sent at",
+      openedAt: "Opened at",
+      clickedAt: "Clicked at"
+    },
+    delete: {
+      title: "Delete Email",
+      confirm: "Are you sure you want to delete this email from history?",
+      cancel: "Cancel",
+      confirmDelete: "Delete"
+    },
+    empty: "No emails found",
+    sendForm: {
+      title: "Send New Email",
+      name: "Recipient Name",
+      namePlaceholder: "Enter recipient name",
+      email: "Destination Email",
+      emailPlaceholder: "example@email.com",
+      location: "Location",
+      locationPlaceholder: "City, Country (optional)",
+      subject: "Subject",
+      subjectPlaceholder: "Email subject",
+      message: "Message",
+      messagePlaceholder: "Type your message here...",
+      template: "Template",
+      templateCustom: "Custom",
+      templateWelcome: "Welcome",
+      templateCV: "CV Update",
+      templateJob: "Job Application",
+      templateNewsletter: "Newsletter",
+      templateCollaboration: "Collaboration",
+      cancel: "Cancel",
+      send: "Send Email"
+    }
+  },
 } as const;
 
 export type EnDict = typeof en;

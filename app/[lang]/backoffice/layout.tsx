@@ -27,6 +27,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "language", label: "Langue", icon: LanguageIcon, match: "/backoffice/language" },
     { href: "training", label: "Formation", icon: TrainingIcon, match: "/backoffice/training" },
     { href: "credentials", label: "Mes Identifiants", icon: CredentialsIcon, match: "/backoffice/credentials" },
+    { href: "mailing", label: "Historique Mailing", icon: MailingIcon, match: "/backoffice/mailing" },
     { href: "facebook", label: "Facebook", icon: FacebookIcon, match: "/backoffice/facebook" },
   ];
   return (
@@ -38,12 +39,14 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
           </div>
           <div className="mt-4 rounded-xl bg-white shadow-sm">
             <div className="flex items-center gap-3 px-4 py-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5">
-                <svg viewBox="0 0 24 24" className="h-6 w-6 fill-black/40"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5C21 16.5 17 14 12 14z"/></svg>
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
+                <svg viewBox="0 0 24 24" className="h-7 w-7 fill-gray-400">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
               </div>
               <div className="leading-tight">
-                <div className="font-semibold text-black text-var-title">Nilsen</div>
-                <div className="text-black/60 text-var-caption">Administrator</div>
+                <div className="font-semibold text-black text-lg">Nilsen</div>
+                <div className="text-black/60 text-sm">Administrator</div>
               </div>
             </div>
           </div>
@@ -51,7 +54,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
 
         <div className="px-3">
           <div className="mb-2 mt-4 uppercase tracking-wider text-white/70 text-var-caption">Navigation</div>
-          <nav className="space-y-2">
+          <nav className="space-y-0.5">
             {links.map(({ href, label, icon: Icon, match }) => (
               <SidebarLink
                 key={href}
@@ -63,10 +66,10 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
             ))}
           </nav>
 
-          <div className="mt-6 rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
+          <div className="mt-6 rounded-xl bg-white/5 p-4 ring-1 ring-white/10">
             <div className="text-sm font-medium text-foreground">Aide et support</div>
             <p className="mt-1 text-xs text-foreground/60">Besoin d&apos;aide ? Consultez la documentation.</p>
-            <Link href="../" className="mt-2 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs text-foreground ring-1 ring-white/20 hover:bg-white/15">
+            <Link href="../" className="mt-3 inline-flex rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-foreground ring-1 ring-white/20 hover:bg-white/15">
               Voir le site public
             </Link>
           </div>
@@ -103,14 +106,14 @@ function SidebarLink({ href, label, icon: Icon, active }: { href: string; label:
   return (
     <Link
       href={href}
-      className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-xs ${
+      className={`group flex items-center gap-5 rounded-lg px-5 py-4 text-xs ${
         active ? "bg-blue-600 text-white shadow" : "text-white/80 hover:bg-white/10 hover:text-white"
       }`}
     >
-      <span className={`flex h-8 w-8 items-center justify-center rounded-md ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
-        <Icon className="h-5 w-5" />
+      <span className={`flex h-12 w-12 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
+        <Icon className="h-7 w-7" />
       </span>
-      <span className="text-var-caption">{label}</span>
+      <span className="text-xs font-normal">{label}</span>
     </Link>
   );
 }
@@ -200,6 +203,14 @@ function CredentialsIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M6 2h12v4H6V2zm-2 6h16v14H4V8zm3 3h10v2H7v-2z" />
+    </svg>
+  );
+}
+
+function MailingIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
     </svg>
   );
 }

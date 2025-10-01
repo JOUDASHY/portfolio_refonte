@@ -24,9 +24,7 @@ export default function BackofficeNavbar({ onToggleSidebar }: { onToggleSidebar:
             onClick={onToggleSidebar}
             className="lg:hidden p-2 rounded-md text-foreground/80 hover:bg-white/10 hover:text-foreground"
           >
-            <IconWrapper size="md">
-              <MenuIcon />
-            </IconWrapper>
+            <MenuIcon className="icon-responsive" />
           </button>
           <span className="hidden sm:inline">Backoffice</span>
           <span className="mx-2 hidden text-foreground/30 sm:inline">/</span>
@@ -66,22 +64,14 @@ function TopbarRight({ onLogout }: { onLogout: () => void }) {
         className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-foreground/80 hover:bg-white/10 hover:text-foreground"
       >
         {theme === "dark" ? (
-          <IconWrapper size="xs" className="sm:hidden">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-          </IconWrapper>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         ) : (
-          <IconWrapper size="xs" className="sm:hidden">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z"/></svg>
-          </IconWrapper>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z"/></svg>
         )}
         {theme === "dark" ? (
-          <IconWrapper size="sm" className="hidden sm:block">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-          </IconWrapper>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         ) : (
-          <IconWrapper size="sm" className="hidden sm:block">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z"/></svg>
-          </IconWrapper>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z"/></svg>
         )}
         <span className="hidden sm:inline">{theme === "dark" ? "Dark" : "Light"}</span>
       </button>
@@ -100,12 +90,8 @@ function TopbarRight({ onLogout }: { onLogout: () => void }) {
         onClick={onLogout}
         className="ml-2 inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-foreground/80 hover:bg-white/10 hover:text-foreground"
       >
-        <IconWrapper size="xs" className="sm:hidden">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z"/></svg>
-        </IconWrapper>
-        <IconWrapper size="sm" className="hidden sm:block">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z"/></svg>
-        </IconWrapper>
+        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z"/></svg>
         <span className="hidden sm:inline">Logout</span>
       </button>
     </div>

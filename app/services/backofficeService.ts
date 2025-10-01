@@ -1,0 +1,15 @@
+export { educationService } from "./backoffice/educationService";
+export { experienceService } from "./backoffice/experienceService";
+export { competenceService } from "./backoffice/competenceService";
+export { projetService } from "./backoffice/projetService";
+export { notificationService } from "./backoffice/notificationService";
+export { imageProjetService } from "./backoffice/imageProjetService";
+export { formationService } from "./backoffice/formationService";
+export { awardService } from "./backoffice/awardService";
+export { ratingService } from "./backoffice/ratingService";
+export { emailService } from "./backoffice/emailService";
+export { langueService } from "./backoffice/langueService";
+export { userService } from "./backoffice/userService";
+export { visitService } from "./backoffice/visitService";
+export { facebookService } from "./backoffice/facebookService";
+export { myloginService } from "./backoffice/myloginService";

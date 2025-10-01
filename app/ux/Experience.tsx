@@ -1,41 +1,11 @@
 "use client";
 
 import { useLanguage } from "../hooks/LanguageProvider";
-
-type Role = {
-  period: string;
-  title: string;
-  company: string;
-  summary?: string;
-  stack?: string[];
-};
-
-const roles: Role[] = [
-  {
-    period: "2024 – Présent",
-    title: "Développeur Full‑Stack",
-    company: "Startup Exemple",
-    summary: "Conception et développement d'applications Next.js/Node avec CI/CD.",
-    stack: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Prisma"],
-  },
-  {
-    period: "2022 – 2024",
-    title: "Développeur Front‑End",
-    company: "Agence Web",
-    summary: "Intégration d'interfaces responsives et optimisation performance.",
-    stack: ["React", "Tailwind", "Vite"],
-  },
-  {
-    period: "2021 – 2022",
-    title: "Stagiaire Développeur",
-    company: "Entreprise Logiciels",
-    summary: "Contribution aux features et corrections, revue de code.",
-    stack: ["React", "Express", "MongoDB"],
-  },
-];
+import { useExperiences } from "../hooks/useExperiences";
 
 export default function Experience() {
   const { t } = useLanguage();
+  const { items, loading, error } = useExperiences();
   return (
     <section id="experience" className="relative bg-background py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -44,25 +14,35 @@ export default function Experience() {
           <p className="mt-2 text-lg text-foreground/70">{t("experience.subtitle")}</p>
         </div>
 
+        {error && (
+          <div className="mb-6 rounded-md bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">{error}</div>
+        )}
+
         <ol className="relative border-s border-white/10">
-          {roles.map((r, idx) => (
-            <li key={idx} className="mb-10 ms-6">
-              <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-accent ring-4 ring-background" />
-              <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
-                <p className="text-sm text-foreground/70">{r.period}</p>
-                <h3 className="mt-1 text-foreground font-semibold">{r.title}</h3>
-                <p className="text-foreground/80">{r.company}</p>
-                {r.summary && <p className="mt-2 text-foreground/80 text-sm">{r.summary}</p>}
-                {r.stack && (
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {r.stack.map((s) => (
-                      <li key={s} className="rounded-full bg-white/10 px-3 py-1 text-xs text-foreground/80 ring-1 ring-white/10">{s}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </li>
-          ))}
+          {loading
+            ? Array.from({ length: 3 }).map((_, idx) => (
+                <li key={idx} className="mb-10 ms-6">
+                  <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-accent ring-4 ring-background" />
+                  <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+                    <div className="animate-pulse space-y-2">
+                      <div className="h-3 w-24 bg-white/10 rounded" />
+                      <div className="h-4 w-48 bg-white/10 rounded" />
+                      <div className="h-3 w-40 bg-white/10 rounded" />
+                    </div>
+                  </div>
+                </li>
+              ))
+            : items.map((r, idx) => (
+                <li key={idx} className="mb-10 ms-6">
+                  <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-accent ring-4 ring-background" />
+                  <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+                    <p className="text-sm text-foreground/70">{r.period}</p>
+                    <h3 className="mt-1 text-foreground font-semibold">{r.title}</h3>
+                    <p className="text-foreground/80">{r.company}</p>
+                    {r.summary && <p className="mt-2 text-foreground/80 text-sm">{r.summary}</p>}
+                  </div>
+                </li>
+              ))}
         </ol>
       </div>
     </section>

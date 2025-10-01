@@ -1,32 +1,13 @@
 "use client";
 
 import { useLanguage } from "../hooks/LanguageProvider";
-
-type Skill = { name: string; level: number };
-
-const frontend: Skill[] = [
-  { name: "React", level: 5 },
-  { name: "Next.js", level: 5 },
-  { name: "TypeScript", level: 4 },
-  { name: "Tailwind CSS", level: 5 },
-];
-
-const backend: Skill[] = [
-  { name: "Node.js", level: 5 },
-  { name: "Express", level: 4 },
-  { name: "GraphQL", level: 3 },
-  { name: "REST APIs", level: 5 },
-];
-
-const tooling: Skill[] = [
-  { name: "Git", level: 5 },
-  { name: "CI/CD", level: 4 },
-  { name: "Testing", level: 4 },
-  { name: "Prisma", level: 4 },
-];
+import { useSkills } from "../hooks/useSkills";
 
 export default function Skills() {
   const { t } = useLanguage();
+  const { grouped, loading, error } = useSkills();
+
+  const categories = loading ? ["Frontend", "Backend", "Tooling"] : Array.from(grouped.keys());
 
   return (
     <section id="skills" className="relative bg-background py-24">
@@ -36,32 +17,52 @@ export default function Skills() {
           <p className="mt-2 text-lg text-foreground/70">{t("skills.subtitle")}</p>
         </div>
 
+        {error && (
+          <div className="mb-6 rounded-md bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">{error}</div>
+        )}
+
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <Category title={t("skills.categories.frontend")} skills={frontend} />
-          <Category title={t("skills.categories.backend")} skills={backend} />
-          <Category title={t("skills.categories.tooling")} skills={tooling} />
+          {categories.map((cat) => (
+            <Category
+              key={cat}
+              title={cat}
+              skills={loading ? [] : grouped.get(cat) || []}
+              loading={loading}
+            />
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function Category({ title, skills }: { title: string; skills: Skill[] }) {
+type Skill = { name: string; level: number };
+
+function Category({ title, skills, loading }: { title: string; skills: Skill[]; loading?: boolean }) {
   return (
     <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
       <h3 className="text-white font-semibold">{title}</h3>
       <ul className="mt-4 space-y-3">
-        {skills.map((s) => (
-          <li key={s.name} className="text-white/90">
-            <div className="flex items-center justify-between">
-              <span>{s.name}</span>
-              <span className="text-sm text-white/70">{s.level}/5</span>
-            </div>
-            <div className="mt-2 h-2 rounded-full bg-white/10">
-              <div className="h-2 rounded-full bg-accent" style={{ width: `${(s.level / 5) * 100}%` }} />
-            </div>
-          </li>
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, idx) => (
+              <li key={idx} className="text-white/90">
+                <div className="animate-pulse space-y-2">
+                  <div className="h-4 w-32 bg-white/10 rounded" />
+                  <div className="h-2 w-full bg-white/10 rounded" />
+                </div>
+              </li>
+            ))
+          : skills.map((s) => (
+              <li key={s.name} className="text-white/90">
+                <div className="flex items-center justify-between">
+                  <span>{s.name}</span>
+                  <span className="text-sm text-white/70">{s.level}/5</span>
+                </div>
+                <div className="mt-2 h-2 rounded-full bg-white/10">
+                  <div className="h-2 rounded-full bg-accent" style={{ width: `${(s.level / 5) * 100}%` }} />
+                </div>
+              </li>
+            ))}
       </ul>
     </div>
   );

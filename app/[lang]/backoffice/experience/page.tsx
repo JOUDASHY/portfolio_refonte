@@ -6,6 +6,7 @@ import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
+import { useBackofficeExperiences } from "../../../hooks/useBackofficeExperiences";
 
 type Experience = {
   id: string;
@@ -19,26 +20,7 @@ type Experience = {
 
 export default function ExperiencePage() {
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<Experience[]>([
-    {
-      id: "1",
-      period: "2024 – Présent",
-      title: "Développeur Full‑Stack",
-      company: "Startup Exemple",
-      summary: "Conception et développement d'applications Next.js/Node avec CI/CD.",
-      stack: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Prisma"],
-      updatedAt: "2025-09-20",
-    },
-    {
-      id: "2",
-      period: "2022 – 2024",
-      title: "Développeur Front‑End",
-      company: "Agence Web",
-      summary: "Intégration d'interfaces responsives et optimisation performance.",
-      stack: ["React", "Tailwind", "Vite"],
-      updatedAt: "2025-09-18",
-    },
-  ]);
+  const { items, loading, error, setError, create, update, remove } = useBackofficeExperiences();
 
   const [form, setForm] = useState<Omit<Experience, "id" | "updatedAt">>({
     period: "",
@@ -78,17 +60,25 @@ export default function ExperiencePage() {
     setIsFormOpen(false);
   }
 
-  function handleSubmit() {
-    const now = new Date().toISOString().slice(0, 10);
-    if (editingId) {
-      setItems((prev) =>
-        prev.map((e) => (e.id === editingId ? { ...e, ...form, updatedAt: now } : e))
-      );
-    } else {
-      const id = Math.random().toString(36).slice(2, 9);
-      setItems((prev) => [...prev, { id, ...form, updatedAt: now }]);
+  function parsePeriod(period: string): { date_debut: string; date_fin: string } {
+    // Accept formats like "YYYY – YYYY" or "YYYY-YYYY" or full dates "YYYY-MM-DD – YYYY-MM-DD"
+    const norm = period.replace(/\s+–\s+|\s*-\s*/g, "-");
+    const [start, end] = norm.split("-");
+    const toDate = (v?: string) => (v && v.trim().length >= 4 ? v.trim() : new Date().getFullYear().toString());
+    return { date_debut: toDate(start), date_fin: toDate(end) };
+  }
+
+  async function handleSubmit() {
+    try {
+      if (editingId) {
+        await update(editingId, form);
+      } else {
+        await create(form);
+      }
+      resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de l'enregistrement");
     }
-    resetForm();
   }
 
   function handleEdit(id: string) {
@@ -100,11 +90,16 @@ export default function ExperiencePage() {
     setIsFormOpen(true);
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (!deleteId) return;
-    setItems((prev) => prev.filter((e) => e.id !== deleteId));
-    if (editingId === deleteId) resetForm();
-    setDeleteId(null);
+    try {
+      await remove(deleteId);
+      if (editingId === deleteId) resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de la suppression");
+    } finally {
+      setDeleteId(null);
+    }
   }
 
   return (
@@ -129,10 +124,14 @@ export default function ExperiencePage() {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">{error}</div>
+      )}
+
       <div className="grid grid-cols-1 gap-6">
         <Table
           columns={columns}
-          data={filtered}
+          data={loading ? [] : filtered}
           rowKey={(row) => (row as Experience).id}
           emptyText="Aucune expérience trouvée"
           actionsHeader="Actions"

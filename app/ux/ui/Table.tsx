@@ -6,7 +6,7 @@ import Button from "./Button";
 
 export type TableColumn<Row extends Record<string, unknown>> = {
   key: keyof Row | string;
-  header: string;
+  header: ReactNode;
   className?: string;
   render?: (row: Row) => ReactNode;
 };

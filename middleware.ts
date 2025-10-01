@@ -19,6 +19,17 @@ export function middleware(req: NextRequest) {
   // If path already has /en or /fr, ensure cookie matches and continue
   const pathLocale = pathname.split("/")[1];
   if (SUPPORTED.has(pathLocale)) {
+    // Protect backoffice: require access token from cookies or header
+    if (pathname.startsWith(`/${pathLocale}/backoffice`)) {
+      const token = req.cookies.get("access_token")?.value;
+      // When using client storage, we cannot read it here; optionally, allow header-based auth
+      const hasBearer = req.headers.get("authorization")?.toLowerCase().startsWith("bearer ");
+      if (!token && !hasBearer) {
+        const url = req.nextUrl.clone();
+        url.pathname = `/${pathLocale}/login`;
+        return NextResponse.redirect(url);
+      }
+    }
     const res = NextResponse.next();
     res.cookies.set(LOCALE_COOKIE, pathLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
     return res;

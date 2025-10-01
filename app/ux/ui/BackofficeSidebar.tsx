@@ -28,12 +28,12 @@ function SidebarLink({ href, label, icon: Icon, active }: {
   return (
     <Link
       href={href}
-      className={`group flex items-center gap-0.5 sm:gap-3 rounded-lg px-1 sm:px-4 py-1 sm:py-3 text-xs ${
+      className={`group flex items-center gap-0.5 sm:gap-2 rounded-lg px-1.5 sm:px-3 py-0.5 sm:py-2 text-xs ${
         active ? "text-black shadow" : "text-white/80 hover:bg-white/10 hover:text-white"
       }`}
       style={active ? { backgroundColor: '#f68c09' } : {}}
     >
-             <span className={`flex h-4 w-4 sm:h-10 sm:w-10 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
+              <span className={`flex h-4 w-4 sm:h-8 sm:w-8 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
                <Icon className="icon-responsive" />
              </span>
       <span className="text-xs sm:text-xs font-normal leading-tight" style={{ fontSize: '0.625rem' }}>{label}</span>
@@ -79,7 +79,7 @@ export default function BackofficeSidebar({ links, isOpen, onClose }: Backoffice
 
       <div className="px-3">
         <div className="mb-2 mt-4 uppercase tracking-wider text-white/70 text-var-caption">Navigation</div>
-        <nav className="space-y-0.5">
+        <nav className="space-y-0">
           {links.map(({ href, label, icon: Icon, match }) => (
             <SidebarLink
               key={href}

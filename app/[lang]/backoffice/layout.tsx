@@ -19,7 +19,6 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "language", label: "Langue", icon: LanguageIcon, match: "/backoffice/language" },
     { href: "training", label: "Formation", icon: TrainingIcon, match: "/backoffice/training" },
     { href: "credentials", label: "Mes Identifiants", icon: CredentialsIcon, match: "/backoffice/credentials" },
-    { href: "mailing", label: "Historique Mailing", icon: MailingIcon, match: "/backoffice/mailing" },
     { href: "facebook", label: "Facebook", icon: FacebookIcon, match: "/backoffice/facebook" },
   ];
   

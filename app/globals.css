@@ -75,6 +75,10 @@ body {
 .bg-white-var { background-color: var(--white); }
 .bg-black-var { background-color: var(--black); }
 
+/* Themed button borders: default (dark) = jaune, light = navy */
+.button-themed-border { border: 1px solid var(--jaune); }
+[data-theme="light"] .button-themed-border { border-color: var(--blue); }
+
 /* Text size utilities backed by variables */
 .text-var-title { font-size: var(--fs-title); }
 .text-var-body { font-size: var(--fs-body); }

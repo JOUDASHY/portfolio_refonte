@@ -1,33 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
-
-type Project = {
-  id: string;
-  title: string;
-  image: string;
-  href?: string;
-  initialStars?: number;
-};
-
-const defaultProjects: Project[] = [
-  { id: "p1", title: "Dashboard Analytics", image: "/window.svg", href: "#", initialStars: 12 },
-  { id: "p2", title: "E‑commerce Store", image: "/globe.svg", href: "#", initialStars: 8 },
-  { id: "p3", title: "Portfolio v2", image: "/file.svg", href: "#", initialStars: 15 },
-];
+import { useProjects } from "../hooks/useProjects";
 
 export default function Projects() {
   const { t } = useLanguage();
-  const [stars, setStars] = useState<Record<string, number>>(
-    Object.fromEntries(defaultProjects.map((p) => [p.id, p.initialStars ?? 0]))
-  );
-
-  const addStar = (id: string) => {
-    setStars((s) => ({ ...s, [id]: (s[id] ?? 0) + 1 }));
-  };
-
   return (
     <section id="projects" className="relative bg-background py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -35,9 +14,51 @@ export default function Projects() {
           <h2 className="text-var-title sm:text-4xl font-extrabold text-foreground">{t("projects.title")}</h2>
           <p className="mt-2 text-var-body sm:text-lg text-foreground/70">{t("projects.subtitle")}</p>
         </div>
+        <ProjectGrid />
+      </div>
+    </section>
+  );
+}
 
-        <ul className="grid grid-cols-1 gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {defaultProjects.map((p) => (
+function ProjectGrid() {
+  const { t } = useLanguage();
+  const { items, loading, error } = useProjects();
+  const [stars, setStars] = useState<Record<number, number>>({});
+
+  useEffect(() => {
+    if (!loading && items.length) {
+      setStars(Object.fromEntries(items.map((p) => [p.id, p.initialStars])));
+    }
+  }, [loading, items]);
+
+  const addStar = (id: number) => {
+    setStars((s) => ({ ...s, [id]: (s[id] ?? 0) + 1 }));
+  };
+
+  if (error) {
+    return (
+      <div className="mb-6 rounded-md bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">{error}</div>
+    );
+  }
+
+  return (
+    <ul className="grid grid-cols-1 gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {loading
+        ? Array.from({ length: 6 }).map((_, i) => (
+            <li key={i} className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10">
+              <div className="relative h-32 sm:h-48 w-full">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+                <div className="absolute inset-0 p-6">
+                  <div className="animate-pulse h-full w-full rounded-lg bg-white/10" />
+                </div>
+              </div>
+              <div className="p-3 sm:p-6">
+                <div className="animate-pulse h-5 w-40 bg-white/10 rounded" />
+                <div className="mt-3 h-4 w-24 bg-white/10 rounded" />
+              </div>
+            </li>
+          ))
+        : items.map((p) => (
             <li
               key={p.id}
               className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
@@ -68,9 +89,7 @@ export default function Projects() {
               </div>
             </li>
           ))}
-        </ul>
-      </div>
-    </section>
+    </ul>
   );
 }
 

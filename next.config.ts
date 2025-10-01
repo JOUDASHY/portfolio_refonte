@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
         hostname: "s.yimg.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "portfolio.unityfianar.site",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "portfolio.unityfianar.site",
+        pathname: "/**",
+      },
       
     ],
   },

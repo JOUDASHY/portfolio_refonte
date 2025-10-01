@@ -1,46 +1,146 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
+import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
-
-type CredentialsForm = {
-  email: string;
-  password: string;
-  github?: string;
-  linkedin?: string;
-};
+import SearchBar from "../../../ux/ui/SearchBar";
+import { useBackofficeMyLogins, type BackofficeMyLogin } from "../../../hooks/useBackofficeMyLogins";
 
 export default function CredentialsPage() {
-  const [form, setForm] = useState<CredentialsForm>({ email: "", password: "", github: "", linkedin: "" });
-  const [showPassword, setShowPassword] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const { items, loading, error, setError, create, update, remove } = useBackofficeMyLogins();
 
-  function handleSave() {
-    setConfirmOpen(true);
+  const [form, setForm] = useState<Omit<BackofficeMyLogin, "id" | "updatedAt">>({ site: "", link: "", username: "", password: "" });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const filtered = useMemo(
+    () =>
+      items.filter((c) => {
+        const q = query.trim().toLowerCase();
+        if (!q) return true;
+        return (
+          c.site.toLowerCase().includes(q) ||
+          c.username.toLowerCase().includes(q) ||
+          c.link.toLowerCase().includes(q)
+        );
+      }),
+    [items, query]
+  );
+
+  const columns: TableColumn<BackofficeMyLogin>[] = [
+    { key: "site", header: "Site" },
+    { key: "username", header: "Utilisateur" },
+    { key: "link", header: "Lien" },
+    { key: "updatedAt", header: "Mis à jour" },
+  ];
+
+  function resetForm() {
+    setForm({ site: "", link: "", username: "", password: "" });
+    setEditingId(null);
+    setIsFormOpen(false);
   }
 
-  function confirmSave() {
-    // Here you'd call an API. For now we just close the modal.
-    setConfirmOpen(false);
+  async function handleSubmit() {
+    try {
+      if (editingId) await update(editingId, form);
+      else await create(form);
+      resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de l'enregistrement");
+    }
+  }
+
+  function handleEdit(id: string) {
+    const target = items.find((c) => c.id === id);
+    if (!target) return;
+    const { site, link, username, password } = target;
+    setForm({ site, link, username, password });
+    setEditingId(id);
+    setIsFormOpen(true);
+  }
+
+  async function confirmDelete() {
+    if (!deleteId) return;
+    try {
+      await remove(deleteId);
+      if (editingId === deleteId) resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de la suppression");
+    } finally {
+      setDeleteId(null);
+    }
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div>
+    <div className="space-y-6">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Mes identifiants</h1>
-        <p className="text-sm text-foreground/70">Mettre à jour vos informations de connexion et profils.</p>
+        <div className="flex items-center gap-2">
+          <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setEditingId(null);
+              setForm({ site: "", link: "", username: "", password: "" });
+              setIsFormOpen(true);
+            }}
+          >
+            Nouvel identifiant
+          </Button>
+        </div>
       </div>
 
-      <div className="rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
-        <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-6">
+        <Table
+          columns={columns}
+          data={filtered}
+          rowKey={(row) => (row as BackofficeMyLogin).id}
+          emptyText="Aucun identifiant trouvé"
+          actionsHeader="Actions"
+          actions={(row) => (
+            <div className="inline-flex items-center gap-2">
+              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as BackofficeMyLogin).id)}>Éditer</Button>
+              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as BackofficeMyLogin).id)}>Supprimer</Button>
+            </div>
+          )}
+        />
+      </div>
+
+      <Modal
+        open={isFormOpen}
+        onClose={resetForm}
+        title={editingId ? "Modifier l'identifiant" : "Ajouter un identifiant"}
+        footer={
+          <>
+            <Button variant="secondary" onClick={resetForm}>Annuler</Button>
+            <Button onClick={handleSubmit}>{editingId ? "Enregistrer" : "Ajouter"}</Button>
+          </>
+        }
+        size="lg"
+      >
+        <div className="space-y-3">
           <Input
-            label="Email"
-            type="email"
-            placeholder="ex: nilsen@example.com"
-            value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+            label="Site"
+            placeholder="Ex: Gmail, OVH, ..."
+            value={form.site}
+            onChange={(e) => setForm((f) => ({ ...f, site: e.target.value }))}
+          />
+          <Input
+            label="Lien"
+            placeholder="https://..."
+            value={form.link}
+            onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
+          />
+          <Input
+            label="Utilisateur"
+            placeholder="nom.utilisateur"
+            value={form.username}
+            onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
           />
           <div>
             <label className="block text-sm font-medium text-navy/80">Mot de passe</label>
@@ -65,39 +165,22 @@ export default function CredentialsPage() {
               </button>
             </div>
           </div>
-          <Input
-            label="GitHub"
-            placeholder="https://github.com/username"
-            value={form.github}
-            onChange={(e) => setForm((f) => ({ ...f, github: e.target.value }))}
-          />
-          <Input
-            label="LinkedIn"
-            placeholder="https://www.linkedin.com/in/username"
-            value={form.linkedin}
-            onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))}
-          />
         </div>
-
-        <div className="mt-5 flex items-center justify-end gap-2">
-          <Button variant="secondary" onClick={() => setForm({ email: "", password: "", github: "", linkedin: "" })}>Réinitialiser</Button>
-          <Button onClick={handleSave}>Enregistrer</Button>
-        </div>
-      </div>
+      </Modal>
 
       <Modal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        title="Confirmer l'enregistrement"
+        open={Boolean(deleteId)}
+        onClose={() => setDeleteId(null)}
+        title="Confirmer la suppression"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>Annuler</Button>
-            <Button onClick={confirmSave}>Confirmer</Button>
+            <Button variant="secondary" onClick={() => setDeleteId(null)}>Annuler</Button>
+            <Button onClick={confirmDelete}>Supprimer</Button>
           </>
         }
         size="sm"
       >
-        Vos identifiants seront mis à jour. Confirmez-vous cette action ?
+        Êtes-vous sûr de vouloir supprimer cet identifiant ? Cette action est irréversible.
       </Modal>
     </div>
   );

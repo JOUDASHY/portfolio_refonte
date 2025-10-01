@@ -6,41 +6,17 @@ import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
-
-type Award = {
-  id: string;
-  year: string;
-  title: string;
-  organization: string;
-  description?: string;
-  updatedAt: string;
-};
+import { useBackofficeAwards, type BackofficeAward } from "../../../hooks/useBackofficeAwards";
 
 export default function AwardsPage() {
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<Award[]>([
-    {
-      id: "1",
-      year: "2023",
-      title: "Meilleur Projet Web",
-      organization: "Tech Conference Madagascar",
-      description: "Récompense pour l'innovation en développement web",
-      updatedAt: "2025-09-20",
-    },
-    {
-      id: "2",
-      year: "2022",
-      title: "Certification AWS",
-      organization: "Amazon Web Services",
-      description: "Solutions Architect Associate",
-      updatedAt: "2025-09-18",
-    },
-  ]);
+  const { items, loading, error, setError, create, update, remove } = useBackofficeAwards();
 
-  const [form, setForm] = useState<Omit<Award, "id" | "updatedAt">>({
+  const [form, setForm] = useState<Omit<BackofficeAward, "id" | "updatedAt">>({
     year: "",
     title: "",
     organization: "",
+    kind: "",
     description: "",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -55,50 +31,59 @@ export default function AwardsPage() {
         return (
           a.title.toLowerCase().includes(q) ||
           a.organization.toLowerCase().includes(q) ||
-          a.year.toLowerCase().includes(q)
+          a.year.toLowerCase().includes(q) ||
+          (a.kind || "").toLowerCase().includes(q)
         );
       }),
     [items, query]
   );
 
-  const columns: TableColumn<Award>[] = [
+  const columns: TableColumn<BackofficeAward>[] = [
     { key: "year", header: "Année" },
     { key: "title", header: "Titre" },
     { key: "organization", header: "Organisation" },
+    { key: "kind", header: "Type" },
     { key: "updatedAt", header: "Mis à jour" },
   ];
 
   function resetForm() {
-    setForm({ year: "", title: "", organization: "", description: "" });
+    setForm({ year: "", title: "", organization: "", kind: "", description: "" });
     setEditingId(null);
     setIsFormOpen(false);
   }
 
-  function handleSubmit() {
-    const now = new Date().toISOString().slice(0, 10);
-    if (editingId) {
-      setItems((prev) => prev.map((a) => (a.id === editingId ? { ...a, ...form, updatedAt: now } : a)));
-    } else {
-      const id = Math.random().toString(36).slice(2, 9);
-      setItems((prev) => [...prev, { id, ...form, updatedAt: now }]);
+  async function handleSubmit() {
+    try {
+      if (editingId) {
+        await update(editingId, form);
+      } else {
+        await create(form);
+      }
+      resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de l'enregistrement");
     }
-    resetForm();
   }
 
   function handleEdit(id: string) {
     const target = items.find((a) => a.id === id);
     if (!target) return;
-    const { year, title, organization, description } = target;
-    setForm({ year, title, organization, description: description || "" });
+    const { year, title, organization, kind, description } = target;
+    setForm({ year, title, organization, kind, description: description || "" });
     setEditingId(id);
     setIsFormOpen(true);
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (!deleteId) return;
-    setItems((prev) => prev.filter((a) => a.id !== deleteId));
-    if (editingId === deleteId) resetForm();
-    setDeleteId(null);
+    try {
+      await remove(deleteId);
+      if (editingId === deleteId) resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de la suppression");
+    } finally {
+      setDeleteId(null);
+    }
   }
 
   return (
@@ -114,7 +99,7 @@ export default function AwardsPage() {
             variant="secondary"
             onClick={() => {
               setEditingId(null);
-              setForm({ year: "", title: "", organization: "", description: "" });
+              setForm({ year: "", title: "", organization: "", kind: "", description: "" });
               setIsFormOpen(true);
             }}
           >
@@ -127,13 +112,13 @@ export default function AwardsPage() {
         <Table
           columns={columns}
           data={filtered}
-          rowKey={(row) => (row as Award).id}
+          rowKey={(row) => (row as BackofficeAward).id}
           emptyText="Aucune récompense trouvée"
           actionsHeader="Actions"
           actions={(row) => (
             <div className="inline-flex items-center gap-2">
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as Award).id)}>Éditer</Button>
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as Award).id)}>Supprimer</Button>
+              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as BackofficeAward).id)}>Éditer</Button>
+              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as BackofficeAward).id)}>Supprimer</Button>
             </div>
           )}
         />
@@ -169,6 +154,12 @@ export default function AwardsPage() {
             placeholder="Tech Conference Madagascar"
             value={form.organization}
             onChange={(e) => setForm((f) => ({ ...f, organization: e.target.value }))}
+          />
+          <Input
+            label="Type"
+            placeholder="Ex: Certification, Prix"
+            value={form.kind}
+            onChange={(e) => setForm((f) => ({ ...f, kind: e.target.value }))}
           />
           <Input
             label="Description"

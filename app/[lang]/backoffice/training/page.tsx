@@ -6,6 +6,7 @@ import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
+import { useBackofficeFormations } from "../../../hooks/useBackofficeFormations";
 
 type Training = {
   id: string;
@@ -18,10 +19,7 @@ type Training = {
 
 export default function TrainingPage() {
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<Training[]>([
-    { id: "1", period: "2024", title: "Next.js Performance", provider: "Vercel", detail: "Workshop avancé", updatedAt: "2025-09-20" },
-    { id: "2", period: "2023 – 2024", title: "React & TypeScript", provider: "OpenClassrooms", detail: "Parcours certifiant", updatedAt: "2025-09-18" },
-  ]);
+  const { items, loading, error, setError, create, update, remove } = useBackofficeFormations();
 
   const [form, setForm] = useState<Omit<Training, "id" | "updatedAt">>({ period: "", title: "", provider: "", detail: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -55,15 +53,14 @@ export default function TrainingPage() {
     setIsFormOpen(false);
   }
 
-  function handleSubmit() {
-    const now = new Date().toISOString().slice(0, 10);
-    if (editingId) {
-      setItems((prev) => prev.map((t) => (t.id === editingId ? { ...t, ...form, updatedAt: now } : t)));
-    } else {
-      const id = Math.random().toString(36).slice(2, 9);
-      setItems((prev) => [...prev, { id, ...form, updatedAt: now }]);
+  async function handleSubmit() {
+    try {
+      if (editingId) await update(editingId, form);
+      else await create(form);
+      resetForm();
+    } catch (e: any) {
+      setError(e?.message || "Échec de l'enregistrement");
     }
-    resetForm();
   }
 
   function handleEdit(id: string) {
@@ -75,11 +72,14 @@ export default function TrainingPage() {
     setIsFormOpen(true);
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (!deleteId) return;
-    setItems((prev) => prev.filter((t) => t.id !== deleteId));
-    if (editingId === deleteId) resetForm();
-    setDeleteId(null);
+    try {
+      await remove(deleteId);
+      if (editingId === deleteId) resetForm();
+    } finally {
+      setDeleteId(null);
+    }
   }
 
   return (
@@ -104,10 +104,14 @@ export default function TrainingPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">{error}</div>
+      )}
+
       <div className="grid grid-cols-1 gap-6">
         <Table
           columns={columns}
-          data={filtered}
+          data={loading ? [] : filtered}
           rowKey={(row) => (row as Training).id}
           emptyText="Aucune formation trouvée"
           actionsHeader="Actions"

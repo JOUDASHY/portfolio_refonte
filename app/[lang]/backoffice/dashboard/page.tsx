@@ -122,7 +122,16 @@ export default function DashboardPage() {
               <span className="text-foreground/50">Mois: {latestMonth} • Total: {totalVisits}</span>
             )}
           </div>
-          {loading ? <ChartSkeleton /> : <LineChart data={lineData} width="100%" />}
+          {loading ? <ChartSkeleton /> : (
+            <LineChart
+              data={lineData}
+              width="100%"
+              variant="line"
+              smooth
+              showArea={false}
+              color="#6366f1"
+            />
+          )}
         </div>
 
         <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">

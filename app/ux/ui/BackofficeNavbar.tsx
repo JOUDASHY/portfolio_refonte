@@ -8,6 +8,7 @@ import { useTheme } from "../../components/ThemeProvider";
 import { useLanguage } from "../../hooks/LanguageProvider";
 import Modal from "./Modal";
 import Button from "./Button";
+import { authService } from "../../services/authService";
 
 export default function BackofficeNavbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const router = useRouter();
@@ -39,8 +40,9 @@ export default function BackofficeNavbar({ onToggleSidebar }: { onToggleSidebar:
       <LogoutModal
         open={logoutOpen}
         onCancel={() => setLogoutOpen(false)}
-        onConfirm={() => {
+        onConfirm={async () => {
           setLogoutOpen(false);
+          await authService.logout();
           router.push("../");
         }}
       />

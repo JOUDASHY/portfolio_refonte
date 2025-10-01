@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "media.zenfs.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "portfolio.unityfianar.site",
         pathname: "/**",
       },

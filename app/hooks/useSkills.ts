@@ -24,9 +24,9 @@ export function useSkills() {
           category: c.categorie || "Autres",
         }));
         setItems(mapped);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return;
-        setError(err?.message || "Failed to load skills");
+        setError(err instanceof Error ? err.message : "Failed to load skills");
       } finally {
         if (mounted) setLoading(false);
       }

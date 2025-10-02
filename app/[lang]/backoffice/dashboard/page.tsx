@@ -1,12 +1,23 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import BarChart from "../../../ux/charts/BarChart";
 import LineChart from "../../../ux/charts/LineChart";
 import DonutChart from "../../../ux/charts/DonutChart";
 import { visitService } from "../../../services/backoffice/visitService";
 import { projetService } from "../../../services/backoffice/projetService";
 import { competenceService } from "../../../services/backoffice/competenceService";
+
+interface ProjectData {
+  id: number;
+  nom: string;
+  average_score?: number | null;
+}
+
+interface SkillData {
+  id: number;
+  name: string;
+  niveau?: number | null;
+}
 
 export default function DashboardPage() {
   const [monthly, setMonthly] = useState<{ label: string; value: number }[]>([]);
@@ -37,18 +48,18 @@ export default function DashboardPage() {
           competenceService.list(),
         ]);
         const m = Array.isArray(monthlyData) ? monthlyData : [];
-        setMonthly(m.map((x: any) => ({ label: x.month, value: x.count })));
+        setMonthly(m.map((x: { month: string; count: number }) => ({ label: x.month, value: x.count })));
         setTotalVisits(Number(totalData?.total_visits || 0));
 
         const projArr = Array.isArray(projects) ? projects : [];
         setProjectsCount(projArr.length);
-        setTopProjects(projArr.slice(0, 10).map((p: any) => ({ id: String(p.id), name: p.nom, stars: p.average_score ?? null })));
+        setTopProjects(projArr.slice(0, 10).map((p: ProjectData) => ({ id: String(p.id), name: p.nom, stars: p.average_score ?? null })));
 
         const skillArr = Array.isArray(skills) ? skills : [];
         setSkillsCount(skillArr.length);
-        setTopSkills(skillArr.slice(0, 10).map((s: any) => ({ id: String(s.id), name: s.name, level: s.niveau ?? null })));
-      } catch (e: any) {
-        setError(e?.message || "Échec du chargement du tableau de bord");
+        setTopSkills(skillArr.slice(0, 10).map((s: SkillData) => ({ id: String(s.id), name: s.name, level: s.niveau ?? null })));
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Échec du chargement du tableau de bord");
       } finally {
         setLoading(false);
       }
@@ -62,15 +73,6 @@ export default function DashboardPage() {
     { label: "Taux conv.", value: "—", icon: TrendingUpIcon },
   ]), [totalVisits, projectsCount, skillsCount]);
 
-  const barData = [
-    { label: "Lun", value: 7 },
-    { label: "Mar", value: 9 },
-    { label: "Mer", value: 5 },
-    { label: "Jeu", value: 11 },
-    { label: "Ven", value: 8 },
-    { label: "Sam", value: 4 },
-    { label: "Dim", value: 6 },
-  ];
 
   const lineData = monthly.length > 0 ? monthly : [
     { label: "Jan", value: 0 },
@@ -156,7 +158,7 @@ export default function DashboardPage() {
         <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
           <div className="mb-3 text-sm text-foreground/70">Top 10 projets</div>
           <ul className="divide-y divide-white/10 rounded-xl bg-white/0 ring-1 ring-white/10">
-            {(loading ? Array.from({ length: 5 }) : topProjects).map((p: any, idx: number) => (
+            {(loading ? Array.from({ length: 5 }, (_, i) => ({ id: `loading-${i}`, name: '', stars: null })) : topProjects).map((p, idx: number) => (
               <li key={p?.id ?? idx} className="flex items-center justify-between px-3 py-2">
                 {loading ? (
                   <Skeleton w="80%" />
@@ -164,13 +166,13 @@ export default function DashboardPage() {
                   <>
                     <span className="flex min-w-0 items-center gap-3">
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-[0.7rem] font-semibold uppercase text-accent ring-1 ring-accent/20">
-                        {getInitials(p.name)}
+                        {getInitials(p?.name || "")}
                       </span>
-                      <span className="truncate text-foreground/90">{p.name}</span>
+                      <span className="truncate text-foreground/90">{p?.name}</span>
                     </span>
                     <span className="ml-3 inline-flex items-center gap-1 text-xs text-foreground/70">
                       <StarIcon className="h-3.5 w-3.5 text-yellow-400" />
-                      <span>{formatStars(p.stars)}</span>
+                      <span>{formatStars(p?.stars)}</span>
                       <span className="text-foreground/40">#{idx + 1}</span>
                     </span>
                   </>
@@ -183,7 +185,7 @@ export default function DashboardPage() {
         <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
           <div className="mb-3 text-sm text-foreground/70">Top 10 compétences</div>
           <ul className="divide-y divide-white/10 rounded-xl bg-white/0 ring-1 ring-white/10">
-            {(loading ? Array.from({ length: 5 }) : topSkills).map((s: any, idx: number) => (
+            {(loading ? Array.from({ length: 5 }, (_, i) => ({ id: `loading-${i}`, name: '', level: null })) : topSkills).map((s, idx: number) => (
               <li key={s?.id ?? idx} className="flex items-center justify-between px-3 py-2">
                 {loading ? (
                   <Skeleton w="70%" />
@@ -191,13 +193,13 @@ export default function DashboardPage() {
                   <>
                     <span className="flex min-w-0 items-center gap-3">
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-[0.7rem] font-semibold uppercase text-foreground ring-1 ring-white/20">
-                        {getInitials(s.name)}
+                        {getInitials(s?.name || "")}
                       </span>
-                      <span className="truncate text-foreground/90">{s.name}</span>
+                      <span className="truncate text-foreground/90">{s?.name}</span>
                     </span>
                     <span className="ml-3 inline-flex items-center gap-1 text-xs text-foreground/70">
                       <StarIcon className="h-3.5 w-3.5 text-yellow-400" />
-                      <span>{formatStars(s.level)}</span>
+                      <span>{formatStars(s?.level)}</span>
                       <span className="text-foreground/40">#{idx + 1}</span>
                     </span>
                   </>

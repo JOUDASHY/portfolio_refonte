@@ -27,9 +27,9 @@ export default function Education() {
           detail: edu.lieu,
         }));
         setItems(mapped);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return;
-        setError(err?.message || "Failed to load education");
+        setError(err instanceof Error ? err.message : "Failed to load education");
       } finally {
         if (mounted) setLoading(false);
       }

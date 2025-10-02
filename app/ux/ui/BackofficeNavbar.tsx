@@ -12,8 +12,8 @@ import { authService } from "../../services/authService";
 
 export default function BackofficeNavbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const router = useRouter();
-  const { toggle, theme } = useTheme();
-  const { lang, setLang } = useLanguage();
+  useTheme();
+  useLanguage();
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   return (

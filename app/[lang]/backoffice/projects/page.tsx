@@ -10,7 +10,7 @@ import { useBackofficeProjets, type BackofficeProjet } from "../../../hooks/useB
 
 export default function ProjectsPage() {
   const [query, setQuery] = useState("");
-  const { items, loading, error, setError, create, update, remove } = useBackofficeProjets();
+  const { items, setError, create, update, remove } = useBackofficeProjets();
 
   const [form, setForm] = useState<Omit<BackofficeProjet, "id" | "updatedAt">>({
     name: "",
@@ -54,8 +54,8 @@ export default function ProjectsPage() {
       if (editingId) await update(editingId, form);
       else await create(form);
       resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'enregistrement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 
@@ -73,8 +73,8 @@ export default function ProjectsPage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de la suppression");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
     }

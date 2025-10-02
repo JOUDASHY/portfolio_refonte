@@ -30,9 +30,9 @@ export function useExperiences() {
           summary: e.description ?? null,
         }));
         setItems(mapped);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return;
-        setError(err?.message || "Failed to load experiences");
+        setError(err instanceof Error ? err.message : "Failed to load experiences");
       } finally {
         if (mounted) setLoading(false);
       }

@@ -35,8 +35,8 @@ export default function FacebookPage() {
         createdAt: `${f.date} ${f.heure}`,
       }));
       setItems(list);
-    } catch (e: any) {
-      setError(e?.message || "Erreur de chargement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Erreur de chargement");
     } finally {
       setLoading(false);
     }
@@ -87,8 +87,8 @@ export default function FacebookPage() {
     try {
       await facebookService.remove(deleteId);
       setItems((prev) => prev.filter((i) => i.id !== deleteId));
-    } catch (e: any) {
-      setError(e?.message || "Échec de la suppression");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
     }

@@ -31,8 +31,12 @@ export default function Login() {
       // Persist tokens according to remember choice
       setTokensWithStorage(res.access, res.refresh, remember ? "local" : "session");
       router.push(`/${currentLang}/backoffice/dashboard`);
-    } catch (err: any) {
-      const message = err?.response?.data?.detail || err?.message || "Login failed";
+    } catch (err: unknown) {
+      const message = (err && typeof err === 'object' && 'response' in err && 
+                      err.response && typeof err.response === 'object' && 'data' in err.response &&
+                      err.response.data && typeof err.response.data === 'object' && 'detail' in err.response.data)
+                      ? String(err.response.data.detail)
+                      : (err instanceof Error ? err.message : "Login failed");
       setError(message);
     } finally {
       setLoading(false);

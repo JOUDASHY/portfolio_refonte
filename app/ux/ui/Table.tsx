@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, useMemo } from "react";
+import React, { ReactNode, useState } from "react";
 import Checkbox from "./Checkbox";
 import Button from "./Button";
 
@@ -46,7 +46,8 @@ export default function DataTable<Row extends Record<string, unknown>>({
   const currentData = data.slice(startIndex, endIndex);
 
   // Selection logic
-  const handleSelectAll = (checked: boolean) => {
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
     if (checked) {
       const allKeys = currentData.map(row => rowKey(row));
       setSelectedRows(new Set(allKeys));
@@ -57,7 +58,8 @@ export default function DataTable<Row extends Record<string, unknown>>({
     }
   };
 
-  const handleSelectRow = (row: Row, checked: boolean) => {
+  const handleSelectRow = (row: Row) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
     const key = rowKey(row);
     const newSelection = new Set(selectedRows);
     
@@ -109,7 +111,7 @@ export default function DataTable<Row extends Record<string, unknown>>({
                   <td className="px-4 py-3">
                     <Checkbox
                       checked={selectedRows.has(rowKey(row))}
-                      onChange={(checked) => handleSelectRow(row, checked)}
+                      onChange={handleSelectRow(row)}
                     />
                   </td>
                 )}
@@ -145,7 +147,6 @@ export default function DataTable<Row extends Record<string, unknown>>({
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
-              size="sm"
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
             >
@@ -156,7 +157,6 @@ export default function DataTable<Row extends Record<string, unknown>>({
                 <Button
                   key={page}
                   variant={page === currentPage ? "primary" : "secondary"}
-                  size="sm"
                   onClick={() => goToPage(page)}
                   className="w-8 h-8 p-0"
                 >
@@ -166,7 +166,6 @@ export default function DataTable<Row extends Record<string, unknown>>({
             </div>
             <Button
               variant="secondary"
-              size="sm"
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
             >

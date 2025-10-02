@@ -14,7 +14,7 @@ export default function LanguageSettingsPage() {
   const [tempLang, setTempLang] = useState<string>(lang);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const { items, loading, error, setError, create, update, remove } = useBackofficeLangues();
+  const { items, setError, create, update, remove } = useBackofficeLangues();
   const [query, setQuery] = useState("");
   const [form, setForm] = useState<Omit<BackofficeLangue, "id" | "updatedAt">>({ titre: "", niveau: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -57,8 +57,8 @@ export default function LanguageSettingsPage() {
       if (editingId) await update(editingId, form);
       else await create(form);
       resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'enregistrement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 
@@ -76,8 +76,8 @@ export default function LanguageSettingsPage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de la suppression");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
     }

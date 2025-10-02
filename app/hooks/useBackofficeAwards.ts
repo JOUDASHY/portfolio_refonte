@@ -38,8 +38,8 @@ export function useBackofficeAwards() {
       const { data } = await awardService.list();
       const list = (Array.isArray(data) ? (data as AwardModel[]) : []).map(toUi);
       setItems(list);
-    } catch (e: any) {
-      setError(e?.message || "Erreur de chargement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Erreur de chargement");
     } finally {
       setLoading(false);
     }

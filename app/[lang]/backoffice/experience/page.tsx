@@ -60,13 +60,6 @@ export default function ExperiencePage() {
     setIsFormOpen(false);
   }
 
-  function parsePeriod(period: string): { date_debut: string; date_fin: string } {
-    // Accept formats like "YYYY – YYYY" or "YYYY-YYYY" or full dates "YYYY-MM-DD – YYYY-MM-DD"
-    const norm = period.replace(/\s+–\s+|\s*-\s*/g, "-");
-    const [start, end] = norm.split("-");
-    const toDate = (v?: string) => (v && v.trim().length >= 4 ? v.trim() : new Date().getFullYear().toString());
-    return { date_debut: toDate(start), date_fin: toDate(end) };
-  }
 
   async function handleSubmit() {
     try {
@@ -76,8 +69,8 @@ export default function ExperiencePage() {
         await create(form);
       }
       resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'enregistrement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 
@@ -95,8 +88,8 @@ export default function ExperiencePage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de la suppression");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
     }

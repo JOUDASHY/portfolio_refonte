@@ -1,7 +1,6 @@
 "use client";
 
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import axios from "axios";
 import { createHttp } from "./base";
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from "./tokens";
 
@@ -9,7 +8,7 @@ export const apiNoAuth: AxiosInstance = createHttp();
 export const apiAuth: AxiosInstance = createHttp();
 
 let isRefreshing = false;
-let pendingQueue: Array<{ resolve: (value: string) => void; reject: (reason?: any) => void }> = [];
+let pendingQueue: Array<{ resolve: (value: string) => void; reject: (reason?: unknown) => void }> = [];
 
 async function refreshAccessToken(): Promise<string> {
   if (isRefreshing) {

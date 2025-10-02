@@ -58,8 +58,8 @@ export default function TrainingPage() {
       if (editingId) await update(editingId, form);
       else await create(form);
       resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'enregistrement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 type Datum = { label: string; value: number };
 
@@ -42,7 +42,7 @@ export default function LineChart({
   // Y ticks (0 to niceMax with 4 intervals)
   const yTicks = Array.from({ length: 5 }, (_, i) => Math.round((niceMax / 4) * i));
 
-  function getPathD(pts: { x: number; y: number }[]) {
+  const getPathD = useCallback((pts: { x: number; y: number }[]) => {
     if (pts.length === 0) return "";
     if (!smooth || pts.length < 3) {
       return `M ${pts.map((p) => `${p.x} ${p.y}`).join(" L ")}`;
@@ -63,9 +63,9 @@ export default function LineChart({
       d.push(`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`);
     }
     return d.join(" ");
-  }
+  }, [smooth]);
 
-  const lineD = useMemo(() => getPathD(points), [points, smooth]);
+  const lineD = useMemo(() => getPathD(points), [points, getPathD]);
   const areaD = useMemo(() => {
     if (points.length === 0) return "";
     const baseY = height - 16;
@@ -85,7 +85,7 @@ export default function LineChart({
       <line x1={paddingX} y1={8} x2={paddingX} y2={height - 16} className="stroke-white/20" strokeWidth={1} />
 
       {/* Horizontal grid + labels */}
-      {yTicks.map((val, idx) => {
+      {yTicks.map((val) => {
         const y = height - 16 - (val / range) * (height - 56);
         return (
           <g key={val}>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { SVGProps, ReactElement } from "react";
+import type { SVGProps } from "react";
 import BackofficeSidebar from "../../ux/ui/BackofficeSidebar";
 import BackofficeNavbar from "../../ux/ui/BackofficeNavbar";
 
@@ -123,14 +123,6 @@ function CredentialsIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M6 2h12v4H6V2zm-2 6h16v14H4V8zm3 3h10v2H7v-2z" />
-    </svg>
-  );
-}
-
-function MailingIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
     </svg>
   );
 }

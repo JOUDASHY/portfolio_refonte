@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { notificationService } from "../../../services/backoffice/notificationService";
 import type { Notification } from "../../../types/backoffice/notification";
 
 export default function NotificationsPage() {
   const [items, setItems] = useState<Notification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<boolean>(false);
   const [triggerType, setTriggerType] = useState<"rating" | "view">("rating");
   const [projectId, setProjectId] = useState<string>("");
@@ -17,8 +17,8 @@ export default function NotificationsPage() {
       setLoading(true);
       const { data } = await notificationService.list();
       setItems(Array.isArray(data) ? data : []);
-    } catch (e: any) {
-      setError(e?.message || "Échec du chargement des notifications");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec du chargement des notifications");
     } finally {
       setLoading(false);
     }
@@ -33,7 +33,7 @@ export default function NotificationsPage() {
       setBusy(true);
       await notificationService.markRead(id);
       setItems((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
-    } catch (e) {
+    } catch {
       // noop
     } finally {
       setBusy(false);
@@ -45,7 +45,7 @@ export default function NotificationsPage() {
       setBusy(true);
       await notificationService.markAllRead();
       setItems((prev) => prev.map((n) => ({ ...n, is_read: true })));
-    } catch (e) {
+    } catch {
       // noop
     } finally {
       setBusy(false);
@@ -57,7 +57,7 @@ export default function NotificationsPage() {
       setBusy(true);
       await notificationService.clearAll();
       setItems([]);
-    } catch (e) {
+    } catch {
       // noop
     } finally {
       setBusy(false);
@@ -72,7 +72,7 @@ export default function NotificationsPage() {
       if (projectId.trim()) payload.project_id = Number(projectId);
       await notificationService.trigger(payload);
       await refresh();
-    } catch (e) {
+    } catch {
       // noop
     } finally {
       setBusy(false);
@@ -105,10 +105,10 @@ export default function NotificationsPage() {
 
       <form onSubmit={handleTrigger} className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-3">
         <div>
-          <label className="mb-1 block text-xs text-foreground/60">Type d'événement</label>
+          <label className="mb-1 block text-xs text-foreground/60">Type d&apos;événement</label>
           <select
             value={triggerType}
-            onChange={(e) => setTriggerType(e.target.value as any)}
+            onChange={(e) => setTriggerType(e.target.value as "rating" | "view")}
             className="w-full rounded-lg bg-white/5 px-2 py-1.5 text-sm text-foreground ring-1 ring-white/10"
           >
             <option value="rating">rating</option>

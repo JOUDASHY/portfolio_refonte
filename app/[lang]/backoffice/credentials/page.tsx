@@ -10,7 +10,7 @@ import { useBackofficeMyLogins, type BackofficeMyLogin } from "../../../hooks/us
 
 export default function CredentialsPage() {
   const [query, setQuery] = useState("");
-  const { items, loading, error, setError, create, update, remove } = useBackofficeMyLogins();
+  const { items, setError, create, update, remove } = useBackofficeMyLogins();
 
   const [form, setForm] = useState<Omit<BackofficeMyLogin, "id" | "updatedAt">>({ site: "", link: "", username: "", password: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -50,8 +50,8 @@ export default function CredentialsPage() {
       if (editingId) await update(editingId, form);
       else await create(form);
       resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'enregistrement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 
@@ -69,8 +69,8 @@ export default function CredentialsPage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de la suppression");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
     }

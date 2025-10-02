@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import type { SVGProps, ReactElement } from "react";
 
 interface SidebarLink {

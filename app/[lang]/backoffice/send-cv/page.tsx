@@ -14,7 +14,7 @@ type EntrepriseMailForm = {
 };
 
 export default function SendCvPage() {
-  const { t } = useLanguage();
+  useLanguage();
   const [form, setForm] = useState<EntrepriseMailForm>({ nomEntreprise: "", emailEntreprise: "", lieuEntreprise: "" });
   const [loading, setLoading] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -27,8 +27,8 @@ export default function SendCvPage() {
       await emailService.sendMailEntreprise(form);
       setSuccessOpen(true);
       setForm({ nomEntreprise: "", emailEntreprise: "", lieuEntreprise: "" });
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'envoi");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'envoi");
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export default function SendCvPage() {
     <div className="space-y-6">
       <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
         <h1 className="text-2xl font-bold text-foreground">Envoyer mon CV à une entreprise</h1>
-        <p className="mt-1 text-foreground/60">Renseignez les informations de l'entreprise pour envoyer votre CV.</p>
+        <p className="mt-1 text-foreground/60">Renseignez les informations de l&apos;entreprise pour envoyer votre CV.</p>
       </div>
 
       <div className="rounded-xl border border-white/10 bg-white/5 p-6 max-w-2xl">
@@ -84,7 +84,7 @@ export default function SendCvPage() {
         size="sm"
         footer={<Button onClick={() => setSuccessOpen(false)}>Fermer</Button>}
       >
-        Votre CV a été envoyé avec succès à l'entreprise.
+        Votre CV a été envoyé avec succès à l&apos;entreprise.
       </Modal>
     </div>
   );

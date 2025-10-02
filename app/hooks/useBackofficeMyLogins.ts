@@ -36,8 +36,8 @@ export function useBackofficeMyLogins() {
       const { data } = await myloginService.list();
       const list = (Array.isArray(data) ? (data as MyLoginModel[]) : []).map(toUi);
       setItems(list);
-    } catch (e: any) {
-      setError(e?.message || "Erreur de chargement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Erreur de chargement");
     } finally {
       setLoading(false);
     }

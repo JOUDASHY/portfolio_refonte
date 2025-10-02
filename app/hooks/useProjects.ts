@@ -32,9 +32,9 @@ export function useProjects() {
           initialStars: Math.max(0, Math.round((p.average_score ?? 0)))
         }));
         setItems(mapped);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return;
-        setError(err?.message || "Failed to load projects");
+        setError(err instanceof Error ? err.message : "Failed to load projects");
       } finally {
         if (mounted) setLoading(false);
       }

@@ -35,7 +35,7 @@ export default function ProfilePage() {
     twitter: "",
   });
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [, setLoading] = useState<boolean>(true);
   const [changePwdOpen, setChangePwdOpen] = useState<boolean>(false);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function ProfilePage() {
         address: form.location || null,
       });
       await loadProfile();
-    } catch (e) {
+    } catch {
       // noop
     }
   }
@@ -95,7 +95,7 @@ export default function ProfilePage() {
         linkedin: me.link_linkedin || "",
         twitter: "",
       }));
-    } catch (e) {
+    } catch {
       // noop
     } finally {
       setLoading(false);
@@ -341,7 +341,7 @@ function ChangePasswordForm({ onDone }: { onDone?: () => void }) {
         old_password: oldPassword,
         new_password: newPassword,
         confirm_password: confirmPassword,
-      } as any);
+      });
       setMsg("Mot de passe mis à jour.");
       setOldPassword("");
       setNewPassword("");
@@ -349,8 +349,8 @@ function ChangePasswordForm({ onDone }: { onDone?: () => void }) {
       setTimeout(() => {
         onDone?.();
       }, 500);
-    } catch (e: any) {
-      setMsg(e?.message || "Échec de la mise à jour");
+    } catch (e: unknown) {
+      setMsg(e instanceof Error ? e.message : "Échec de la mise à jour");
     } finally {
       setBusy(false);
     }

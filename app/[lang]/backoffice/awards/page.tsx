@@ -10,7 +10,7 @@ import { useBackofficeAwards, type BackofficeAward } from "../../../hooks/useBac
 
 export default function AwardsPage() {
   const [query, setQuery] = useState("");
-  const { items, loading, error, setError, create, update, remove } = useBackofficeAwards();
+  const { items, setError, create, update, remove } = useBackofficeAwards();
 
   const [form, setForm] = useState<Omit<BackofficeAward, "id" | "updatedAt">>({
     year: "",
@@ -60,8 +60,8 @@ export default function AwardsPage() {
         await create(form);
       }
       resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de l'enregistrement");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 
@@ -79,8 +79,8 @@ export default function AwardsPage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
-    } catch (e: any) {
-      setError(e?.message || "Échec de la suppression");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
     }

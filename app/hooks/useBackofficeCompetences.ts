@@ -34,22 +34,35 @@ export function useBackofficeCompetences() {
   useEffect(() => { refresh(); }, [refresh]);
 
   const create = useCallback(async (form: CompetenceForm) => {
-    const { imageFile, name, description, niveau, categorie } = form;
-    const { data } = await competenceService.createForm({ image: imageFile || undefined, name, description, niveau, categorie });
-    setItems((prev) => [data, ...prev]);
-    return data;
+    setLoading(true);
+    try {
+      const { data } = await competenceService.createForm({ image: form.imageFile || undefined, name: form.name, description: form.description, niveau: form.niveau, categorie: form.categorie });
+      setItems((prev) => [data, ...prev]);
+      return data;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const update = useCallback(async (id: number | string, form: CompetenceForm) => {
-    const { imageFile, name, description, niveau, categorie } = form;
-    const { data } = await competenceService.updateForm(id, { image: imageFile || undefined, name, description, niveau, categorie });
-    setItems((prev) => prev.map((c) => (String(c.id) === String(id) ? data : c)));
-    return data;
+    setLoading(true);
+    try {
+      const { data } = await competenceService.updateForm(id, { image: form.imageFile || undefined, name: form.name, description: form.description, niveau: form.niveau, categorie: form.categorie });
+      setItems((prev) => prev.map((c) => (String(c.id) === String(id) ? data : c)));
+      return data;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const remove = useCallback(async (id: number | string) => {
-    await competenceService.remove(id);
-    setItems((prev) => prev.filter((c) => String(c.id) !== String(id)));
+    setLoading(true);
+    try {
+      await competenceService.remove(id);
+      setItems((prev) => prev.filter((c) => String(c.id) !== String(id)));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const grouped = useMemo(() => {

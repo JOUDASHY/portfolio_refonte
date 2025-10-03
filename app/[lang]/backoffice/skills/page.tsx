@@ -8,6 +8,7 @@ import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeCompetences, type CompetenceForm } from "../../../hooks/useBackofficeCompetences";
 import Image from "next/image";
+import Loading from "../../../ux/Loading";
 
 export default function SkillsPage() {
   const { items, loading, error, create, update, remove, setError } = useBackofficeCompetences();
@@ -79,7 +80,8 @@ export default function SkillsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="relative space-y-6">
+      {loading && <Loading />}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Compétences</h1>
         <div className="flex items-center gap-2">

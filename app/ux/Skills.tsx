@@ -40,15 +40,15 @@ type Skill = { name: string; level: number };
 
 function Category({ title, skills, loading }: { title: string; skills: Skill[]; loading?: boolean }) {
   return (
-    <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
-      <h3 className="text-white font-semibold">{title}</h3>
+    <div className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-6 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
+      <h3 className="font-semibold text-foreground">{title}</h3>
       <ul className="mt-4 space-y-3">
         {loading
           ? Array.from({ length: 4 }).map((_, idx) => (
-              <li key={idx} className="text-white/90">
+              <li key={idx} className="text-foreground/90">
                 <div className="animate-pulse space-y-2">
-                  <div className="h-4 w-32 bg-white/10 rounded" />
-                  <div className="h-2 w-full bg-white/10 rounded" />
+                  <div className="h-4 w-32 rounded bg-white/10 data-[theme=light]:bg-black/10" />
+                  <div className="h-2 w-full rounded bg-white/10 data-[theme=light]:bg-black/10" />
                 </div>
               </li>
             ))
@@ -56,12 +56,12 @@ function Category({ title, skills, loading }: { title: string; skills: Skill[]; 
               const clamped = Math.max(0, Math.min(10, s.level || 0));
               const width = `${(clamped / 10) * 100}%`;
               return (
-                <li key={s.name} className="text-white/90">
+                <li key={s.name} className="text-foreground/90">
                   <div className="flex items-center justify-between">
                     <span>{s.name}</span>
-                    <span className="text-sm text-white/70">{clamped}/10</span>
+                    <span className="text-sm text-foreground/70">{clamped}/10</span>
                   </div>
-                  <div className="mt-2 h-2 rounded-full bg-white/10">
+                  <div className="mt-2 h-2 rounded-full bg-white/10 data-[theme=light]:bg-black/10">
                     <div className="h-2 rounded-full bg-accent" style={{ width }} />
                   </div>
                 </li>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 
 type BannerProps = {
   title?: ReactNode;
@@ -12,6 +12,33 @@ type BannerProps = {
   align?: "left" | "center" | "right";
   children?: ReactNode;
 };
+
+function normalizeYouTube(url: string): string | null {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace("www.", "");
+    if (host.endsWith("google.com") && u.pathname.startsWith("/url")) {
+      const target = u.searchParams.get("url");
+      if (target) return normalizeYouTube(target);
+    }
+    if (host === "youtu.be") {
+      const id = u.pathname.slice(1);
+      return id || null;
+    }
+    if (host === "youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com") {
+      if (u.pathname.startsWith("/embed/")) return u.pathname.split("/").pop() || null;
+      const id = u.searchParams.get("v");
+      return id || null;
+    }
+  } catch {}
+  return null;
+}
+
+function toYouTubeEmbed(url: string): string | null {
+  const id = normalizeYouTube(url);
+  if (!id) return null;
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&playsinline=1&rel=0`;
+}
 
 export default function Banner({
   title,
@@ -29,25 +56,34 @@ export default function Banner({
       ? "items-end text-right"
       : "items-center text-center";
 
+  const embedSrc = useMemo(() => toYouTubeEmbed(bgSrc), [bgSrc]);
+
   return (
     <section className={`relative isolate ${heightClass} overflow-hidden`}>
-      <Image
-        src={bgSrc}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {embedSrc ? (
+        <div className="absolute inset-0 -z-10">
+          {/* Full width (not forced full height): center vertically, crop if taller than section */}
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
+            <iframe
+              className="w-full aspect-video"
+              src={embedSrc}
+              title="Video background"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+              frameBorder={0}
+            />
+          </div>
+        </div>
+      ) : (
+        <Image src={bgSrc} alt="" fill priority sizes="100vw" className="object-cover -z-10" />
+      )}
 
       <div className={`absolute inset-0 ${overlayClass}`} />
 
       <div className="relative z-10 mx-auto flex h-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className={`flex w-full flex-col justify-center gap-3 text-white ${alignment}`}>
           {title ? (
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
-              {title}
-            </h1>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">{title}</h1>
           ) : null}
           {subtitle ? (
             <p className="text-base sm:text-lg lg:text-xl text-white/90">{subtitle}</p>

@@ -38,8 +38,19 @@ const nextConfig: NextConfig = {
         hostname: "www.google.com",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "youtu.be",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
 
- 
+      
+      
       
     ],
   },

@@ -7,8 +7,8 @@ import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeCompetences, type CompetenceForm } from "../../../hooks/useBackofficeCompetences";
-import Image from "next/image";
 import Loading from "../../../ux/Loading";
+import SafeImage from "../../../ux/ui/SafeImage";
 
 export default function SkillsPage() {
   const { items, loading, error, create, update, remove, setError } = useBackofficeCompetences();
@@ -29,11 +29,11 @@ export default function SkillsPage() {
   );
 
   const columns: TableColumn<typeof items[number]>[] = [
-    { key: "image", header: "Image", render: (row) => row.image ? (
+    { key: "image", header: "Image", render: (row) => (
       <div className="relative h-8 w-8">
-        <Image src={row.image} alt="" fill sizes="32px" className="rounded object-cover" />
+        <SafeImage src={row.image || null} alt="" fill sizes="32px" className="rounded object-cover" fallbackSrc="/window.svg" />
       </div>
-    ) : <span className="text-foreground/50">—</span> },
+    ) },
     { key: "name", header: "Nom" },
     { key: "description", header: "Description", className: "max-w-[320px] truncate" },
     { key: "niveau", header: "Niveau", render: (row) => <span>{Math.max(0, Math.min(10, row.niveau))}/10</span> },

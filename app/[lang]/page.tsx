@@ -30,7 +30,7 @@ export default function Home() {
       />
       <Experience />
       <Banner
-        bgSrc="https://img.freepik.com/photos-gratuite/beaux-bureaux-dans-style-dessins-animes_23-2151043338.jpg?semt=ais_hybrid&w=740&q=80"
+        bgSrc="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dit-jSj7hA_Y&psig=AOvVaw2MODuce4oSA5CaPg1Lp8gs&ust=1759584555746000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCNiH78mRiJADFQAAAAAdAAAAABAL"
         title="Construisons quelque chose d'exceptionnel"
         subtitle="Disponible pour des missions et collaborations"
         align="center"

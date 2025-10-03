@@ -33,6 +33,13 @@ const nextConfig: NextConfig = {
         hostname: "portfolio.unityfianar.site",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "www.google.com",
+        pathname: "/**",
+      },
+
+ 
       
     ],
   },

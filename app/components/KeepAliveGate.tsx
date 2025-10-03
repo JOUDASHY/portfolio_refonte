@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import MaintenancePage from "../[lang]/maintenance/page";
 import { apiNoAuth } from "../lib/axiosClient";
+import Loading from "../ux/Loading";
 
 export default function KeepAliveGate({ children }: { children: React.ReactNode }) {
   const [alive, setAlive] = useState<boolean | null>(null);
@@ -26,13 +27,7 @@ export default function KeepAliveGate({ children }: { children: React.ReactNode 
   }, []);
 
   if (alive === null) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="h-2 w-56 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/15">
-          <div className="h-full w-1/3 animate-[shimmer_1.6s_ease-in-out_infinite] bg-accent/70" />
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!alive) {

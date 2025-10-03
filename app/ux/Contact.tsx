@@ -3,10 +3,37 @@
 import { useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import VisitStats from "./VisitStats";
+import { useSendEmail } from "../hooks/useSendEmail";
+import Input from "./ui/Input";
+import Textarea from "./ui/Textarea";
 
 export default function Contact() {
   const { t } = useLanguage();
-  const [sent, setSent] = useState(false);
+  const { loading, error, success, send } = useSendEmail();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [invalid, setInvalid] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setInvalid(false);
+
+    const isEmail = /.+@.+\..+/.test(email.trim());
+    if (!name.trim() || !isEmail || !message.trim()) {
+      setInvalid(true);
+      return;
+    }
+
+    try {
+      await send({ name: name.trim(), email: email.trim(), message: message.trim() });
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch {
+      // handled by hook
+    }
+  }
 
   return (
     <section id="contact" className="relative bg-background py-24">
@@ -25,40 +52,67 @@ export default function Contact() {
           <div className="lg:col-span-2">
             <form
               className="rounded-2xl bg-white-var p-4 sm:p-8 ring-1 ring-black/5 shadow-sm"
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSent(true);
-              }}
+              onSubmit={handleSubmit}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-navy/80" htmlFor="name">{t("contact.name")}</label>
-                  <div className="mt-1 sm:mt-2 relative">
-                    <span className="pointer-events-none absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-navy/40 text-sm sm:text-base">👤</span>
-                    <input id="name" name="name" type="text" className="mt-0 w-full rounded-lg border border-black/10 bg-white-var pl-7 sm:pl-9 pr-3 sm:pr-4 py-1.5 sm:py-2.5 text-xs sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="John Doe" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-navy/80" htmlFor="email">{t("contact.email")}</label>
-                  <div className="mt-1 sm:mt-2 relative">
-                    <span className="pointer-events-none absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-navy/40 text-sm sm:text-base">✉️</span>
-                    <input id="email" name="email" type="email" className="mt-0 w-full rounded-lg border border-black/10 bg-white-var pl-7 sm:pl-9 pr-3 sm:pr-4 py-1.5 sm:py-2.5 text-xs sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="john@example.com" />
-                  </div>
-                </div>
+                <Input
+                  label={t("contact.name")}
+                  name="name"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={loading}
+                  required
+                />
+                <Input
+                  label={t("contact.email")}
+                  name="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  required
+                />
               </div>
               <div className="mt-4 sm:mt-6">
-                <label className="block text-xs sm:text-sm font-medium text-navy/80" htmlFor="message">{t("contact.message")}</label>
-                <div className="mt-1 sm:mt-2 relative">
-                  <textarea id="message" name="message" rows={4} className="w-full rounded-lg border border-black/10 bg-white-var px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Hello..." />
-                  <span className="pointer-events-none absolute right-2 sm:right-3 bottom-2 sm:bottom-3 text-navy/30 text-xs">max 1000</span>
-                </div>
+                <Textarea
+                  label={t("contact.message")}
+                  name="message"
+                  rows={4}
+                  placeholder="Hello..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={loading}
+                  required
+                />
               </div>
 
+              {invalid && (
+                <div className="mt-3 rounded-lg bg-yellow-500/10 px-3 py-2 text-xs text-yellow-600 ring-1 ring-yellow-500/20">
+                  Merci de renseigner un nom, un email valide et un message.
+                </div>
+              )}
+              {error && (
+                <div className="mt-3 rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-600 ring-1 ring-red-500/20">
+                  Échec de l&apos;envoi{error ? `: ${error}` : "."}
+                </div>
+              )}
+              {success && (
+                <div className="mt-3 rounded-lg bg-green-500/10 px-3 py-2 text-xs text-green-600 ring-1 ring-green-500/20">
+                  Merci ! Votre message a bien été envoyé.
+                </div>
+              )}
+
               <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3">
-                <button type="submit" className="inline-flex items-center gap-1 sm:gap-2 rounded-full bg-accent px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-medium text-navy hover:brightness-110">
-                  {t("contact.send")}
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-1 sm:gap-2 rounded-full bg-accent px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-medium text-navy hover:brightness-110 disabled:opacity-60"
+                  disabled={loading}
+                >
+                  {loading ? "Envoi…" : t("contact.send")}
                 </button>
-                {sent && (
+                {success && (
                   <span className="text-xs sm:text-sm text-navy/70">{t("contact.success")}</span>
                 )}
               </div>

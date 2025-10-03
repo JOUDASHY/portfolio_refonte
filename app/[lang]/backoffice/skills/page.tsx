@@ -6,77 +6,76 @@ import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
-
-type Skill = {
-  id: string;
-  name: string;
-  level: number; // 1-5
-  category: "Front-end" | "Back-end" | "Tooling" | "Autre";
-  updatedAt: string;
-};
+import { useBackofficeCompetences, type CompetenceForm } from "../../../hooks/useBackofficeCompetences";
+import Image from "next/image";
 
 export default function SkillsPage() {
+  const { items, loading, error, create, update, remove, setError } = useBackofficeCompetences();
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<Skill[]>([
-    { id: "1", name: "React", level: 5, category: "Front-end", updatedAt: "2025-09-20" },
-    { id: "2", name: "TypeScript", level: 5, category: "Front-end", updatedAt: "2025-09-18" },
-    { id: "3", name: "Node.js", level: 4, category: "Back-end", updatedAt: "2025-09-10" },
-    { id: "4", name: "Tailwind CSS", level: 4, category: "Front-end", updatedAt: "2025-09-08" },
-  ]);
 
-  const [form, setForm] = useState<Omit<Skill, "id" | "updatedAt">>({ name: "", level: 3, category: "Front-end" });
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState<CompetenceForm>({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null });
+  const [editingId, setEditingId] = useState<number | string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<number | string | null>(null);
 
   const filtered = useMemo(
-    () =>
-      items.filter((s) => {
-        const q = query.trim().toLowerCase();
-        if (!q) return true;
-        return s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q);
-      }),
+    () => items.filter((s) => {
+      const q = query.trim().toLowerCase();
+      if (!q) return true;
+      return s.name.toLowerCase().includes(q) || (s.categorie || "").toLowerCase().includes(q);
+    }),
     [items, query]
   );
 
-  const columns: TableColumn<Skill>[] = [
+  const columns: TableColumn<typeof items[number]>[] = [
+    { key: "image", header: "Image", render: (row) => row.image ? (
+      <div className="relative h-8 w-8">
+        <Image src={row.image} alt="" fill sizes="32px" className="rounded object-cover" />
+      </div>
+    ) : <span className="text-foreground/50">—</span> },
     { key: "name", header: "Nom" },
-    { key: "level", header: "Niveau", render: (row) => "★".repeat((row as Skill).level) },
-    { key: "category", header: "Catégorie" },
-    { key: "updatedAt", header: "Mis à jour" },
+    { key: "description", header: "Description", className: "max-w-[320px] truncate" },
+    { key: "niveau", header: "Niveau", render: (row) => <span>{Math.max(0, Math.min(10, row.niveau))}/10</span> },
+    { key: "categorie", header: "Catégorie" },
   ];
 
   function resetForm() {
-    setForm({ name: "", level: 3, category: "Front-end" });
+    setForm({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null });
     setEditingId(null);
     setIsFormOpen(false);
   }
 
-  function handleSubmit() {
-    const now = new Date().toISOString().slice(0, 10);
-    if (editingId) {
-      setItems((prev) => prev.map((s) => (s.id === editingId ? { ...s, ...form, updatedAt: now } : s)));
-    } else {
-      const id = Math.random().toString(36).slice(2, 9);
-      setItems((prev) => [...prev, { id, ...form, updatedAt: now }]);
+  async function handleSubmit() {
+    try {
+      if (editingId) {
+        await update(editingId, form);
+      } else {
+        await create(form);
+      }
+      resetForm();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
-    resetForm();
   }
 
-  function handleEdit(id: string) {
-    const target = items.find((s) => s.id === id);
+  function handleEdit(id: number | string) {
+    const target = items.find((s) => String(s.id) === String(id));
     if (!target) return;
-    const { name, level, category } = target;
-    setForm({ name, level, category });
+    setForm({ name: target.name, description: target.description, niveau: target.niveau, categorie: target.categorie || "", imageFile: null });
     setEditingId(id);
     setIsFormOpen(true);
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (!deleteId) return;
-    setItems((prev) => prev.filter((s) => s.id !== deleteId));
-    if (editingId === deleteId) resetForm();
-    setDeleteId(null);
+    try {
+      await remove(deleteId);
+      if (editingId === deleteId) resetForm();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Échec de la suppression");
+    } finally {
+      setDeleteId(null);
+    }
   }
 
   return (
@@ -84,36 +83,31 @@ export default function SkillsPage() {
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Compétences</h1>
         <div className="flex items-center gap-2">
-          <SearchBar
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setEditingId(null);
-              setForm({ name: "", level: 3, category: "Front-end" });
-              setIsFormOpen(true);
-            }}
-          >
+          <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
+          <Button variant="secondary" onClick={() => { setEditingId(null); setForm({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null }); setIsFormOpen(true); }}>
             Nouvelle compétence
           </Button>
         </div>
       </div>
 
+      {error ? (
+        <div className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300 ring-1 ring-red-500/20">{error}</div>
+      ) : null}
+
       <div className="grid grid-cols-1 gap-6">
         <Table
           columns={columns}
           data={filtered}
-          rowKey={(row) => (row as Skill).id}
-          emptyText="Aucune compétence trouvée"
+          rowKey={(row) => String(row.id)}
+          emptyText={loading ? "Chargement..." : "Aucune compétence trouvée"}
           actionsHeader="Actions"
           actions={(row) => (
             <div className="inline-flex items-center gap-2">
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as Skill).id)}>Éditer</Button>
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as Skill).id)}>Supprimer</Button>
+              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit(row.id)}>Éditer</Button>
+              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId(row.id)}>Supprimer</Button>
             </div>
           )}
+          selectable={false}
         />
       </div>
 
@@ -137,25 +131,40 @@ export default function SkillsPage() {
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           />
           <Input
-            label="Niveau (1-5)"
+            label="Description"
+            placeholder="Courte description"
+            value={form.description}
+            onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+          />
+          <Input
+            label="Niveau (0-10)"
             type="number"
-            min={1}
-            max={5}
-            value={form.level}
-            onChange={(e) => setForm((f) => ({ ...f, level: Math.min(5, Math.max(1, Number(e.target.value || 1))) }))}
+            min={0}
+            max={10}
+            value={form.niveau}
+            onChange={(e) => setForm((f) => ({ ...f, niveau: Math.max(0, Math.min(10, Number(e.target.value || 0))) }))}
           />
           <div>
             <label className="block text-sm font-medium text-navy/80">Catégorie</label>
             <select
               className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
-              value={form.category}
-              onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as Skill["category"] }))}
+              value={form.categorie || ""}
+              onChange={(e) => setForm((f) => ({ ...f, categorie: e.target.value }))}
             >
               <option value="Front-end">Front-end</option>
               <option value="Back-end">Back-end</option>
               <option value="Tooling">Tooling</option>
               <option value="Autre">Autre</option>
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-navy/80">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
+              onChange={(e) => setForm((f) => ({ ...f, imageFile: e.target.files?.[0] || null }))}
+            />
           </div>
         </div>
       </Modal>

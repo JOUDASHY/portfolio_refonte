@@ -52,17 +52,21 @@ function Category({ title, skills, loading }: { title: string; skills: Skill[]; 
                 </div>
               </li>
             ))
-          : skills.map((s) => (
-              <li key={s.name} className="text-white/90">
-                <div className="flex items-center justify-between">
-                  <span>{s.name}</span>
-                  <span className="text-sm text-white/70">{s.level}/5</span>
-                </div>
-                <div className="mt-2 h-2 rounded-full bg-white/10">
-                  <div className="h-2 rounded-full bg-accent" style={{ width: `${(s.level / 5) * 100}%` }} />
-                </div>
-              </li>
-            ))}
+          : skills.map((s) => {
+              const clamped = Math.max(0, Math.min(10, s.level || 0));
+              const width = `${(clamped / 10) * 100}%`;
+              return (
+                <li key={s.name} className="text-white/90">
+                  <div className="flex items-center justify-between">
+                    <span>{s.name}</span>
+                    <span className="text-sm text-white/70">{clamped}/10</span>
+                  </div>
+                  <div className="mt-2 h-2 rounded-full bg-white/10">
+                    <div className="h-2 rounded-full bg-accent" style={{ width }} />
+                  </div>
+                </li>
+              );
+            })}
       </ul>
     </div>
   );

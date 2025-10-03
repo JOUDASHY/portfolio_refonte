@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MaintenancePage from "../[lang]/maintenance/page";
+import { apiNoAuth } from "../lib/axiosClient";
 
 export default function KeepAliveGate({ children }: { children: React.ReactNode }) {
   const [alive, setAlive] = useState<boolean | null>(null);
@@ -10,8 +11,8 @@ export default function KeepAliveGate({ children }: { children: React.ReactNode 
     let cancelled = false;
     const check = async () => {
       try {
-        const res = await fetch("/api/keep-alive/", { method: "GET", cache: "no-store" });
-        if (!cancelled) setAlive(res.ok);
+        const res = await apiNoAuth.get("keep-alive/");
+        if (!cancelled) setAlive(res.status >= 200 && res.status < 300);
       } catch {
         if (!cancelled) setAlive(false);
       }

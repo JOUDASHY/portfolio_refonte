@@ -7,7 +7,7 @@ import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeMyLogins, type BackofficeMyLogin } from "../../../hooks/useBackofficeMyLogins";
-888
+
 export default function CredentialsPage() {
   const [query, setQuery] = useState("");
   const { items, setError, create, update, remove } = useBackofficeMyLogins();
@@ -34,9 +34,8 @@ export default function CredentialsPage() {
 
   const columns: TableColumn<BackofficeMyLogin>[] = [
     { key: "site", header: "Site" },
-    { key: "username", header: "Utilisateur" },
+    { key: "username", header: "Nom d'utilisateur" },
     { key: "link", header: "Lien" },
-    { key: "updatedAt", header: "Mis à jour" },
   ];
 
   function resetForm() {
@@ -47,16 +46,19 @@ export default function CredentialsPage() {
 
   async function handleSubmit() {
     try {
-      if (editingId) await update(editingId, form);
-      else await create(form);
+      if (editingId) {
+        await update(editingId, form);
+      } else {
+        await create(form);
+      }
       resetForm();
-    } catch (e: unknown) {
+    } catch (e) {
       setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
     }
   }
 
   function handleEdit(id: string) {
-    const target = items.find((c) => c.id === id);
+    const target = items.find((s) => s.id === id);
     if (!target) return;
     const { site, link, username, password } = target;
     setForm({ site, link, username, password });
@@ -69,7 +71,7 @@ export default function CredentialsPage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
-    } catch (e: unknown) {
+    } catch (e) {
       setError(e instanceof Error ? e.message : "Échec de la suppression");
     } finally {
       setDeleteId(null);
@@ -79,7 +81,7 @@ export default function CredentialsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-        <h1 className="text-xl font-semibold text-foreground">Mes identifiants</h1>
+        <h1 className="text-xl font-semibold text-foreground">Identifiants</h1>
         <div className="flex items-center gap-2">
           <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
           <Button
@@ -121,12 +123,12 @@ export default function CredentialsPage() {
             <Button onClick={handleSubmit}>{editingId ? "Enregistrer" : "Ajouter"}</Button>
           </>
         }
-        size="lg"
+        size="md"
       >
         <div className="space-y-3">
           <Input
             label="Site"
-            placeholder="Ex: Gmail, OVH, ..."
+            placeholder="ex: Github"
             value={form.site}
             onChange={(e) => setForm((f) => ({ ...f, site: e.target.value }))}
           />
@@ -137,32 +139,24 @@ export default function CredentialsPage() {
             onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
           />
           <Input
-            label="Utilisateur"
-            placeholder="nom.utilisateur"
+            label="Nom d'utilisateur"
+            placeholder="john.doe"
             value={form.username}
             onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
           />
           <div>
             <label className="block text-sm font-medium text-navy/80">Mot de passe</label>
-            <div className="mt-1 flex items-stretch">
-              <input
-                className="w-full rounded-l-lg border border-black/10 bg-white px-3 py-2 text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent"
+            <div className="mt-1 flex gap-2">
+              <Input
                 type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
                 value={form.password}
                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+                className="flex-1"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                className="rounded-r-lg border border-l-0 border-black/10 bg-white px-3 text-navy hover:bg-black/5"
-                aria-label={showPassword ? "Masquer" : "Afficher"}
-              >
-                {showPassword ? (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/></svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M12 6c-4.5 0-8.2 2.5-10 6 1.1 2.2 3 4 5.3 5.1L3 21l1.4 1.4 18-18L21 3l-3.1 3.1C16.6 5.4 14.4 5 12 5zm0 3a4 4 0 013.7 2.6l-5.1 5.1A4 4 0 0112 9z"/></svg>
-                )}
-              </button>
+              <Button type="button" variant="secondary" onClick={() => setShowPassword((v) => !v)}>
+                {showPassword ? "Masquer" : "Afficher"}
+              </Button>
             </div>
           </div>
         </div>

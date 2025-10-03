@@ -1,3 +1,5 @@
+"use client";
+
 import Hero from "../ux/Hero";
 import About from "../ux/About";
 import Skills from "../ux/Skills";
@@ -7,8 +9,11 @@ import Experience from "../ux/Experience";
 import Contact from "../ux/Contact";
 import Banner from "../ux/Banner";
 import SocialDock from "../ux/SocialDock";
+import { useVisitTracker } from "../hooks/useVisitTracker";
 
 export default function Home() {
+  // Enregistrement automatique des visites
+  useVisitTracker();
   return (
     <div className="min-h-screen">
       <Hero />

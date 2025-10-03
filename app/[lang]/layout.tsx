@@ -3,6 +3,7 @@ import ConditionalNavbar from "../components/ConditionalNavbar";
 import ConditionalFooter from "../components/ConditionalFooter";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { LanguageProvider } from "../hooks/LanguageProvider";
+import KeepAliveGate from "../components/KeepAliveGate";
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -22,7 +23,9 @@ export default async function LangLayout({
     <ThemeProvider>
       <LanguageProvider initialLang={initialLang}>
         <ConditionalNavbar />
-        {children}
+        <KeepAliveGate>
+          {children}
+        </KeepAliveGate>
         <ConditionalFooter />
       </LanguageProvider>
     </ThemeProvider>

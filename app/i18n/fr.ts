@@ -17,6 +17,17 @@ const fr = {
     webdev: "le développement web",
     cta: "Découvrir plus",
   },
+  maintenance: {
+    by: "par",
+    title: "Ce site est en maintenance",
+    subtitle: "Nous améliorons l'expérience. Merci de revenir un peu plus tard.",
+    badges: {
+      active: "Maintenance active",
+      soon: "Bientôt de retour",
+      updating: "Mise à jour",
+    },
+    ctaHome: "Retour à l’accueil",
+  },
   about: {
     title: "À propos de moi",
     subtitle: "Développeur Full‑Stack",

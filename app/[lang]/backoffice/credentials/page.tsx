@@ -7,7 +7,7 @@ import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeMyLogins, type BackofficeMyLogin } from "../../../hooks/useBackofficeMyLogins";
-
+888
 export default function CredentialsPage() {
   const [query, setQuery] = useState("");
   const { items, setError, create, update, remove } = useBackofficeMyLogins();

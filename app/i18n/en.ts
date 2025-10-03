@@ -17,6 +17,17 @@ const en = {
     webdev: "web development",
     cta: "Discover More",
   },
+  maintenance: {
+    by: "by",
+    title: "This site is under maintenance",
+    subtitle: "We're improving the experience. Please come back later.",
+    badges: {
+      active: "Maintenance active",
+      soon: "Coming soon",
+      updating: "Updating",
+    },
+    ctaHome: "Back to home",
+  },
   about: {
     title: "About Me",
     subtitle: "Full‑Stack Developer",

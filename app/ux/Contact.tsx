@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
+import VisitStats from "./VisitStats";
 
 export default function Contact() {
   const { t } = useLanguage();
@@ -77,6 +78,11 @@ export default function Contact() {
                   <a href="#" className="rounded-full bg-navy text-white px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm hover:opacity-90">GitHub</a>
                   <a href="#" className="rounded-full bg-navy text-white px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm hover:opacity-90">X</a>
                 </div>
+              </div>
+              
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-black/10">
+                <p className="text-sm sm:text-base text-navy font-semibold mb-2">Statistiques</p>
+                <VisitStats className="text-navy/80" />
               </div>
             </div>
           </div>

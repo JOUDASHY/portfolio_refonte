@@ -45,26 +45,26 @@ function ProjectGrid() {
     <ul className="grid grid-cols-1 gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
-            <li key={i} className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10">
+            <li key={i} className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
               <div className="relative h-32 sm:h-48 w-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
                 <div className="absolute inset-0 p-6">
-                  <div className="animate-pulse h-full w-full rounded-lg bg-white/10" />
+                  <div className="animate-pulse h-full w-full rounded-lg bg-white/10 data-[theme=light]:bg-black/10" />
                 </div>
               </div>
               <div className="p-3 sm:p-6">
-                <div className="animate-pulse h-5 w-40 bg-white/10 rounded" />
-                <div className="mt-3 h-4 w-24 bg-white/10 rounded" />
+                <div className="animate-pulse h-5 w-40 bg-white/10 rounded data-[theme=light]:bg-black/10" />
+                <div className="mt-3 h-4 w-24 bg-white/10 rounded data-[theme=light]:bg-black/10" />
               </div>
             </li>
           ))
         : items.map((p) => (
             <li
               key={p.id}
-              className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
+              className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10 transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
             >
               <div className="relative h-32 sm:h-48 w-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
                 <Image src={p.image} alt={p.title} fill sizes="400px" className="object-contain p-6" />
                 <div className="absolute left-2 top-2 sm:left-4 sm:top-4 rounded-full bg-black/40 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm text-white backdrop-blur">
                   <span className="inline-flex items-center gap-0.5 sm:gap-1"><StarIcon className="h-3 w-3 sm:h-4 sm:w-4 text-accent" /> {stars[p.id] ?? 0}</span>

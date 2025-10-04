@@ -44,7 +44,7 @@ export default function Banner({
   title,
   subtitle,
   bgSrc,
-  heightClass = "h-[320px] sm:h-[420px] lg:h-[520px]",
+  heightClass = "h-[280px] xs:h-[320px] sm:h-[420px] lg:h-[520px]",
   overlayClass = "bg-black/40",
   align = "center",
   children,
@@ -93,12 +93,12 @@ export default function Banner({
       <div className={`absolute inset-0 ${overlayClass}`} />
 
       <div className="relative z-10 mx-auto flex h-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className={`flex w-full flex-col justify-center gap-3 text-white ${alignment}`}>
+        <div className={`flex w-full flex-col justify-center gap-2 sm:gap-3 text-white ${alignment}`}>
           {title ? (
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">{title}</h1>
+            <h1 className="text-var-title xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight">{title}</h1>
           ) : null}
           {subtitle ? (
-            <p className="text-base sm:text-lg lg:text-xl text-white/90">{subtitle}</p>
+            <p className="text-var-caption xs:text-base sm:text-lg lg:text-xl text-white/90">{subtitle}</p>
           ) : null}
           {children}
         </div>

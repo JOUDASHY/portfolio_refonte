@@ -6,37 +6,37 @@ export default function Footer() {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-16 border-t border-white/10 bg-background">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 items-start">
+    <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-background">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-3 items-start">
           <div className="flex flex-col items-center sm:items-start gap-1">
-            <p className="text-foreground font-semibold">Nilsen</p>
-            <p className="text-foreground/70 text-sm">
+            <p className="text-foreground font-semibold text-var-caption sm:text-base">Nilsen</p>
+            <p className="text-foreground/70 text-var-caption sm:text-sm">
               {t("footer.email")}:
               {" "}
               <a className="underline text-accent" href="mailto:you@example.com">you@example.com</a>
             </p>
-            <p className="text-foreground/70 text-sm">{t("footer.location")}: —</p>
+            <p className="text-foreground/70 text-var-caption sm:text-sm">{t("footer.location")}: —</p>
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <span className="text-foreground/80 text-sm">{t("footer.follow")}</span>
-            <div className="flex items-center gap-3">
-              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn" className="rounded-full bg-white/5 p-2 text-foreground/80 ring-1 ring-white/10 hover:text-foreground hover:bg-white/10">
-                <LinkedInIcon className="h-4 w-4" />
+            <span className="text-foreground/80 text-var-caption sm:text-sm">{t("footer.follow")}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn" className="rounded-full bg-white/5 p-1.5 sm:p-2 text-foreground/80 ring-1 ring-white/10 hover:text-foreground hover:bg-white/10">
+                <LinkedInIcon className="icon-xs sm:icon-sm" />
               </a>
-              <a href="https://github.com/" target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="rounded-full bg-white/5 p-2 text-foreground/80 ring-1 ring-white/10 hover:text-foreground hover:bg-white/10">
-                <GitHubIcon className="h-4 w-4" />
+              <a href="https://github.com/" target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="rounded-full bg-white/5 p-1.5 sm:p-2 text-foreground/80 ring-1 ring-white/10 hover:text-foreground hover:bg-white/10">
+                <GitHubIcon className="icon-xs sm:icon-sm" />
               </a>
-              <a href="https://x.com/" target="_blank" rel="noreferrer noopener" aria-label="X" className="rounded-full bg-white/5 p-2 text-foreground/80 ring-1 ring-white/10 hover:text-foreground hover:bg-white/10">
-                <XIcon className="h-4 w-4" />
+              <a href="https://x.com/" target="_blank" rel="noreferrer noopener" aria-label="X" className="rounded-full bg-white/5 p-1.5 sm:p-2 text-foreground/80 ring-1 ring-white/10 hover:text-foreground hover:bg-white/10">
+                <XIcon className="icon-xs sm:icon-sm" />
               </a>
             </div>
           </div>
 
           <div className="flex flex-col items-center sm:items-end gap-1">
-            <p className="text-foreground/70 text-sm">© {year} Nilsen. {t("footer.copyright")}</p>
-            <p className="text-foreground/70 text-sm">
+            <p className="text-foreground/70 text-var-caption sm:text-sm">© {year} Nilsen. {t("footer.copyright")}</p>
+            <p className="text-foreground/70 text-var-caption sm:text-sm">
               {t("footer.built")} <span className="text-accent">Next.js</span> & <span className="text-accent">Tailwind</span>
             </p>
           </div>

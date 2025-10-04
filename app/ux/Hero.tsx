@@ -11,30 +11,30 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative isolate flex items-center min-h-[calc(100vh-4rem)] pt-16 overflow-hidden bg-background"
+      className="relative isolate flex items-center min-h-[calc(100vh-4rem)] pt-8 sm:pt-12 lg:pt-16 overflow-hidden bg-background"
     >
       <Particles />
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
-        <div className="flex flex-col justify-center py-12">
-          <p className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-16 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col justify-center py-8 sm:py-12 order-2 lg:order-1">
+          <p className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
             {t("hero.welcome")}
           </p>
-          <p className="mt-4 text-3xl sm:text-4xl font-semibold text-foreground">
+          <p className="mt-3 sm:mt-4 text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground">
             {t("hero.im")} <span className="text-cyan-300">{t("hero.name")}</span>
           </p>
-          <p className="mt-6 text-xl sm:text-2xl text-foreground/90">
+          <p className="mt-4 sm:mt-6 text-var-body sm:text-lg lg:text-xl text-foreground/90">
             {t("hero.passion")} <TypingText className="text-accent" text={t("hero.webdev")} />
           </p>
 
-          <div className="mt-10">
+          <div className="mt-6 sm:mt-8 lg:mt-10">
             <a
               href="#about"
-              className="inline-flex items-center gap-3 rounded-full bg-white/10 px-6 py-3 text-foreground hover:bg-white/15 ring-1 ring-white/20 dark:ring-white/20 ring-black/20"
+              className="inline-flex items-center gap-2 sm:gap-3 rounded-full bg-white/10 px-4 sm:px-6 py-2 sm:py-3 text-foreground hover:bg-white/15 ring-1 ring-white/20 dark:ring-white/20 ring-black/20 transition-all duration-200"
             >
-              <span className="font-medium">{t("hero.cta")}</span>
+              <span className="font-medium text-var-caption sm:text-base">{t("hero.cta")}</span>
               <svg
-                className="h-5 w-5"
+                className="icon-sm sm:icon-md"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
@@ -45,14 +45,14 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto flex h-[380px] w-[380px] sm:h-[440px] sm:w-[440px] items-center justify-center">
+        <div className="relative mx-auto flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2">
           <div className="absolute inset-0 rounded-full bg-accent" />
           <div className="relative z-10 h-[92%] w-[92%]">
             <Image
               src="/logo_nil.png"
               alt="Nilsen eagle logo"
               fill
-              sizes="(max-width: 768px) 360px, 440px"
+              sizes="(max-width: 475px) 200px, (max-width: 640px) 240px, (max-width: 1024px) 320px, 380px"
               className="object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
               priority
             />

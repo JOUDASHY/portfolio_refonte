@@ -13,17 +13,17 @@ const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     return (
       <div>
         {label ? (
-          <label htmlFor={inputId} className="block text-sm font-medium text-navy/80">
+          <label htmlFor={inputId} className="block text-var-caption sm:text-sm font-medium text-navy/80">
             {label}
           </label>
         ) : null}
         <textarea
           id={inputId}
           ref={ref}
-          className={`mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent ${className}`}
+          className={`mt-1 w-full rounded-lg border border-black/10 bg-white px-2 py-1.5 sm:px-3 sm:py-2 text-var-caption sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent ${className}`}
           {...props}
         />
-        {hint ? <p className="mt-1 text-xs text-navy/60">{hint}</p> : null}
+        {hint ? <p className="mt-1 text-var-caption text-navy/60">{hint}</p> : null}
       </div>
     );
   }

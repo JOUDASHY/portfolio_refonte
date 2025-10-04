@@ -44,7 +44,7 @@ export default function Login() {
   };
 
   return (
-    <section className="bg-white-var py-24 relative">
+    <section className="bg-white-var py-8 sm:py-12 relative min-h-screen flex items-center">
       {loading && <Loading />}
       <div className={`mx-auto max-w-md px-4 sm:px-6 lg:px-8 ${loading ? "pointer-events-none select-none" : ""}`}>
         <div className="rounded-2xl bg-white-var p-6 ring-1 ring-black/5 shadow-sm">

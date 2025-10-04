@@ -62,20 +62,32 @@ export default function Banner({
     <section className={`relative isolate ${heightClass} overflow-hidden`}>
       {embedSrc ? (
         <div className="absolute inset-0 -z-10">
-          {/* Full width (not forced full height): center vertically, crop if taller than section */}
+          {/* Parallax effect: fixed background video */}
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
             <iframe
-              className="w-full aspect-video"
+              className="w-full aspect-video fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full"
               src={embedSrc}
               title="Video background"
               allow="autoplay; encrypted-media; picture-in-picture"
               allowFullScreen
               frameBorder={0}
+              style={{
+                width: '100vw',
+                height: '56.25vw', // 16:9 aspect ratio
+                minHeight: '100vh',
+                minWidth: '177.78vh' // 16:9 aspect ratio
+              }}
             />
           </div>
         </div>
       ) : (
-        <Image src={bgSrc} alt="" fill priority sizes="100vw" className="object-cover -z-10" />
+        <div 
+          className="absolute inset-0 -z-10 bg-fixed bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${bgSrc})`,
+            backgroundAttachment: 'fixed'
+          }}
+        />
       )}
 
       <div className={`absolute inset-0 ${overlayClass}`} />

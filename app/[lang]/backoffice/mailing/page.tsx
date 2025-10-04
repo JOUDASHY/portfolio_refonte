@@ -93,15 +93,15 @@ export default function MailingHistoryPage() {
         email: emailForm.email,
         message: emailForm.message
       });
-      setSendEmailOpen(false);
-      setEmailForm({
-        name: "",
-        email: "",
-        location: "",
-        subject: "",
-        message: "",
-        template: "custom"
-      });
+    setSendEmailOpen(false);
+    setEmailForm({
+      name: "",
+      email: "",
+      location: "",
+      subject: "",
+      message: "",
+      template: "custom"
+    });
     } catch (error) {
       console.error("Error creating email:", error);
     }
@@ -217,8 +217,8 @@ export default function MailingHistoryPage() {
                   style={{ backgroundColor: profileColor }}
                 >
                   {initial}
-                </div>
-                
+      </div>
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -240,33 +240,33 @@ export default function MailingHistoryPage() {
                             <strong className="text-accent text-sm">{t("mailing.latestResponse")}:</strong>
                             <span className="text-xs text-foreground/60">
                               {formatSimpleDate(latestResponse.date, latestResponse.heure)}
-                            </span>
-                          </div>
+                  </span>
+                </div>
                           <p className="text-sm text-foreground/90">{latestResponse.response}</p>
                         </div>
                       )}
-                    </div>
+              </div>
                     
                     <div className="flex items-center gap-2 ml-4">
-                      <Button 
-                        variant="ghost" 
+              <Button 
+                variant="ghost" 
                         className="px-3 py-2 text-sm text-accent hover:bg-accent/10"
-                        onClick={() => {
+                onClick={() => {
                           setSelectedEmail(email);
                           setResponseModalOpen(true);
-                        }}
-                      >
+                }}
+              >
                         <i className="fas fa-reply mr-2"></i>
                         {t("mailing.actions.reply")}
-                      </Button>
-                      <Button 
-                        variant="ghost" 
+              </Button>
+              <Button 
+                variant="ghost" 
                         className="px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-500/10"
                         onClick={() => deletion.openDeleteModal(email)}
                       >
                         <i className="fas fa-trash mr-2"></i>
-                        {t("mailing.actions.delete")}
-                      </Button>
+                {t("mailing.actions.delete")}
+              </Button>
                     </div>
                   </div>
                 </div>
@@ -279,8 +279,8 @@ export default function MailingHistoryPage() {
           <div className="text-center py-12 border border-white/20 rounded-lg bg-white/5">
             <i className="fas fa-envelope-open text-4xl text-foreground/30 mb-4"></i>
             <p className="text-foreground/60 text-lg">{t("mailing.empty")}</p>
-          </div>
-        )}
+            </div>
+          )}
       </div>
 
       {/* Modal de réponse */}
@@ -295,7 +295,7 @@ export default function MailingHistoryPage() {
           size="md"
         >
           <form onSubmit={handleSendResponse} className="space-y-4">
-            <div>
+              <div>
               <h3 className="text-lg font-medium text-foreground mb-2">
                 {t("mailing.replyModal.replyTo")} {selectedEmail.email}
               </h3>
@@ -305,9 +305,9 @@ export default function MailingHistoryPage() {
                 </p>
                 <p className="text-sm text-foreground/90 mt-1">{selectedEmail.message}</p>
               </div>
-            </div>
+              </div>
             
-            <div>
+              <div>
               <label className="block text-sm font-medium text-foreground/80 mb-2">
                 {t("mailing.replyModal.response")}
               </label>
@@ -319,7 +319,7 @@ export default function MailingHistoryPage() {
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-foreground ring-1 ring-white/20 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
                 required
               />
-            </div>
+              </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
               <Button 

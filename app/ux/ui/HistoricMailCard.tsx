@@ -24,11 +24,11 @@ export default function HistoricMailCard({
   const initial = getInitial(mail.nom_entreprise);
 
   return (
-    <div className="historic-mail-item bg-white/5 rounded-lg border border-white/20 p-4 hover:bg-white/10 transition-colors shadow-sm">
+    <div className="historic-mail-item bg-white/5 dark:bg-white/5 bg-white rounded-lg border border-white/20 dark:border-white/20 border-black/20 p-4 hover:bg-white/10 dark:hover:bg-white/10 hover:bg-gray-50 transition-colors shadow-sm">
       <div className="flex items-start gap-4">
         <input
           type="checkbox"
-          className="checkbox mt-1 w-4 h-4 text-accent bg-white/10 border-white/30 rounded focus:ring-accent focus:ring-2"
+          className="checkbox mt-1 w-4 h-4 text-accent bg-white/10 dark:bg-white/10 bg-gray-100 border-white/30 dark:border-white/30 border-gray-300 rounded focus:ring-accent focus:ring-2"
           checked={isSelected}
           onChange={() => onSelect(mail.id)}
         />

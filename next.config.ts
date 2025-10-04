@@ -48,6 +48,16 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "intradys.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "itechgems.com",
+        pathname: "/**",
+      },
 
       
       

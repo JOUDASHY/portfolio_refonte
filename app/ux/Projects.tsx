@@ -45,7 +45,7 @@ function ProjectGrid() {
     <ul className="grid grid-cols-1 gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
-            <li key={i} className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
+            <li key={i} className="group rounded-2xl overflow-hidden card-border">
               <div className="relative h-32 sm:h-48 w-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
                 <div className="absolute inset-0 p-6">
@@ -61,7 +61,7 @@ function ProjectGrid() {
         : items.map((p) => (
             <li
               key={p.id}
-              className="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10 transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
+              className="group rounded-2xl overflow-hidden card-border transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
             >
               <div className="relative h-32 sm:h-48 w-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />

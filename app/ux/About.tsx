@@ -84,8 +84,8 @@ export default function About() {
 
 function ContactBlock({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white/5 p-4 text-white ring-1 ring-white/10">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">{icon}</span>
+    <div className="flex items-center gap-3 rounded-2xl bg-white/5 dark:bg-white/5 bg-white p-4 text-white ring-1 ring-white/10 dark:ring-white/10 ring-black/10">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 dark:bg-white/10 bg-gray-100 ring-1 ring-white/15 dark:ring-white/15 ring-black/15">{icon}</span>
       <div className="leading-tight">
         <div className="text-[10px] font-semibold tracking-wider text-white/60">{label}</div>
         <div className="text-sm text-white/90">{value}</div>

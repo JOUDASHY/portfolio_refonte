@@ -40,7 +40,7 @@ type Skill = { name: string; level: number };
 
 function Category({ title, skills, loading }: { title: string; skills: Skill[]; loading?: boolean }) {
   return (
-    <div className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-6 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
+    <div className="rounded-2xl card-border p-6">
       <h3 className="font-semibold text-foreground">{title}</h3>
       <ul className="mt-4 space-y-3">
         {loading

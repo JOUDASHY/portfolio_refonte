@@ -58,6 +58,16 @@ const nextConfig: NextConfig = {
         hostname: "itechgems.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "apprendre-la-programmation.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "wallpapercave.com",
+        pathname: "/**",
+      },
 
       
       

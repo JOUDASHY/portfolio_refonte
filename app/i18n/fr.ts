@@ -17,6 +17,18 @@ const fr = {
     webdev: "le développement web",
     cta: "Découvrir plus",
   },
+  banner: {
+    webDev: "Développeur Web & Administrateur Système",
+    webDevSubtitle: "Création et optimisation de solutions web évolutives",
+    fullStack: "Développeur Full-Stack & DevOps",
+    fullStackSubtitle: "Architecture et déploiement d'applications modernes",
+    techExpert: "Expert en Technologies Web",
+    techExpertSubtitle: "Innovation et performance au service de vos projets",
+    sysAdmin: "Administration Système & Infrastructure",
+    sysAdminSubtitle: "Gestion et sécurisation de vos environnements techniques",
+    collaboration: "Construisons quelque chose d'exceptionnel",
+    collaborationSubtitle: "Disponible pour des missions et collaborations",
+  },
   maintenance: {
     by: "par",
     title: "Ce site est en maintenance",

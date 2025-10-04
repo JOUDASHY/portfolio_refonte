@@ -17,6 +17,18 @@ const en = {
     webdev: "web development",
     cta: "Discover More",
   },
+  banner: {
+    webDev: "Web Developer & System Administrator",
+    webDevSubtitle: "Crafting and optimizing scalable web solutions",
+    fullStack: "Full-Stack Developer & DevOps",
+    fullStackSubtitle: "Architecture and deployment of modern applications",
+    techExpert: "Web Technologies Expert",
+    techExpertSubtitle: "Innovation and performance for your projects",
+    sysAdmin: "System Administration & Infrastructure",
+    sysAdminSubtitle: "Management and security of your technical environments",
+    collaboration: "Let's build something exceptional",
+    collaborationSubtitle: "Available for missions and collaborations",
+  },
   maintenance: {
     by: "by",
     title: "This site is under maintenance",

@@ -126,22 +126,29 @@ const en = {
       sentAt: "Sent at",
       template: "Template",
       campaign: "Campaign",
+      responses: "Responses",
       actions: "Actions"
     },
     actions: {
       view: "View",
-      delete: "Delete"
+      delete: "Delete",
+      reply: "Reply"
     },
     details: {
       title: "Email Details",
       recipient: "Recipient",
       subject: "Subject",
+      message: "Message",
       status: "Status",
       template: "Template",
       campaign: "Campaign",
       sentAt: "Sent at",
       openedAt: "Opened at",
-      clickedAt: "Clicked at"
+      clickedAt: "Clicked at",
+      responses: "Responses",
+      addResponse: "Add a response",
+      responsePlaceholder: "Type your response here...",
+      addResponseButton: "Add Response"
     },
     delete: {
       title: "Delete Email",
@@ -150,6 +157,21 @@ const en = {
       confirmDelete: "Delete"
     },
     empty: "No emails found",
+    loading: "Loading emails...",
+    retry: "Retry",
+    receivedAt: "Received on",
+    latestResponse: "Latest response",
+    deleteSelected: "Delete selected",
+    replyModal: {
+      title: "Reply to email",
+      replyTo: "Reply to",
+      originalMessage: "Original message",
+      response: "Your response",
+      placeholder: "Write your response here...",
+      cancel: "Cancel",
+      send: "Send",
+      sending: "Sending..."
+    },
     sendForm: {
       title: "Send New Email",
       name: "Recipient Name",
@@ -171,6 +193,29 @@ const en = {
       templateCollaboration: "Collaboration",
       cancel: "Cancel",
       send: "Send Email"
+    }
+  },
+  mailingHistory: {
+    title: "Mailing History",
+    subtitle: "View the history of emails sent to companies",
+    loading: "Loading history...",
+    retry: "Retry",
+    search: "Search by company, email or location...",
+    empty: "No sends found",
+    export: "Export",
+    sentAt: "Sent on",
+    status: {
+      sent: "Sent"
+    },
+    actions: {
+      delete: "Delete"
+    },
+    deleteSelected: "Delete selected",
+    delete: {
+      title: "Delete send",
+      confirm: "Are you sure you want to delete this send from history?",
+      cancel: "Cancel",
+      confirmDelete: "Delete"
     }
   },
 } as const;

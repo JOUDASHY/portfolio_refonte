@@ -126,22 +126,29 @@ const fr = {
       sentAt: "Envoyé le",
       template: "Template",
       campaign: "Campagne",
+      responses: "Réponses",
       actions: "Actions"
     },
     actions: {
       view: "Voir",
-      delete: "Supprimer"
+      delete: "Supprimer",
+      reply: "Répondre"
     },
     details: {
       title: "Détails de l'email",
       recipient: "Destinataire",
       subject: "Sujet",
+      message: "Message",
       status: "Statut",
       template: "Template",
       campaign: "Campagne",
       sentAt: "Envoyé le",
       openedAt: "Ouvert le",
-      clickedAt: "Cliqué le"
+      clickedAt: "Cliqué le",
+      responses: "Réponses",
+      addResponse: "Ajouter une réponse",
+      responsePlaceholder: "Tapez votre réponse ici...",
+      addResponseButton: "Ajouter la réponse"
     },
     delete: {
       title: "Supprimer l'email",
@@ -150,6 +157,21 @@ const fr = {
       confirmDelete: "Supprimer"
     },
     empty: "Aucun email trouvé",
+    loading: "Chargement des emails...",
+    retry: "Réessayer",
+    receivedAt: "Reçu le",
+    latestResponse: "Dernière réponse",
+    deleteSelected: "Supprimer sélectionnés",
+    replyModal: {
+      title: "Répondre à l'email",
+      replyTo: "Répondre à",
+      originalMessage: "Message original",
+      response: "Votre réponse",
+      placeholder: "Écrivez votre réponse ici...",
+      cancel: "Annuler",
+      send: "Envoyer",
+      sending: "Envoi en cours..."
+    },
     sendForm: {
       title: "Envoyer un nouvel email",
       name: "Nom du destinataire",
@@ -171,6 +193,29 @@ const fr = {
       templateCollaboration: "Collaboration",
       cancel: "Annuler",
       send: "Envoyer l'email"
+    }
+  },
+  mailingHistory: {
+    title: "Historique Mailing",
+    subtitle: "Consultez l'historique des envois d'emails aux entreprises",
+    loading: "Chargement de l'historique...",
+    retry: "Réessayer",
+    search: "Rechercher par entreprise, email ou lieu...",
+    empty: "Aucun envoi trouvé",
+    export: "Exporter",
+    sentAt: "Envoyé le",
+    status: {
+      sent: "Envoyé"
+    },
+    actions: {
+      delete: "Supprimer"
+    },
+    deleteSelected: "Supprimer sélectionnés",
+    delete: {
+      title: "Supprimer l'envoi",
+      confirm: "Êtes-vous sûr de vouloir supprimer cet envoi de l'historique ?",
+      cancel: "Annuler",
+      confirmDelete: "Supprimer"
     }
   },
 } as const;

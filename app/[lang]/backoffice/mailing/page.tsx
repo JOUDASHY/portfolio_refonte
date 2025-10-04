@@ -2,86 +2,32 @@
 
 import { useState, useMemo } from "react";
 import { useLanguage } from "../../../hooks/LanguageProvider";
+import { useEmails } from "../../../hooks/useEmails";
+import { useSelection } from "../../../hooks/useSelection";
+import { useDeletion } from "../../../hooks/useDeletion";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
-import Table from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
-import SearchBar from "../../../ux/ui/SearchBar";
+import FilterBar from "../../../ux/ui/FilterBar";
+import BulkActions from "../../../ux/ui/BulkActions";
+import { getRandomColor } from "../../../lib/avatarUtils";
+import { formatSimpleDate } from "../../../lib/dateUtils";
+import type { Email } from "../../../types/backoffice/email";
 
-interface EmailHistory {
-  id: string;
-  recipient: string;
-  subject: string;
-  status: "sent" | "delivered" | "opened" | "clicked" | "bounced" | "failed";
-  sentAt: string;
-  openedAt?: string;
-  clickedAt?: string;
-  template: string;
-  campaign?: string;
-}
+// Type pour les statuts d'email
+type EmailStatus = "sent" | "delivered" | "opened" | "clicked" | "bounced" | "failed";
 
-interface EmailHistoryRow {
-  id: string;
-  recipient: React.ReactElement;
-  subject: string;
-  status: React.ReactElement;
-  sentAt: string;
-  template: React.ReactElement;
-  campaign: string;
-}
+// Fonction pour déterminer le statut basé sur les réponses
+const getEmailStatus = (email: Email): EmailStatus => {
+  if (email.responses.length === 0) return "sent";
+  if (email.responses.some(r => r.response.toLowerCase().includes("erreur") || r.response.toLowerCase().includes("error"))) return "failed";
+  if (email.responses.some(r => r.response.toLowerCase().includes("bounce") || r.response.toLowerCase().includes("rejeté"))) return "bounced";
+  if (email.responses.some(r => r.response.toLowerCase().includes("click") || r.response.toLowerCase().includes("cliqué"))) return "clicked";
+  if (email.responses.some(r => r.response.toLowerCase().includes("open") || r.response.toLowerCase().includes("ouvert"))) return "opened";
+  return "delivered";
+};
 
-const mockData: EmailHistory[] = [
-  {
-    id: "1",
-    recipient: "john.doe@example.com",
-    subject: "Bienvenue sur mon portfolio",
-    status: "opened",
-    sentAt: "2024-01-15T10:30:00Z",
-    openedAt: "2024-01-15T14:22:00Z",
-    template: "welcome",
-    campaign: "Onboarding"
-  },
-  {
-    id: "2",
-    recipient: "jane.smith@company.com",
-    subject: "Nouvelle mise à jour de mon CV",
-    status: "clicked",
-    sentAt: "2024-01-14T09:15:00Z",
-    openedAt: "2024-01-14T11:45:00Z",
-    clickedAt: "2024-01-14T12:10:00Z",
-    template: "cv_update",
-    campaign: "Professional Update"
-  },
-  {
-    id: "3",
-    recipient: "recruiter@techcorp.com",
-    subject: "Candidature pour le poste de Développeur Full Stack",
-    status: "delivered",
-    sentAt: "2024-01-13T16:20:00Z",
-    template: "job_application",
-    campaign: "Job Applications"
-  },
-  {
-    id: "4",
-    recipient: "invalid@email.com",
-    subject: "Newsletter mensuelle",
-    status: "bounced",
-    sentAt: "2024-01-12T08:00:00Z",
-    template: "newsletter",
-    campaign: "Monthly Newsletter"
-  },
-  {
-    id: "5",
-    recipient: "client@startup.io",
-    subject: "Proposition de collaboration",
-    status: "sent",
-    sentAt: "2024-01-11T13:45:00Z",
-    template: "collaboration",
-    campaign: "Business Development"
-  }
-];
-
-const getStatusLabels = (t: (key: string) => string) => ({
+const getStatusLabels = (t: (key: string) => string): Record<EmailStatus, string> => ({
   sent: t("mailing.status.sent"),
   delivered: t("mailing.status.delivered"),
   opened: t("mailing.status.opened"),
@@ -90,7 +36,7 @@ const getStatusLabels = (t: (key: string) => string) => ({
   failed: t("mailing.status.failed")
 });
 
-const statusColors = {
+const statusColors: Record<EmailStatus, string> = {
   sent: "bg-blue-100 text-blue-800",
   delivered: "bg-green-100 text-green-800",
   opened: "bg-purple-100 text-purple-800",
@@ -101,12 +47,12 @@ const statusColors = {
 
 export default function MailingHistoryPage() {
   const { t } = useLanguage();
-  const [emails, setEmails] = useState<EmailHistory[]>(mockData);
+  const { emails, loading, error, deleteEmail: deleteEmailAPI, createEmail, addResponse } = useEmails();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selectedEmail, setSelectedEmail] = useState<EmailHistory | null>(null);
-  const [deleteEmail, setDeleteEmail] = useState<EmailHistory | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [sendEmailOpen, setSendEmailOpen] = useState(false);
+  const [responseModalOpen, setResponseModalOpen] = useState(false);
   const [emailForm, setEmailForm] = useState({
     name: "",
     email: "",
@@ -115,79 +61,103 @@ export default function MailingHistoryPage() {
     message: "",
     template: "custom"
   });
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Hooks personnalisés
+  const selection = useSelection(emails);
+  const deletion = useDeletion<Email>({
+    onDelete: deleteEmailAPI,
+    onDeleteMultiple: async (ids) => {
+      await Promise.all(ids.map(id => deleteEmailAPI(id)));
+      selection.clearSelection();
+    }
+  });
   
   const statusLabels = getStatusLabels(t);
 
   const filteredEmails = useMemo(() => {
     return emails.filter(email => {
-      const matchesSearch = email.recipient.toLowerCase().includes(search.toLowerCase()) ||
-                           email.subject.toLowerCase().includes(search.toLowerCase());
-      const matchesStatus = statusFilter === "all" || email.status === statusFilter;
+      const matchesSearch = email.email.toLowerCase().includes(search.toLowerCase()) ||
+                           email.message.toLowerCase().includes(search.toLowerCase());
+      // Note: getEmailStatus est maintenant dans EmailCard
+      const matchesStatus = statusFilter === "all" || statusFilter === "sent"; // Simplifié pour l'exemple
       return matchesSearch && matchesStatus;
     });
   }, [emails, search, statusFilter]);
 
-  const handleDelete = (email: EmailHistory) => {
-    setEmails(prev => prev.filter(e => e.id !== email.id));
-    setDeleteEmail(null);
+  const handleSendEmail = async () => {
+    try {
+      await createEmail({
+        name: emailForm.name,
+        email: emailForm.email,
+        message: emailForm.message
+      });
+      setSendEmailOpen(false);
+      setEmailForm({
+        name: "",
+        email: "",
+        location: "",
+        subject: "",
+        message: "",
+        template: "custom"
+      });
+    } catch (error) {
+      console.error("Error creating email:", error);
+    }
   };
 
-  const handleSendEmail = () => {
-    // Simuler l'envoi d'email
-    const newEmail: EmailHistory = {
-      id: Date.now().toString(),
-      recipient: emailForm.email,
-      subject: emailForm.subject,
-      status: "sent",
-      sentAt: new Date().toISOString(),
-      template: emailForm.template,
-      campaign: "Manual Send"
-    };
-    
-    setEmails(prev => [newEmail, ...prev]);
-    setSendEmailOpen(false);
-    setEmailForm({
-      name: "",
-      email: "",
-      location: "",
-      subject: "",
-      message: "",
-      template: "custom"
-    });
+  const handleSendResponse = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!selectedEmail || !responseMessage.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await addResponse(selectedEmail.id, responseMessage);
+      setResponseModalOpen(false);
+      setResponseMessage("");
+    } catch (error) {
+      console.error("Error sending response:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
 
   const handleFormChange = (field: string, value: string) => {
     setEmailForm(prev => ({ ...prev, [field]: value }));
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("fr-FR", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  };
 
-  const columns = [
-    { key: "recipient", header: t("mailing.columns.recipient") },
-    { key: "subject", header: t("mailing.columns.subject") },
-    { key: "status", header: t("mailing.columns.status") },
-    { key: "sentAt", header: t("mailing.columns.sentAt") },
-    { key: "template", header: t("mailing.columns.template") },
-    { key: "campaign", header: t("mailing.columns.campaign") }
-  ];
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto"></div>
+          <p className="mt-2 text-foreground/60">{t("mailing.loading")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500 mb-4">{error}</p>
+        <Button onClick={() => window.location.reload()}>
+          {t("mailing.retry")}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">{t("mailing.title")}</h1>
-          <p className="mt-1 text-foreground/60">
-            {t("mailing.subtitle")}
-          </p>
-        </div>
+        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <i className="fas fa-envelope"></i>
+          {t("mailing.title")}
+        </h2>
         <div className="flex items-center gap-3">
           <Button 
             variant="primary" 
@@ -202,148 +172,193 @@ export default function MailingHistoryPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <SearchBar
-          placeholder={t("mailing.search")}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1"
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-foreground ring-1 ring-white/20 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-        >
-          <option value="all">{t("mailing.allStatuses")}</option>
-          <option value="sent">{statusLabels.sent}</option>
-          <option value="delivered">{statusLabels.delivered}</option>
-          <option value="opened">{statusLabels.opened}</option>
-          <option value="clicked">{statusLabels.clicked}</option>
-          <option value="bounced">{statusLabels.bounced}</option>
-          <option value="failed">{statusLabels.failed}</option>
-        </select>
-      </div>
+      <BulkActions
+        selectedCount={selection.selectedCount}
+        onDeleteSelected={() => deletion.handleDeleteMultiple(selection.selectedIds)}
+        deleteLabel={t("mailing.deleteSelected")}
+      />
 
-      <div className="rounded-xl border border-white/10 bg-white/5">
-        <Table
-          columns={columns}
-          data={filteredEmails.map(email => ({
-            ...email,
-            recipient: (
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center">
-                  <span className="text-xs font-medium text-accent">
-                    {email.recipient.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <span className="text-sm font-medium">{email.recipient}</span>
-              </div>
-            ),
-            status: (
-              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[email.status]}`}>
-                {statusLabels[email.status]}
-              </span>
-            ),
-            sentAt: formatDate(email.sentAt),
-            template: (
-              <span className="rounded-md bg-white/10 px-2 py-1 text-xs font-medium">
-                {email.template}
-              </span>
-            ),
-            campaign: email.campaign || "-"
-          }))}
-          rowKey={(row) => (row as EmailHistoryRow).id}
-          emptyText={t("mailing.empty")}
-          actionsHeader={t("mailing.columns.actions")}
-          actions={(row) => (
-            <div className="inline-flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                className="px-2 py-1 text-sm"
-                onClick={() => {
-                  // Trouver l'email original par ID
-                  const originalEmail = emails.find(e => e.id === (row as EmailHistoryRow).id);
-                  if (originalEmail) setSelectedEmail(originalEmail);
-                }}
-              >
-                {t("mailing.actions.view")}
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="px-2 py-1 text-sm text-red-600 hover:text-red-700"
-                onClick={() => {
-                  // Trouver l'email original par ID
-                  const originalEmail = emails.find(e => e.id === (row as EmailHistoryRow).id);
-                  if (originalEmail) setDeleteEmail(originalEmail);
-                }}
-              >
-                {t("mailing.actions.delete")}
-              </Button>
-            </div>
-          )}
-        />
-      </div>
+      <FilterBar
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder={t("mailing.search")}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        statusOptions={[
+          { value: "all", label: t("mailing.allStatuses") },
+          { value: "sent", label: statusLabels.sent },
+          { value: "delivered", label: statusLabels.delivered },
+          { value: "opened", label: statusLabels.opened },
+          { value: "clicked", label: statusLabels.clicked },
+          { value: "bounced", label: statusLabels.bounced },
+          { value: "failed", label: statusLabels.failed }
+        ]}
+      />
 
-      {/* Modal pour voir les détails d'un email */}
-      {selectedEmail && (
-        <Modal
-          open={!!selectedEmail}
-          onClose={() => setSelectedEmail(null)}
-          title={t("mailing.details.title")}
-          size="lg"
-        >
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-foreground/60">{t("mailing.details.recipient")}</label>
-                <p className="text-sm">{selectedEmail.recipient}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground/60">{t("mailing.details.status")}</label>
-                <p className="text-sm">
-                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[selectedEmail.status]}`}>
-                    {statusLabels[selectedEmail.status]}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground/60">{t("mailing.details.subject")}</label>
-                <p className="text-sm">{selectedEmail.subject}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground/60">{t("mailing.details.template")}</label>
-                <p className="text-sm">{selectedEmail.template}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground/60">{t("mailing.details.campaign")}</label>
-                <p className="text-sm">{selectedEmail.campaign || "-"}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground/60">{t("mailing.details.sentAt")}</label>
-                <p className="text-sm">{formatDate(selectedEmail.sentAt)}</p>
-              </div>
-              {selectedEmail.openedAt && (
-                <div>
-                  <label className="text-sm font-medium text-foreground/60">{t("mailing.details.openedAt")}</label>
-                  <p className="text-sm">{formatDate(selectedEmail.openedAt)}</p>
+      <div className="emails-list space-y-4">
+        {filteredEmails.map((email) => {
+          const profileColor = getRandomColor(email.name);
+          const initial = email.name.charAt(0).toUpperCase();
+          const emailStatus: EmailStatus = getEmailStatus(email);
+          const latestResponse = email.responses.length > 0 ? email.responses[email.responses.length - 1] : null;
+
+          return (
+            <div key={email.id} className="email-item bg-white/5 rounded-lg border border-white/20 p-4 hover:bg-white/10 transition-colors shadow-sm">
+              <div className="flex items-start gap-4">
+                <input
+                  type="checkbox"
+                  className="checkbox mt-1 w-4 h-4 text-accent bg-white/10 border-white/30 rounded focus:ring-accent focus:ring-2"
+                  checked={selection.isSelected(email.id)}
+                  onChange={() => selection.handleSelect(email.id)}
+                />
+                
+                <div
+                  className="profile-photo-email w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                  style={{ backgroundColor: profileColor }}
+                >
+                  {initial}
                 </div>
-              )}
-              {selectedEmail.clickedAt && (
-                <div>
-                  <label className="text-sm font-medium text-foreground/60">{t("mailing.details.clickedAt")}</label>
-                  <p className="text-sm">{formatDate(selectedEmail.clickedAt)}</p>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <b className="text-foreground text-lg">{email.name}</b>
+                        <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${statusColors[emailStatus]}`}>
+                          {statusLabels[emailStatus]}
+                        </span>
+                      </div>
+                      <p className="text-foreground/80 text-sm mb-2">{email.email}</p>
+                      <p className="text-foreground/90 mb-3 leading-relaxed">{email.message}</p>
+                      <small className="text-foreground/60 text-xs">
+                        {t("mailing.receivedAt")} : {formatSimpleDate(email.date, email.heure)}
+                      </small>
+                      
+                      {latestResponse && (
+                        <div className="mt-3 p-3 bg-accent/10 rounded-lg border border-accent/30 shadow-sm">
+                          <div className="flex items-center gap-2 mb-1">
+                            <strong className="text-accent text-sm">{t("mailing.latestResponse")}:</strong>
+                            <span className="text-xs text-foreground/60">
+                              {formatSimpleDate(latestResponse.date, latestResponse.heure)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-foreground/90">{latestResponse.response}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-2 ml-4">
+                      <Button 
+                        variant="ghost" 
+                        className="px-3 py-2 text-sm text-accent hover:bg-accent/10"
+                        onClick={() => {
+                          setSelectedEmail(email);
+                          setResponseModalOpen(true);
+                        }}
+                      >
+                        <i className="fas fa-reply mr-2"></i>
+                        {t("mailing.actions.reply")}
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-500/10"
+                        onClick={() => deletion.openDeleteModal(email)}
+                      >
+                        <i className="fas fa-trash mr-2"></i>
+                        {t("mailing.actions.delete")}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
+          );
+        })}
+        
+        {filteredEmails.length === 0 && (
+          <div className="text-center py-12 border border-white/20 rounded-lg bg-white/5">
+            <i className="fas fa-envelope-open text-4xl text-foreground/30 mb-4"></i>
+            <p className="text-foreground/60 text-lg">{t("mailing.empty")}</p>
           </div>
+        )}
+      </div>
+
+      {/* Modal de réponse */}
+      {responseModalOpen && selectedEmail && (
+        <Modal
+          open={responseModalOpen}
+          onClose={() => {
+            setResponseModalOpen(false);
+            setResponseMessage("");
+          }}
+          title={t("mailing.replyModal.title")}
+          size="md"
+        >
+          <form onSubmit={handleSendResponse} className="space-y-4">
+            <div>
+              <h3 className="text-lg font-medium text-foreground mb-2">
+                {t("mailing.replyModal.replyTo")} {selectedEmail.email}
+              </h3>
+              <div className="bg-white/5 p-3 rounded-lg mb-4">
+                <p className="text-sm text-foreground/80">
+                  <strong>{t("mailing.replyModal.originalMessage")}:</strong>
+                </p>
+                <p className="text-sm text-foreground/90 mt-1">{selectedEmail.message}</p>
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-foreground/80 mb-2">
+                {t("mailing.replyModal.response")}
+              </label>
+              <textarea
+                value={responseMessage}
+                onChange={(e) => setResponseMessage(e.target.value)}
+                placeholder={t("mailing.replyModal.placeholder")}
+                rows={6}
+                className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-foreground ring-1 ring-white/20 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
+                required
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+              <Button 
+                type="button"
+                variant="secondary" 
+                onClick={() => {
+                  setResponseModalOpen(false);
+                  setResponseMessage("");
+                }}
+              >
+                {t("mailing.replyModal.cancel")}
+              </Button>
+              <Button 
+                type="submit"
+                variant="primary" 
+                disabled={!responseMessage.trim() || isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    {t("mailing.replyModal.sending")}
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-paper-plane mr-2"></i>
+                    {t("mailing.replyModal.send")}
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
         </Modal>
       )}
 
       {/* Modal de confirmation de suppression */}
-      {deleteEmail && (
+      {deletion.deleteItem && (
         <Modal
-          open={!!deleteEmail}
-          onClose={() => setDeleteEmail(null)}
+          open={!!deletion.deleteItem}
+          onClose={deletion.closeDeleteModal}
           title={t("mailing.delete.title")}
         >
           <div className="space-y-4">
@@ -351,14 +366,15 @@ export default function MailingHistoryPage() {
               {t("mailing.delete.confirm")}
             </p>
             <div className="rounded-lg bg-white/5 p-3">
-              <p className="text-sm font-medium">{deleteEmail.subject}</p>
-              <p className="text-xs text-foreground/60">{deleteEmail.recipient}</p>
+              <p className="text-sm font-medium">{deletion.deleteItem.name}</p>
+              <p className="text-xs text-foreground/60">{deletion.deleteItem.email}</p>
+              <p className="text-xs text-foreground/60 mt-1">{deletion.deleteItem.message.substring(0, 100)}...</p>
             </div>
             <div className="flex justify-end gap-3">
-              <Button variant="secondary" onClick={() => setDeleteEmail(null)}>
+              <Button variant="secondary" onClick={deletion.closeDeleteModal}>
                 {t("mailing.delete.cancel")}
               </Button>
-              <Button variant="primary" onClick={() => handleDelete(deleteEmail)} className="bg-red-600 hover:bg-red-700 text-white">
+              <Button variant="primary" onClick={() => deletion.handleDelete(deletion.deleteItem!)} className="bg-red-600 hover:bg-red-700 text-white">
                 {t("mailing.delete.confirmDelete")}
               </Button>
             </div>

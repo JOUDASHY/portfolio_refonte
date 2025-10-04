@@ -43,11 +43,11 @@ export default function Navbar() {
             <span className="font-semibold tracking-wide text-xs sm:text-base text-foreground">{t("brand")}</span>
           </Link>
 
-          <button
-            aria-label="Toggle menu"
-            className="inline-flex items-center justify-center rounded-md p-1.5 sm:p-2 text-white/90 hover:text-white focus:outline-none focus:ring-2 ring-accent sm:hidden"
-            onClick={() => setIsOpen((v) => !v)}
-          >
+           <button
+             aria-label="Toggle menu"
+             className="inline-flex items-center justify-center rounded-md p-1.5 sm:p-2 text-foreground/90 hover:text-foreground focus:outline-none focus:ring-2 ring-accent sm:hidden"
+             onClick={() => setIsOpen((v) => !v)}
+           >
             <svg
               className="h-5 w-5 sm:h-6 sm:w-6"
               fill="none"
@@ -94,7 +94,11 @@ export default function Navbar() {
               <button
                 aria-label="Toggle theme"
                 onClick={toggle}
-                className="toggle-theme-contrast relative h-3 w-6 sm:h-4 sm:w-8 rounded-full hover:ring-white/20 transition-colors flex-shrink-0"
+                className="toggle-theme-contrast relative h-3 w-6 sm:h-4 sm:w-8 rounded-full transition-colors flex-shrink-0"
+                style={{
+                  backgroundColor: theme === "light" ? "rgba(0, 0, 0, 0.15)" : "rgba(255, 255, 255, 0.15)",
+                  borderColor: theme === "light" ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.2)"
+                }}
               >
                 <span className="pointer-events-none absolute left-0.5 top-0.5 text-xs">🌙</span>
                 <span className="pointer-events-none absolute right-0.5 top-0.5 text-xs">☀️</span>

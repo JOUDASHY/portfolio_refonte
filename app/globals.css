@@ -102,6 +102,26 @@ html {
   border: 1px solid #d1d5db; 
 }
 
+/* Toggle theme button styles */
+.toggle-theme {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+[data-theme="light"] .toggle-theme {
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Toggle theme button with proper contrast */
+.toggle-theme-contrast {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+[data-theme="light"] .toggle-theme-contrast {
+  background-color: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
 /* Text size utilities backed by variables */
 .text-var-title { font-size: var(--fs-title); }
 .text-var-body { font-size: var(--fs-body); }

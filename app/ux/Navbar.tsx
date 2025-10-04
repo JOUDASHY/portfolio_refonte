@@ -94,7 +94,7 @@ export default function Navbar() {
               <button
                 aria-label="Toggle theme"
                 onClick={toggle}
-                className="relative h-3 w-6 sm:h-4 sm:w-8 rounded-full bg-white/10 ring-1 ring-white/10 hover:ring-white/20 transition-colors flex-shrink-0"
+                className="toggle-theme-contrast relative h-3 w-6 sm:h-4 sm:w-8 rounded-full hover:ring-white/20 transition-colors flex-shrink-0"
               >
                 <span className="pointer-events-none absolute left-0.5 top-0.5 text-xs">🌙</span>
                 <span className="pointer-events-none absolute right-0.5 top-0.5 text-xs">☀️</span>

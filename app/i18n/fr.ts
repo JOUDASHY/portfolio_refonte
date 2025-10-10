@@ -44,7 +44,7 @@ const fr = {
     title: "À propos de moi",
     subtitle: "Développeur Full‑Stack",
     description:
-      "Je conçois et réalise des applications web modernes, performantes et accessibles, du design à la mise en production.",
+      "Je suis un développeur full-stack et administrateur système passionné, basé à Isada, Fianarantsoa. Avec une solide base en développement logiciel et en gestion des systèmes d’information, je conçois et réalise des applications web dynamiques et des sites responsives en utilisant des technologies modernes comme Django, Laravel et React. En tant qu’administrateur système, je gère des infrastructures serveurs robustes en mettant en place des mesures de sécurité avancées, en optimisant les performances et en assurant une haute disponibilité. Cette double expertise me permet d’intégrer harmonieusement le développement et les opérations IT, afin de proposer des solutions complètes, innovantes et fiables. Que ce soit sur des projets personnels ou des défis professionnels complexes, je cherche constamment à améliorer mes compétences et à appliquer les meilleures pratiques pour concilier innovation et efficacité opérationnelle.",
     profile: {
       label: "Profil",
       location: "Localisation",

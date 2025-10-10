@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useProjects } from "../hooks/useProjects";
 
@@ -35,6 +35,37 @@ function ProjectGrid() {
     setStars((s) => ({ ...s, [id]: (s[id] ?? 0) + 1 }));
   };
 
+  function AnimatedCard({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
+    const ref = useRef<HTMLLIElement | null>(null);
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisible(true);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
+    return (
+      <li
+        ref={ref}
+        className={`${visible ? "animate-fade-in-up" : "opacity-0 translate-y-3"} group rounded-xl sm:rounded-2xl overflow-hidden card-border transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]`}
+        style={visible ? { animationDelay: `${delayMs}ms` } : undefined}
+      >
+        {children}
+      </li>
+    );
+  }
+
   if (error) {
     return (
       <div className="mb-4 sm:mb-6 rounded-md bg-red-50 p-3 text-var-caption text-red-700 ring-1 ring-red-200">{error}</div>
@@ -58,11 +89,8 @@ function ProjectGrid() {
               </div>
             </li>
           ))
-        : items.map((p) => (
-            <li
-              key={p.id}
-              className="group rounded-xl sm:rounded-2xl overflow-hidden card-border transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
-            >
+        : items.map((p, idx) => (
+            <AnimatedCard key={p.id} delayMs={idx * 120}>
               <div className="relative h-28 sm:h-36 lg:h-48 w-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
                 <Image src={p.image} alt={p.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-4 sm:p-6" />
@@ -87,7 +115,7 @@ function ProjectGrid() {
                   </a>
                 </div>
               </div>
-            </li>
+            </AnimatedCard>
           ))}
     </ul>
   );

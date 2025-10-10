@@ -1,12 +1,43 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useTheme } from "../components/ThemeProvider";
 
 export default function About() {
   const { t } = useLanguage();
   const { theme } = useTheme();
+  function AnimatedBox({ children, delayMs = 0 }: { children: React.ReactNode; delayMs?: number }) {
+    const ref = useRef<HTMLDivElement | null>(null);
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisible(true);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
+    return (
+      <div
+        ref={ref}
+        className={`${visible ? "animate-fade-in-up" : "opacity-0 translate-y-3"}`}
+        style={visible ? { animationDelay: `${delayMs}ms` } : undefined}
+      >
+        {children}
+      </div>
+    );
+  }
   return (
     <section
       id="about"
@@ -15,31 +46,40 @@ export default function About() {
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl sm:rounded-3xl border border-accent/30 bg-navy p-4 sm:p-6 lg:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+          <AnimatedBox>
           <div className="flex items-center gap-2 sm:gap-3 font-medium text-white/90">
             <span className="inline-flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15">
               <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm text-accent"><path d="M12 2l2.39 4.84L20 8l-3.5 3.41L17.48 18 12 15.6 6.52 18 7.5 11.41 4 8l5.61-1.16L12 2z"/></svg>
             </span>
             <span className="text-var-caption tracking-wider font-medium">INNOVATIVE DEVELOPER</span>
           </div>
+          </AnimatedBox>
 
+          <AnimatedBox delayMs={80}>
           <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3">
             <div className="relative h-10 w-10 sm:h-12 sm:w-12 overflow-hidden rounded-lg ring-2 ring-accent/60">
               <Image src="/logo_nil.png" alt="Profile" fill sizes="(max-width: 640px) 40px, 48px" className="object-contain p-1" />
             </div>
             <h2 className="text-var-title sm:text-3xl font-extrabold text-white">Nilsen</h2>
           </div>
+          </AnimatedBox>
 
+          <AnimatedBox delayMs={160}>
           <div className="mt-4 sm:mt-6">
             <h3 className="text-var-body sm:text-2xl font-semibold text-white inline-flex flex-col">
               <span>{t("about.subtitle")}</span>
               <span className="mt-2 h-[2px] sm:h-[3px] w-20 sm:w-28 rounded bg-accent" />
             </h3>
           </div>
+          </AnimatedBox>
 
-          <p className="mt-4 sm:mt-6 text-var-caption sm:text-base text-white/90 leading-relaxed">
-            {t("about.description")}
-          </p>
+          <AnimatedBox delayMs={240}>
+            <p className="mt-4 sm:mt-6 text-var-caption sm:text-base text-white/90 leading-relaxed">
+              {t("about.description")}
+            </p>
+          </AnimatedBox>
 
+          <AnimatedBox delayMs={320}>
           <div className="mt-4 sm:mt-6 grid grid-cols-1 gap-3 sm:gap-4">
             <ContactBlock
               icon={(<svg viewBox="0 0 24 24" fill="currentColor" className="icon-sm sm:icon-md"><path d="M21 8V7l-3 2-5-3-5 3-3-2v1l3 2v5l5 3 5-3V10l3-2z"/></svg>)}
@@ -52,16 +92,24 @@ export default function About() {
               value="Isada ,Fianarantsoa"
             />
           </div>
+          </AnimatedBox>
 
           <div className="mt-4 sm:mt-6 flex flex-wrap gap-1.5 sm:gap-2">
             {[
               "React","Nextjs","Laravel","Nginx","IIS Web Server",
               "Mysql","Docker","Python","Django","SSL Encryption","Git",
-            ].map((tag) => (
-              <span key={tag} className="rounded-full bg-white/10 px-2 sm:px-3 py-1 text-xs text-white/90 ring-1 ring-white/15">{tag}</span>
+            ].map((tag, idx) => (
+              <span
+                key={tag}
+                className="rounded-full bg-white/10 px-2 sm:px-3 py-1 text-xs text-white/90 ring-1 ring-white/15 opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${360 + idx * 80}ms` }}
+              >
+                {tag}
+              </span>
             ))}
           </div>
 
+          <AnimatedBox delayMs={360 + 80 * 10}>
           <div className="mt-6 sm:mt-8 flex flex-wrap gap-2 sm:gap-3">
             <a href="https://linkedin.com" target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white/10 px-3 sm:px-5 py-1.5 sm:py-2 text-white ring-1 ring-white/20 hover:bg-white/15 transition-all duration-200">
               <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V24h-4V8zm7 0h3.8v2.2h.1c.5-1 1.8-2.2 3.7-2.2 4 0 4.7 2.6 4.7 6V24h-4v-7.5c0-1.8 0-4.1-2.5-4.1-2.5 0-2.9 2-2.9 4V24h-4V8z"/></svg>
@@ -76,6 +124,7 @@ export default function About() {
               <span className="text-var-caption sm:text-sm">Download CV</span>
             </a>
           </div>
+          </AnimatedBox>
         </div>
       </div>
     </section>

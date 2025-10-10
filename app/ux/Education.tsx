@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import type { Education as EducationModel } from "../types/models";
 import { educationService } from "../services/backoffice/educationService";
@@ -39,6 +39,39 @@ export default function Education() {
     };
   }, []);
 
+  function AnimatedListItem({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
+    const ref = useRef<HTMLLIElement | null>(null);
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisible(true);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
+
+    return (
+      <li
+        ref={ref}
+        className={`${visible ? "animate-fade-in-up" : "opacity-0 translate-y-3"} mb-8 sm:mb-10 ms-4 sm:ms-6`}
+        style={visible ? { animationDelay: `${delayMs}ms` } : undefined}
+      >
+        {children}
+      </li>
+    );
+  }
+
   return (
     <section id="education" className="relative bg-white-var py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -68,7 +101,7 @@ export default function Education() {
                 </li>
               ))
             : items.map((e: Edu, idx) => (
-                <li key={idx} className="mb-8 sm:mb-10 ms-4 sm:ms-6">
+                <AnimatedListItem key={idx} delayMs={idx * 120}>
                   <span className="absolute -start-2 sm:-start-3 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-accent ring-2 sm:ring-4 ring-white-var" />
                   <div className="rounded-xl sm:rounded-2xl bg-white-var p-4 sm:p-6 ring-1 ring-black/5 shadow-sm">
                     <p className="text-var-caption sm:text-sm text-navy/60">{e.period}</p>
@@ -76,7 +109,7 @@ export default function Education() {
                     <p className="text-var-caption sm:text-base text-navy/80">{e.school}</p>
                     {e.detail && <p className="mt-2 text-var-caption sm:text-sm text-navy/70">{e.detail}</p>}
                   </div>
-                </li>
+                </AnimatedListItem>
               ))}
         </ol>
       </div>

@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useTheme } from "../components/ThemeProvider";
+import ThemeToggle from "./ui/ThemeToggle";
 
 export default function Navbar() {
   // ULTRA COMPACT BUTTONS - FORCE RELOAD
@@ -91,23 +92,7 @@ export default function Navbar() {
               >
                 {lang === "en" ? "FR" : "EN"}
               </button>
-              <button
-                aria-label="Toggle theme"
-                onClick={toggle}
-                className="toggle-theme-contrast relative h-3 w-6 sm:h-4 sm:w-8 rounded-full transition-colors flex-shrink-0"
-                style={{
-                  backgroundColor: theme === "light" ? "rgba(0, 0, 0, 0.15)" : "rgba(255, 255, 255, 0.15)",
-                  borderColor: theme === "light" ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.2)"
-                }}
-              >
-                <span className="pointer-events-none absolute left-0.5 top-0.5 text-xs">🌙</span>
-                <span className="pointer-events-none absolute right-0.5 top-0.5 text-xs">☀️</span>
-                <span
-                  className={`absolute top-0.5 left-0.5 h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-accent transition-transform ${
-                    theme === "light" ? "translate-x-2 sm:translate-x-3" : "translate-x-0"
-                  }`}
-                />
-              </button>
+              <ThemeToggle />
             </li>
           </ul>
         </nav>
@@ -137,19 +122,7 @@ export default function Navbar() {
                 </button>
               </li>
               <li>
-                <button
-                  aria-label="Toggle theme"
-                  onClick={toggle}
-                  className="mt-1 sm:mt-2 relative w-full rounded-md py-1 sm:py-1.5 ring-1 ring-white/10 hover:bg-white/5 transition-colors"
-                >
-                  <span className="pointer-events-none absolute left-2 sm:left-3 lg:left-4 top-1.5 sm:top-2 lg:top-2.5 text-xs">🌙</span>
-                  <span className="pointer-events-none absolute right-2 sm:right-3 lg:right-4 top-1.5 sm:top-2 lg:top-2.5 text-xs">☀️</span>
-                  <span
-                    className={`pointer-events-none absolute top-1/2 -mt-2 sm:-mt-2.5 lg:-mt-3 left-1.5 sm:left-2 lg:left-3 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 rounded-full bg-accent transition-transform ${
-                      theme === "light" ? "translate-x-[calc(100%-1rem-0.5rem)] sm:translate-x-[calc(100%-1.25rem-0.5rem)] lg:translate-x-[calc(100%-1.5rem-0.5rem)]" : "translate-x-0"
-                    }`}
-                  />
-                </button>
+                <ThemeToggle variant="block" />
               </li>
             </ul>
           </div>

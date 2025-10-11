@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-3 items-start">
           {/* Column 1: Portfolio Info */}
           <div className="flex flex-col items-center sm:items-start gap-2">
-            <h3 className="text-foreground font-bold text-sm sm:text-base">Nilsen's Portfolio</h3>
+            <h3 className="text-foreground font-bold text-sm sm:text-base">Nilsen&apos;s Portfolio</h3>
             <p className="text-foreground/70 text-xs sm:text-sm text-center sm:text-left">
               Développeur Web & Administrateur Système
             </p>

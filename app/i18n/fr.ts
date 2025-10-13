@@ -66,6 +66,10 @@ const fr = {
     stars: "étoiles",
     addStar: "Ajouter une étoile",
     view: "Voir le projet",
+    rating: "Note",
+    rateProject: "Noter ce projet",
+    averageRating: "Note moyenne",
+    totalRatings: "Total des notes",
   },
   contact: {
     title: "Contact",

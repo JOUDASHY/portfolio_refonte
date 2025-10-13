@@ -5,6 +5,15 @@ export type RatingSummary = {
   ratings_details: { score: number; ip_address: string }[];
 };
 
-export type RatingCreateRequest = { project_id: number; score: number };
+export type RatingCreateRequest = { 
+  project_id: number; 
+  score: number;
+};
+
+export type RatingCreateResponse = {
+  message: string;
+  score: number;
+  ip_address: string;
+};
 
 

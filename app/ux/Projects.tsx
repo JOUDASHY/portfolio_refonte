@@ -3,12 +3,16 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
+import { useTheme } from "../components/ThemeProvider";
+import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 import { useProjects } from "../hooks/useProjects";
 
 export default function Projects() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   return (
-    <section id="projects" className="relative bg-background py-16 sm:py-20 lg:py-24">
+    <section id="projects" className="relative bg-background py-16 sm:py-20 lg:py-24 border-b-2" style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 sm:mb-10 lg:mb-12">
           <h2 className="text-var-title sm:text-3xl lg:text-4xl font-extrabold text-foreground">{t("projects.title")}</h2>
@@ -23,17 +27,6 @@ export default function Projects() {
 function ProjectGrid() {
   const { t } = useLanguage();
   const { items, loading, error } = useProjects();
-  const [stars, setStars] = useState<Record<number, number>>({});
-
-  useEffect(() => {
-    if (!loading && items.length) {
-      setStars(Object.fromEntries(items.map((p) => [p.id, p.initialStars])));
-    }
-  }, [loading, items]);
-
-  const addStar = (id: number) => {
-    setStars((s) => ({ ...s, [id]: (s[id] ?? 0) + 1 }));
-  };
 
   function AnimatedCard({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
     const ref = useRef<HTMLLIElement | null>(null);
@@ -91,33 +84,91 @@ function ProjectGrid() {
           ))
         : items.map((p, idx) => (
             <AnimatedCard key={p.id} delayMs={idx * 120}>
-              <div className="relative h-28 sm:h-36 lg:h-48 w-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
-                <Image src={p.image} alt={p.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-4 sm:p-6" />
-                <div className="absolute left-2 top-2 sm:left-3 sm:top-3 lg:left-4 lg:top-4 rounded-full bg-black/40 px-2 py-0.5 sm:px-3 sm:py-1 text-var-caption sm:text-sm text-white backdrop-blur">
-                  <span className="inline-flex items-center gap-0.5 sm:gap-1"><StarIcon className="icon-xs sm:icon-sm text-accent" /> {stars[p.id] ?? 0}</span>
-                </div>
-              </div>
-              <div className="p-3 sm:p-4 lg:p-6">
-                <h3 className="text-var-caption sm:text-base text-foreground font-semibold tracking-wide">{p.title}</h3>
-                <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center justify-between">
-                  <Stars value={stars[p.id] ?? 0} />
-                  <button
-                    className="inline-flex items-center gap-1 sm:gap-2 rounded-full bg-accent px-2 py-1 sm:px-3 sm:py-1.5 text-var-caption sm:text-sm font-medium text-navy hover:brightness-110 transition-all duration-200"
-                    onClick={() => addStar(p.id)}
-                  >
-                    <StarIcon className="icon-xs sm:icon-sm" /> {t("projects.addStar")}
-                  </button>
-                </div>
-                <div className="mt-2 sm:mt-3 lg:mt-5">
-                  <a href={p.href || "#"} className="text-var-caption sm:text-sm text-foreground/80 hover:text-foreground underline">
-                    {t("projects.view")}
-                  </a>
-                </div>
-              </div>
+              <ProjectCard project={p} />
             </AnimatedCard>
           ))}
     </ul>
+  );
+}
+
+function ProjectCard({ project }: { project: { id: number; title: string; image: string; href?: string; initialStars: number } }) {
+  const { t } = useLanguage();
+  const [currentRating, setCurrentRating] = useState(project.initialStars);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleRating = async (score: number) => {
+    setSubmitting(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/rating/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          project_id: project.id,
+          score: score
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit rating');
+      }
+      
+      // Update local state optimistically
+      setCurrentRating(score);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to submit rating");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="relative h-28 sm:h-36 lg:h-48 w-full">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
+        <Image src={project.image} alt={project.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-4 sm:p-6" />
+        <div className="absolute left-2 top-2 sm:left-3 sm:top-3 lg:left-4 lg:top-4 rounded-full bg-black/40 px-2 py-0.5 sm:px-3 sm:py-1 text-var-caption sm:text-sm text-white backdrop-blur">
+          <span className="inline-flex items-center gap-0.5 sm:gap-1">
+            <StarIcon className="icon-xs sm:icon-sm text-accent" /> 
+            {currentRating}
+          </span>
+        </div>
+      </div>
+      <div className="p-3 sm:p-4 lg:p-6">
+        <h3 className="text-var-caption sm:text-base text-foreground font-semibold tracking-wide">{project.title}</h3>
+        <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center justify-between">
+          <Stars value={currentRating} />
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((score) => (
+              <button
+                key={score}
+                className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+                  currentRating >= score
+                    ? 'bg-accent text-navy'
+                    : 'bg-foreground/20 text-foreground/60 hover:bg-foreground/30'
+                } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
+                onClick={() => handleRating(score)}
+                disabled={submitting}
+                title={`Rate ${score} star${score > 1 ? 's' : ''}`}
+              >
+                <StarIcon className="icon-xs sm:icon-sm" filled={currentRating >= score} />
+              </button>
+            ))}
+          </div>
+        </div>
+        {error && (
+          <div className="mt-2 text-xs text-red-500">{error}</div>
+        )}
+        <div className="mt-2 sm:mt-3 lg:mt-5">
+          <a href={project.href || "#"} className="text-var-caption sm:text-sm text-foreground/80 hover:text-foreground underline">
+            {t("projects.view")}
+          </a>
+        </div>
+      </div>
+    </>
   );
 }
 

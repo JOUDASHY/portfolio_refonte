@@ -1,11 +1,41 @@
 "use client";
 
+import { useProfile } from "../hooks/useProfile";
+
 export default function SocialDock() {
-  const items = [
-    { href: "https://www.linkedin.com/", label: "LinkedIn", icon: LinkedInIcon },
-    { href: "https://github.com/", label: "GitHub", icon: GitHubIcon },
-    { href: "https://dribbble.com/", label: "Dribbble", icon: DribbbleIcon },
-  ];
+  const { profile, loading } = useProfile();
+  
+  // Créer la liste des liens sociaux dynamiquement
+  const items = [];
+  
+  if (profile?.link_linkedin) {
+    items.push({ href: profile.link_linkedin, label: "LinkedIn", icon: LinkedInIcon });
+  }
+  
+  if (profile?.link_github) {
+    items.push({ href: profile.link_github, label: "GitHub", icon: GitHubIcon });
+  }
+  
+  if (profile?.link_facebook) {
+    items.push({ href: profile.link_facebook, label: "Facebook", icon: FacebookIcon });
+  }
+  
+  // Afficher un skeleton pendant le chargement
+  if (loading) {
+    return (
+      <div className="pointer-events-auto fixed bottom-6 right-6 z-50">
+        <div className="flex items-center gap-4 rounded-full bg-white/10 px-4 py-2 ring-2 ring-accent backdrop-blur-sm border border-accent/50">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy/50 animate-pulse" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy/50 animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+  
+  // Si aucun lien social n'est disponible, ne pas afficher le dock
+  if (items.length === 0) {
+    return null;
+  }
 
   return (
     <div className="pointer-events-auto fixed bottom-6 right-6 z-50">
@@ -43,10 +73,10 @@ function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function DribbbleIcon(props: React.SVGProps<SVGSVGElement>) {
+function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm6.92 6.41a8.08 8.08 0 0 1 1.69 4.99c0 .25-.01.5-.04.74-2.43-.5-4.58-.42-6.36.26-.2-.5-.38-.93-.65-1.52 2.92-1.36 4.46-3.3 5.36-4.47zM12 4c1.9 0 3.65.63 5.06 1.69-.73 1.03-2.1 2.6-4.63 3.78A36.2 36.2 0 0 0 9.9 6.1C10.63 4.86 11.3 4 12 4zM8.54 6.67c.9.98 1.77 2.16 2.54 3.5-2.8.83-6.35 1.08-7.85 1.1A8.03 8.03 0 0 1 8.54 6.67zM4.1 12.69c1.76-.04 5.9-.23 9.13-1.37.28.6.52 1.15.73 1.69-3.08.94-5.37 2.74-6.8 4.24A7.95 7.95 0 0 1 4.1 12.7zm4.77 5.93c1.37-1.35 3.3-2.9 6.04-3.67.65 1.8 1.1 3.55 1.35 5.06A7.97 7.97 0 0 1 12 20a7.96 7.96 0 0 1-3.13-.38z" />
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
   );
 }

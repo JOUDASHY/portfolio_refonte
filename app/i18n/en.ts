@@ -66,6 +66,10 @@ const en = {
     stars: "stars",
     addStar: "Add a star",
     view: "View project",
+    rating: "Rating",
+    rateProject: "Rate this project",
+    averageRating: "Average rating",
+    totalRatings: "Total ratings",
   },
   contact: {
     title: "Contact",

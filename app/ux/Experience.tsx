@@ -2,11 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
+import { useTheme } from "../components/ThemeProvider";
+import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 import { useExperiences } from "../hooks/useExperiences";
 
 export default function Experience() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
   const { items, loading, error } = useExperiences();
+  const isDark = theme === "dark";
   function AnimatedItem({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
     const ref = useRef<HTMLLIElement | null>(null);
     const [visible, setVisible] = useState(false);
@@ -38,7 +42,7 @@ export default function Experience() {
     );
   }
   return (
-    <section id="experience" className="relative bg-background py-16 sm:py-20 lg:py-24">
+    <section id="experience" className="relative bg-background py-16 sm:py-20 lg:py-24 border-b-2" style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 sm:mb-10 lg:mb-12">
           <h2 className="text-var-title sm:text-3xl lg:text-4xl font-extrabold text-foreground">{t("experience.title")}</h2>

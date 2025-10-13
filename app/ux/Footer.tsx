@@ -1,19 +1,23 @@
 "use client";
 
 import { useLanguage } from "../hooks/LanguageProvider";
+import { useProfile } from "../hooks/useProfile";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const { profile, loading } = useProfile();
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-background">
+    <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-background shadow-lg shadow-black/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-3 items-start">
           {/* Column 1: Portfolio Info */}
           <div className="flex flex-col items-center sm:items-start gap-2">
-            <h3 className="text-foreground font-bold text-sm sm:text-base">Nilsen&apos;s Portfolio</h3>
+            <h3 className="text-foreground font-bold text-sm sm:text-base">
+              {loading ? "Loading..." : `${profile?.username || "Nilsen"}'s Portfolio`}
+            </h3>
             <p className="text-foreground/70 text-xs sm:text-sm text-center sm:text-left">
-              Développeur Web & Administrateur Système
+              {loading ? "Loading..." : "Développeur Web & Administrateur Système"}
             </p>
           </div>
 
@@ -45,27 +49,38 @@ export default function Footer() {
           <div className="flex flex-col items-center sm:items-end gap-3">
             <h3 className="text-foreground font-bold text-sm sm:text-base">Contact Info</h3>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
-                <PhoneIcon className="w-4 h-4" />
-                <span>+261 348655523</span>
-              </div>
+              {profile?.phone_number && (
+                <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
+                  <PhoneIcon className="w-4 h-4" />
+                  <span>+261 {profile.phone_number}</span>
+                </div>
+              )}
               <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
                 <EmailIcon className="w-4 h-4" />
-                <span>alitsiryeddynilsen@gmail.com</span>
+                <span>{loading ? "Loading..." : profile?.email || "alitsiryeddynilsen@gmail.com"}</span>
               </div>
               <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
                 <LocationIcon className="w-4 h-4" />
-                <span>Isada, Fianarantsoa</span>
+                <span>{loading ? "Loading..." : profile?.address || "Isada, Fianarantsoa"}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
-                <LinkedInIcon className="w-4 h-4" />
-              </a>
-              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer noopener" aria-label="Facebook" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
-                <FacebookIcon className="w-4 h-4" />
-              </a>
-              <a href="mailto:alitsiryeddynilsen@gmail.com" aria-label="Email" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+              {profile?.link_linkedin && (
+                <a href={profile.link_linkedin} target="_blank" rel="noreferrer noopener" aria-label="LinkedIn" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+                  <LinkedInIcon className="w-4 h-4" />
+                </a>
+              )}
+              {profile?.link_facebook && (
+                <a href={profile.link_facebook} target="_blank" rel="noreferrer noopener" aria-label="Facebook" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+                  <FacebookIcon className="w-4 h-4" />
+                </a>
+              )}
+              {profile?.link_github && (
+                <a href={profile.link_github} target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+                  <GitHubIcon className="w-4 h-4" />
+                </a>
+              )}
+              <a href={`mailto:${profile?.email || "alitsiryeddynilsen@gmail.com"}`} aria-label="Email" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
                 <EmailIcon className="w-4 h-4" />
               </a>
             </div>
@@ -75,7 +90,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-6 pt-4 border-t border-white/10">
           <p className="text-center text-foreground/70 text-xs sm:text-sm">
-            Designed by <span className="text-accent font-semibold">Nilsen</span>
+            Designed by <span className="text-accent font-semibold">{loading ? "Loading..." : profile?.username || "Nilsen"}</span>
           </p>
         </div>
       </div>

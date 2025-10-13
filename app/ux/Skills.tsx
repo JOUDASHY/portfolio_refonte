@@ -1,16 +1,20 @@
 "use client";
 
 import { useLanguage } from "../hooks/LanguageProvider";
+import { useTheme } from "../components/ThemeProvider";
 import { useSkills } from "../hooks/useSkills";
+import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 
 export default function Skills() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
   const { grouped, loading, error } = useSkills();
+  const isDark = theme === "dark";
 
   const categories = loading ? ["Frontend", "Backend", "Tooling"] : Array.from(grouped.keys());
 
   return (
-    <section id="skills" className="relative bg-background py-16 sm:py-20 lg:py-24">
+    <section id="skills" className="relative bg-background py-16 sm:py-20 lg:py-24 border-b-2" style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 sm:mb-10 lg:mb-12">
           <h2 className="text-var-title sm:text-3xl lg:text-4xl font-extrabold text-foreground">{t("skills.title")}</h2>

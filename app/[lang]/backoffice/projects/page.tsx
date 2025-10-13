@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
@@ -282,7 +283,7 @@ export default function ProjectsPage() {
             <div className="flex flex-wrap gap-2">
               {uploadPreviews.map((src, i) => (
                 <div key={i} className="relative h-16 w-16 overflow-hidden rounded bg-black/5">
-                  <img src={src} alt="preview" className="h-full w-full object-cover" />
+                  <Image src={src} alt="preview" fill sizes="64px" className="object-cover" />
                 </div>
               ))}
             </div>

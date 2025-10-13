@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
@@ -8,6 +9,7 @@ import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import SafeImage from "../../../ux/ui/SafeImage";
 import { educationService } from "../../../services/backoffice/educationService";
+import type { Education as EducationModel } from "../../../types/models";
 
 type EducationRow = {
   id: string;
@@ -44,7 +46,7 @@ export default function EducationPage() {
     try {
       const { data } = await educationService.list();
       const list = Array.isArray(data)
-        ? data.map((e: any) => ({
+        ? (data as EducationModel[]).map((e) => ({
             id: String(e.id),
             image: e.image || null,
             nom_ecole: String(e.nom_ecole || ""),
@@ -260,14 +262,14 @@ export default function EducationPage() {
             {previewUrl && (
               <div className="mt-2 inline-flex items-center gap-3">
                 <div className="relative h-12 w-12 overflow-hidden rounded bg-black/5">
-                  <img src={previewUrl} alt="Prévisualisation" className="h-full w-full object-cover" />
+                  <Image src={previewUrl} alt="Prévisualisation" fill sizes="48px" className="object-cover" />
                 </div>
                 <button
                   type="button"
                   className="text-xs text-foreground/70 hover:text-foreground"
                   onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setImageFile(null); }}
                 >
-                  Retirer l'image
+                  Retirer l&apos;image
                 </button>
               </div>
             )}

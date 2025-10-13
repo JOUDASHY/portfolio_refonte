@@ -18,6 +18,7 @@ export default function SkillsPage() {
   const [editingId, setEditingId] = useState<number | string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const filtered = useMemo(
     () => items.filter((s) => {
@@ -44,6 +45,8 @@ export default function SkillsPage() {
     setForm({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null });
     setEditingId(null);
     setIsFormOpen(false);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
   }
 
   async function handleSubmit() {
@@ -65,6 +68,7 @@ export default function SkillsPage() {
     setForm({ name: target.name, description: target.description, niveau: target.niveau, categorie: target.categorie || "", imageFile: null });
     setEditingId(id);
     setIsFormOpen(true);
+    setPreviewUrl(target.image || null);
   }
 
   async function confirmDelete() {
@@ -165,8 +169,27 @@ export default function SkillsPage() {
               type="file"
               accept="image/*"
               className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
-              onChange={(e) => setForm((f) => ({ ...f, imageFile: e.target.files?.[0] || null }))}
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null;
+                setForm((f) => ({ ...f, imageFile: file }));
+                if (previewUrl) URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(file ? URL.createObjectURL(file) : null);
+              }}
             />
+            {previewUrl && (
+              <div className="mt-2 inline-flex items-center gap-3">
+                <div className="relative h-12 w-12 overflow-hidden rounded bg-black/5">
+                  <img src={previewUrl} alt="Prévisualisation" className="h-full w-full object-cover" />
+                </div>
+                <button
+                  type="button"
+                  className="text-xs text-foreground/70 hover:text-foreground"
+                  onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setForm((f) => ({ ...f, imageFile: null })); }}
+                >
+                  Retirer l'image
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </Modal>

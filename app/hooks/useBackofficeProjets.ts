@@ -12,6 +12,8 @@ export type BackofficeProjet = {
   github?: string;
   link?: string;
   updatedAt: string;
+  relatedImages?: { id: number; projet: number; image: string }[];
+  averageScore?: number | null;
 };
 
 function toUi(model: ProjetModel): BackofficeProjet {
@@ -23,6 +25,8 @@ function toUi(model: ProjetModel): BackofficeProjet {
     github: model.githublink || undefined,
     link: model.projetlink || undefined,
     updatedAt: new Date().toISOString().slice(0, 10),
+    relatedImages: Array.isArray(model.related_images) ? model.related_images : [],
+    averageScore: model.average_score ?? null,
   };
 }
 

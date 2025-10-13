@@ -4,13 +4,15 @@ import { useMemo, useState } from "react";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Table, { TableColumn } from "../../../ux/ui/Table";
+import SafeImage from "../../../ux/ui/SafeImage";
 import SearchBar from "../../../ux/ui/SearchBar";
 import Modal from "../../../ux/ui/Modal";
 import { useBackofficeProjets, type BackofficeProjet } from "../../../hooks/useBackofficeProjets";
+import { imageProjetService } from "../../../services/backoffice/imageProjetService";
 
 export default function ProjectsPage() {
   const [query, setQuery] = useState("");
-  const { items, setError, create, update, remove } = useBackofficeProjets();
+  const { items, setError, create, update, remove, refresh } = useBackofficeProjets();
 
   const [form, setForm] = useState<Omit<BackofficeProjet, "id" | "updatedAt">>({
     name: "",
@@ -40,6 +42,58 @@ export default function ProjectsPage() {
   const columns: TableColumn<BackofficeProjet>[] = [
     { key: "name", header: "Nom" },
     { key: "techno", header: "Techno" },
+    {
+      key: "relatedImages",
+      header: "Images",
+      className: "min-w-[200px]",
+      render: (row) => {
+        const images = (row.relatedImages || []);
+        const maxThumbs = 8;
+        const shown = images.slice(0, maxThumbs);
+        const remaining = Math.max(0, images.length - shown.length);
+        async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          try {
+            await imageProjetService.createFromFile(row.id, file);
+            await refresh();
+          } catch (err) {
+            console.error(err);
+          } finally {
+            e.target.value = "";
+          }
+        }
+
+        return (
+          <div className="flex items-center gap-2">
+            <div className="flex items-center max-w-[260px] overflow-hidden">
+              {shown.map((img, i) => (
+                <div
+                  key={img.id}
+                  className={`relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-white/20 bg-black/5 ${i > 0 ? '-ml-2' : ''}`}
+                  title="Image du projet"
+                >
+                  <SafeImage src={img.image} alt="" fill sizes="32px" className="object-cover" fallbackSrc="/window.svg" />
+                </div>
+              ))}
+              {/* Upload trigger as circular button */}
+              <label
+                className={`relative h-8 w-8 shrink-0 cursor-pointer rounded-full border border-dashed border-foreground/20 hover:border-accent/60 flex items-center justify-center text-foreground/60 hover:text-accent transition-colors ${shown.length > 0 ? '-ml-2' : ''}`}
+                title="Ajouter une image"
+              >
+                <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+                <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor" aria-hidden>
+                  <path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                </svg>
+              </label>
+            </div>
+            {remaining > 0 && (
+              <span className="ml-1 text-xs text-foreground/60">+{remaining}</span>
+            )}
+          </div>
+        );
+      },
+    },
     { key: "updatedAt", header: "Mis à jour" },
   ];
 

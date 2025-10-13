@@ -25,9 +25,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get client IP address
-    const ip_address = request.ip || 
-      request.headers.get('x-forwarded-for') || 
+    const ip_address = 
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
       request.headers.get('x-real-ip') || 
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-client-ip') ||
       'unknown';
 
     // Store the rating

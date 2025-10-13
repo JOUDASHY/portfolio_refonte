@@ -24,6 +24,10 @@ export default function ProjectsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [uploadProjectId, setUploadProjectId] = useState<string | null>(null);
+  const [uploadFiles, setUploadFiles] = useState<File[]>([]);
+  const [uploadPreviews, setUploadPreviews] = useState<string[]>([]);
 
   const filtered = useMemo(
     () =>
@@ -51,17 +55,12 @@ export default function ProjectsPage() {
         const maxThumbs = 8;
         const shown = images.slice(0, maxThumbs);
         const remaining = Math.max(0, images.length - shown.length);
-        async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-          const file = e.target.files?.[0];
-          if (!file) return;
-          try {
-            await imageProjetService.createFromFile(row.id, file);
-            await refresh();
-          } catch (err) {
-            console.error(err);
-          } finally {
-            e.target.value = "";
-          }
+        function openUploadModal() {
+          setUploadProjectId(row.id);
+          setUploadFiles([]);
+          // cleanup old previews
+          setUploadPreviews((prev) => { prev.forEach((u) => URL.revokeObjectURL(u)); return []; });
+          setIsUploadOpen(true);
         }
 
         return (
@@ -77,15 +76,16 @@ export default function ProjectsPage() {
                 </div>
               ))}
               {/* Upload trigger as circular button */}
-              <label
-                className={`relative h-8 w-8 shrink-0 cursor-pointer rounded-full border border-dashed border-foreground/20 hover:border-accent/60 flex items-center justify-center text-foreground/60 hover:text-accent transition-colors ${shown.length > 0 ? '-ml-2' : ''}`}
-                title="Ajouter une image"
+              <button
+                type="button"
+                onClick={openUploadModal}
+                className={`relative h-8 w-8 shrink-0 rounded-full border border-dashed border-foreground/20 hover:border-accent/60 flex items-center justify-center text-foreground/60 hover:text-accent transition-colors ${shown.length > 0 ? '-ml-2' : ''}`}
+                title="Ajouter des images"
               >
-                <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
                 <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor" aria-hidden>
                   <path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                 </svg>
-              </label>
+              </button>
             </div>
             {remaining > 0 && (
               <span className="ml-1 text-xs text-foreground/60">+{remaining}</span>
@@ -213,6 +213,80 @@ export default function ProjectsPage() {
             value={form.link}
             onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
           />
+        </div>
+      </Modal>
+
+      {/* Modal d'upload multiple d'images */}
+      <Modal
+        open={isUploadOpen}
+        onClose={() => {
+          setIsUploadOpen(false);
+          setUploadProjectId(null);
+          uploadPreviews.forEach((u) => URL.revokeObjectURL(u));
+          setUploadPreviews([]);
+          setUploadFiles([]);
+        }}
+        title="Ajouter des images"
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setIsUploadOpen(false);
+                setUploadProjectId(null);
+                uploadPreviews.forEach((u) => URL.revokeObjectURL(u));
+                setUploadPreviews([]);
+                setUploadFiles([]);
+              }}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!uploadProjectId || uploadFiles.length === 0) return;
+                try {
+                  for (const f of uploadFiles) {
+                    await imageProjetService.createFromFile(uploadProjectId, f);
+                  }
+                  await refresh();
+                  setIsUploadOpen(false);
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
+            >
+              Télécharger ({uploadFiles.length})
+            </Button>
+          </>
+        }
+        size="lg"
+      >
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-foreground">Fichiers image</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
+              onChange={(e) => {
+                const files = Array.from(e.target.files || []);
+                uploadPreviews.forEach((u) => URL.revokeObjectURL(u));
+                setUploadPreviews(files.map((f) => URL.createObjectURL(f)));
+                setUploadFiles(files);
+              }}
+            />
+          </div>
+
+          {uploadPreviews.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {uploadPreviews.map((src, i) => (
+                <div key={i} className="relative h-16 w-16 overflow-hidden rounded bg-black/5">
+                  <img src={src} alt="preview" className="h-full w-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </Modal>
 

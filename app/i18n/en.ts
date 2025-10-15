@@ -246,6 +246,13 @@ const en = {
       confirmDelete: "Delete"
     }
   },
+  backoffice: {
+    credentials: {
+      password: "Password",
+      showAll: "Show all passwords",
+      hideAll: "Hide all passwords",
+    }
+  },
 } as const;
 
 export type EnDict = typeof en;

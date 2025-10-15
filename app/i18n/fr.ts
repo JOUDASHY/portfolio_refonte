@@ -246,6 +246,13 @@ const fr = {
       confirmDelete: "Supprimer"
     }
   },
+  backoffice: {
+    credentials: {
+      password: "Mot de passe",
+      showAll: "Afficher tous les mots de passe",
+      hideAll: "Masquer tous les mots de passe",
+    }
+  },
 } as const;
 
 export type FrDict = typeof fr;

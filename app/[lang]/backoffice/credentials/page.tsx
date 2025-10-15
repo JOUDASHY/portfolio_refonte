@@ -7,8 +7,10 @@ import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeMyLogins, type BackofficeMyLogin } from "../../../hooks/useBackofficeMyLogins";
+import { useLanguage } from "../../../hooks/LanguageProvider";
 
 export default function CredentialsPage() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const { items, setError, create, update, remove } = useBackofficeMyLogins();
   const [revealAll, setRevealAll] = useState<boolean>(false);
@@ -34,8 +36,8 @@ export default function CredentialsPage() {
   );
 
   const columns: TableColumn<BackofficeMyLogin>[] = [
-    { key: "site", header: "Site" },
-    { key: "username", header: "Nom d'utilisateur" },
+    { key: "site", header: t("mailing.sendForm.name") || "Site" },
+    { key: "username", header: t("login.email") || "Nom d'utilisateur" },
     {
       key: "password",
       header: (
@@ -43,9 +45,9 @@ export default function CredentialsPage() {
           type="button"
           className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground"
           onClick={() => setRevealAll((v) => !v)}
-          aria-label={revealAll ? "Masquer tous les mots de passe" : "Afficher tous les mots de passe"}
+          aria-label={revealAll ? t("backoffice.credentials.hideAll") : t("backoffice.credentials.showAll")}
         >
-          Mot de passe
+          {t("backoffice.credentials.password")}
           {revealAll ? (
             <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
               <path d="M12 6c-4.5 0-8.2 2.5-10 6 1.1 2.2 3 4 5.3 5.1L3 21l1.4 1.4 18-18L21 3l-3.1 3.1C16.6 5.4 14.4 5 12 5zm0 3a4 4 0 013.7 2.6l-5.1 5.1A4 4 0 0112 9z" />
@@ -66,7 +68,7 @@ export default function CredentialsPage() {
         );
       },
     },
-    { key: "link", header: "Lien" },
+    { key: "link", header: t("footer.link") || "Lien" },
   ];
 
   function resetForm() {
@@ -112,7 +114,7 @@ export default function CredentialsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-        <h1 className="text-xl font-semibold text-foreground">Identifiants</h1>
+        <h1 className="text-xl font-semibold text-foreground">{t("login.title")}</h1>
         <div className="flex items-center gap-2">
           <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
           <Button
@@ -123,7 +125,7 @@ export default function CredentialsPage() {
               setIsFormOpen(true);
             }}
           >
-            Nouvel identifiant
+            {t("mailing.newEmail")}
           </Button>
         </div>
       </div>
@@ -133,7 +135,7 @@ export default function CredentialsPage() {
           columns={columns}
           data={filtered}
           rowKey={(row) => (row as BackofficeMyLogin).id}
-          emptyText="Aucun identifiant trouvé"
+          emptyText={t("mailingHistory.empty")}
           actionsHeader="Actions"
           actions={(row) => (
             <div className="inline-flex items-center gap-2">

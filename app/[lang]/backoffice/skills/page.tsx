@@ -186,7 +186,7 @@ export default function SkillsPage() {
                   className="text-xs text-foreground/70 hover:text-foreground"
                   onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setForm((f) => ({ ...f, imageFile: null })); }}
                 >
-                  Retirer l'image
+                  Retirer l&apos;image
                 </button>
               </div>
             )}

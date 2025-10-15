@@ -15,7 +15,7 @@ export default function ThemeToggle({ variant = "inline", className = "" }: Them
       <button
         aria-label="Toggle theme"
         onClick={toggle}
-        className={`mt-1 sm:mt-2 relative w-full rounded-full py-2 sm:py-2.5 px-10 ring-1 transition-colors ${className}`}
+        className={`mt-1 sm:mt-2 relative w-fit sm:w-full overflow-hidden rounded-full py-2 sm:py-2.5 px-10 ring-1 transition-colors ${className}`}
         style={{
           background: theme === "light"
             ? "linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.03))"

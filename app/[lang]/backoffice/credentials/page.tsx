@@ -11,6 +11,7 @@ import { useBackofficeMyLogins, type BackofficeMyLogin } from "../../../hooks/us
 export default function CredentialsPage() {
   const [query, setQuery] = useState("");
   const { items, setError, create, update, remove } = useBackofficeMyLogins();
+  const [revealAll, setRevealAll] = useState<boolean>(false);
 
   const [form, setForm] = useState<Omit<BackofficeMyLogin, "id" | "updatedAt">>({ site: "", link: "", username: "", password: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -35,6 +36,36 @@ export default function CredentialsPage() {
   const columns: TableColumn<BackofficeMyLogin>[] = [
     { key: "site", header: "Site" },
     { key: "username", header: "Nom d'utilisateur" },
+    {
+      key: "password",
+      header: (
+        <button
+          type="button"
+          className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground"
+          onClick={() => setRevealAll((v) => !v)}
+          aria-label={revealAll ? "Masquer tous les mots de passe" : "Afficher tous les mots de passe"}
+        >
+          Mot de passe
+          {revealAll ? (
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
+              <path d="M12 6c-4.5 0-8.2 2.5-10 6 1.1 2.2 3 4 5.3 5.1L3 21l1.4 1.4 18-18L21 3l-3.1 3.1C16.6 5.4 14.4 5 12 5zm0 3a4 4 0 013.7 2.6l-5.1 5.1A4 4 0 0112 9z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
+              <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z" />
+            </svg>
+          )}
+        </button>
+      ),
+      className: "min-w-[200px]",
+      render: (row) => {
+        const pwd = (row as BackofficeMyLogin).password || "";
+        const masked = pwd ? "•".repeat(Math.max(8, Math.min(24, pwd.length))) : "";
+        return (
+          <span className="font-mono text-sm select-all">{revealAll ? pwd : masked}</span>
+        );
+      },
+    },
     { key: "link", header: "Lien" },
   ];
 

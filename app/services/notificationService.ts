@@ -60,4 +60,29 @@ export class NotificationService {
       cancelButtonColor: "#6c757d"
     });
   }
+
+  // Lightweight toast notifications
+  static async showSuccessToast(message: string) {
+    return Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: message,
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    });
+  }
+
+  static async showErrorToast(message: string) {
+    return Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "error",
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
 }

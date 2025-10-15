@@ -10,6 +10,7 @@ import SearchBar from "../../../ux/ui/SearchBar";
 import Modal from "../../../ux/ui/Modal";
 import { useBackofficeProjets, type BackofficeProjet } from "../../../hooks/useBackofficeProjets";
 import { imageProjetService } from "../../../services/backoffice/imageProjetService";
+import { NotificationService } from "../../../services/notificationService";
 
 export default function ProjectsPage() {
   const [query, setQuery] = useState("");
@@ -29,6 +30,7 @@ export default function ProjectsPage() {
   const [uploadProjectId, setUploadProjectId] = useState<string | null>(null);
   const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [uploadPreviews, setUploadPreviews] = useState<string[]>([]);
+  const [deleteImageId, setDeleteImageId] = useState<number | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -74,6 +76,21 @@ export default function ProjectsPage() {
                   title="Image du projet"
                 >
                   <SafeImage src={img.image} alt="" fill sizes="32px" className="object-cover" fallbackSrc="/window.svg" />
+                  {/* Delete image button */}
+                  <button
+                    type="button"
+                    aria-label="Supprimer l'image"
+                    className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-600 text-white hover:bg-red-500 shadow ring-1 ring-black/10 flex items-center justify-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteImageId(img.id);
+                    }}
+                    title="Supprimer cette image"
+                  >
+                    <svg viewBox="0 0 20 20" className="h-3 w-3" fill="currentColor" aria-hidden>
+                      <path fillRule="evenodd" d="M10 8.586l3.536-3.536a1 1 0 111.414 1.414L11.414 10l3.536 3.536a1 1 0 01-1.414 1.414L10 11.414l-3.536 3.536a1 1 0 01-1.414-1.414L8.586 10 5.05 6.464a1 1 0 111.414-1.414L10 8.586z" clipRule="evenodd" />
+                    </svg>
+                  </button>
                 </div>
               ))}
               {/* Upload trigger as circular button */}
@@ -128,10 +145,28 @@ export default function ProjectsPage() {
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
+      await NotificationService.showSuccessToast("Projet supprimé avec succès");
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Échec de la suppression");
+      const msg = e instanceof Error ? e.message : "Échec de la suppression";
+      setError(msg);
+      await NotificationService.showErrorToast(msg);
     } finally {
       setDeleteId(null);
+    }
+  }
+
+  async function confirmDeleteImage() {
+    if (!deleteImageId) return;
+    try {
+      await imageProjetService.remove(deleteImageId);
+      await refresh();
+      await NotificationService.showSuccessToast("Image supprimée avec succès");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Échec de la suppression de l'image";
+      setError(msg);
+      await NotificationService.showErrorToast(msg);
+    } finally {
+      setDeleteImageId(null);
     }
   }
 
@@ -251,8 +286,11 @@ export default function ProjectsPage() {
                   }
                   await refresh();
                   setIsUploadOpen(false);
+                  await NotificationService.showSuccessToast("Images téléchargées avec succès");
                 } catch (e) {
+                  const msg = e instanceof Error ? e.message : "Échec du téléchargement des images";
                   console.error(e);
+                  await NotificationService.showErrorToast(msg);
                 }
               }}
             >
@@ -304,6 +342,21 @@ export default function ProjectsPage() {
         size="sm"
       >
         Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.
+      </Modal>
+
+      <Modal
+        open={Boolean(deleteImageId)}
+        onClose={() => setDeleteImageId(null)}
+        title="Supprimer l'image"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setDeleteImageId(null)}>Annuler</Button>
+            <Button onClick={confirmDeleteImage}>Supprimer</Button>
+          </>
+        }
+        size="sm"
+      >
+        Êtes-vous sûr de vouloir supprimer cette image ? Cette action est irréversible.
       </Modal>
     </div>
   );

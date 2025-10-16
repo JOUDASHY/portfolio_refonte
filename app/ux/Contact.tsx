@@ -196,37 +196,37 @@ export default function Contact() {
                 <div className="space-y-2.5 sm:space-y-4">
                   <ContactInfoCard
                     icon={
-                      <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 sm:w-5 sm:h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     }
                     title={t("footer.email")}
                   >
-                    <a href={`mailto:${profile?.email || "alitsiryeddynilsen@gmail.com"}`} className="text-accent hover:text-accent/80 transition-colors">
+                    <a href={`mailto:${profile?.email || "alitsiryeddynilsen@gmail.com"}`} className="text-xs sm:text-base text-accent hover:text-accent/80 transition-colors">
                       {profileLoading ? "Loading..." : profile?.email || "alitsiryeddynilsen@gmail.com"}
                     </a>
                   </ContactInfoCard>
 
                   <ContactInfoCard
                     icon={
-                      <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 sm:w-5 sm:h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     }
                     title={t("contact.availability")}
                   >
-                    <p className="text-navy/70">{t("contact.responseTime")}</p>
+                    <p className="text-xs sm:text-base text-navy/70">{t("contact.responseTime")}</p>
                   </ContactInfoCard>
 
                   <ContactInfoCard
                     icon={
-                      <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 sm:w-5 sm:h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     }
                     title="Latence"
                   >
-                    <p className="text-navy/70">
+                    <p className="text-xs sm:text-base text-navy/70">
                       {latency !== null ? `${latency} ms` : '—'}
                     </p>
                   </ContactInfoCard>

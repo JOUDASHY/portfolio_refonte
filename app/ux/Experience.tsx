@@ -71,7 +71,7 @@ export default function Experience() {
                 <AnimatedItem key={idx} delayMs={idx * 120}>
                   <span className="absolute -start-2 sm:-start-3 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-accent ring-2 sm:ring-4 ring-background" />
                   <div className="rounded-xl sm:rounded-2xl card-border p-4 sm:p-6">
-                    <p className="text-var-caption sm:text-sm text-foreground/70">{r.period}</p>
+                    <p className="text-var-caption sm:text-sm text-foreground/70">{formatPeriodFr(r.period)}</p>
                     <h3 className="mt-1 text-var-caption sm:text-base text-foreground font-semibold">{r.title}</h3>
                     <p className="text-var-caption sm:text-base text-foreground/80">{r.company}</p>
                     {r.summary && <p className="mt-2 text-var-caption sm:text-sm text-foreground/80">{r.summary}</p>}
@@ -82,6 +82,27 @@ export default function Experience() {
       </div>
     </section>
   );
+}
+
+
+function formatPeriodFr(period: string | null | undefined): string {
+  if (!period || typeof period !== "string") return "";
+  // Split on en dash or hyphen ranges
+  const parts = period.split(/\s+[–-]\s+/);
+  const format = (d: string) => {
+    // normalize YYYY-MM-DD
+    const trimmed = d.trim();
+    // Some backends may return only year-month or other; rely on Date parsing
+    const date = new Date(trimmed);
+    if (isNaN(date.getTime())) return trimmed; // fallback
+    // Use French locale with month in letters
+    return date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  };
+  if (parts.length === 2) {
+    return `${format(parts[0])} – ${format(parts[1])}`;
+  }
+  // Single date
+  return format(period);
 }
 
 

@@ -143,7 +143,7 @@ export default function ProfilePage() {
             window.location.href = "/login";
           }}
         >
-          Se déconnecter
+          Se Déconnecter
         </Button>
       </div>
 

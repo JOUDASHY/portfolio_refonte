@@ -45,7 +45,9 @@ export const authService = {
     if (payload.link_github != null) form.append("link_github", String(payload.link_github));
     if (payload.phone_number != null) form.append("phone_number", String(payload.phone_number));
     if (payload.address != null) form.append("address", String(payload.address));
-    const { data } = await apiAuth.put<{ message: string; data: Profile }>("profile/update/", form);
+    const { data } = await apiAuth.put<{ message: string; data: Profile }>("profile/update/", form, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return data;
   },
 

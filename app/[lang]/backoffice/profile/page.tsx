@@ -40,6 +40,7 @@ export default function ProfilePage() {
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [, setCoverFile] = useState<File | null>(null);
 
   function handleSave() {
@@ -58,6 +59,12 @@ export default function ProfilePage() {
         phone_number: form.phone || null,
         address: form.location || null,
       });
+      // Clear the preview and file after successful upload
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+        setAvatarPreview(null);
+      }
+      setAvatarFile(null);
       await loadProfile();
     } catch {
       // noop
@@ -67,7 +74,14 @@ export default function ProfilePage() {
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
+      // Revoke previous preview URL if it exists
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
       setAvatarFile(file);
+      // Create a preview URL for the selected file
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarPreview(previewUrl);
     }
   }
 
@@ -105,6 +119,15 @@ export default function ProfilePage() {
   useEffect(() => {
     loadProfile();
   }, []);
+
+  // Cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
 
   return (
     <div className="w-full space-y-6">
@@ -176,7 +199,7 @@ export default function ProfilePage() {
           <div className="absolute -bottom-8 left-6">
             <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-accent/60 bg-white">
               <Image
-                src={profile?.image || "/logo_nil.png"}
+                src={avatarPreview || profile?.image || "/logo_nil.png"}
                 alt="Avatar"
                 fill
                 sizes="96px"
@@ -184,10 +207,13 @@ export default function ProfilePage() {
               />
             </div>
             <div className="mt-2">
-              <label className="cursor-pointer text-xs text-foreground/80">
+              <label className="cursor-pointer text-xs text-foreground/80 hover:text-foreground transition-colors">
                 <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
-                Changer la photo
+                {avatarFile ? "Photo sélectionnée" : "Changer la photo"}
               </label>
+              {avatarFile && (
+                <p className="text-xs text-foreground/60 mt-1">{avatarFile.name}</p>
+              )}
             </div>
           </div>
           <div className="absolute bottom-4 right-4">

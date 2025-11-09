@@ -41,6 +41,7 @@ export default function ProfilePage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [imageCacheKey, setImageCacheKey] = useState<number>(Date.now());
   const [, setCoverFile] = useState<File | null>(null);
 
   function handleSave() {
@@ -50,7 +51,7 @@ export default function ProfilePage() {
   async function confirmSave() {
     try {
       setConfirmOpen(false);
-      await authService.updateProfile({
+      const response = await authService.updateProfile({
         image: avatarFile || undefined,
         about: form.bio,
         link_github: form.github || null,
@@ -59,12 +60,19 @@ export default function ProfilePage() {
         phone_number: form.phone || null,
         address: form.location || null,
       });
+      // Update profile immediately with the response data
+      if (response.data) {
+        setProfile(response.data);
+        // Force image reload by updating cache key
+        setImageCacheKey(Date.now());
+      }
       // Clear the preview and file after successful upload
       if (avatarPreview) {
         URL.revokeObjectURL(avatarPreview);
         setAvatarPreview(null);
       }
       setAvatarFile(null);
+      // Reload profile to ensure all data is up to date
       await loadProfile();
     } catch {
       // noop
@@ -199,11 +207,17 @@ export default function ProfilePage() {
           <div className="absolute -bottom-8 left-6">
             <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-accent/60 bg-white">
               <Image
-                src={avatarPreview || profile?.image || "/logo_nil.png"}
+                src={
+                  avatarPreview || 
+                  (profile?.image 
+                    ? `${profile.image}${profile.image.includes('?') ? '&' : '?'}t=${imageCacheKey}` 
+                    : "/logo_nil.png")
+                }
                 alt="Avatar"
                 fill
                 sizes="96px"
                 className="object-cover"
+                key={`avatar-${imageCacheKey}`}
               />
             </div>
             <div className="mt-2">

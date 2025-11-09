@@ -205,28 +205,51 @@ export default function ProfilePage() {
           <div className="absolute inset-0 bg-black/20" />
           {/* Avatar overlay on cover */}
           <div className="absolute -bottom-8 left-6">
-            <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-accent/60 bg-white">
-              <Image
-                src={
-                  avatarPreview || 
-                  (profile?.image 
-                    ? `${profile.image}${profile.image.includes('?') ? '&' : '?'}t=${imageCacheKey}` 
-                    : "/logo_nil.png")
-                }
-                alt="Avatar"
-                fill
-                sizes="96px"
-                className="object-cover"
-                key={`avatar-${imageCacheKey}`}
+            <label className="cursor-pointer group">
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleAvatarChange} 
+                className="hidden" 
+                id="avatar-input"
               />
-            </div>
-            <div className="mt-2">
-              <label className="cursor-pointer text-xs text-foreground/80 hover:text-foreground transition-colors">
-                <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
-                {avatarFile ? "Photo sélectionnée" : "Changer la photo"}
-              </label>
+              <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-accent/60 bg-white group-hover:ring-accent/80 transition-all">
+                <Image
+                  src={
+                    avatarPreview || 
+                    (profile?.image 
+                      ? `${profile.image}${profile.image.includes('?') ? '&' : '?'}t=${imageCacheKey}` 
+                      : "/logo_nil.png")
+                  }
+                  alt="Avatar"
+                  fill
+                  sizes="96px"
+                  className="object-cover"
+                  key={`avatar-${imageCacheKey}`}
+                />
+                {/* Overlay au survol pour indiquer que c'est cliquable */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                  <svg 
+                    className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+            </label>
+            <div className="mt-2 text-center">
+              <p className="text-xs text-foreground/80">
+                {avatarFile ? (
+                  <span className="text-accent">Photo sélectionnée</span>
+                ) : (
+                  "Cliquez pour changer"
+                )}
+              </p>
               {avatarFile && (
-                <p className="text-xs text-foreground/60 mt-1">{avatarFile.name}</p>
+                <p className="text-xs text-foreground/60 mt-1 truncate max-w-[96px]">{avatarFile.name}</p>
               )}
             </div>
           </div>

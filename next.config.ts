@@ -34,6 +34,16 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
+        protocol: "https",
+        hostname: "test-back.unityfianar.site",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "test-back.unityfianar.site",
+        pathname: "/**",
+      },
+      {
         protocol: "http",
         hostname: "www.google.com",
         pathname: "/**",

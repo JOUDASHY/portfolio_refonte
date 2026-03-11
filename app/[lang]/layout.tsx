@@ -22,11 +22,13 @@ export default async function LangLayout({
   return (
     <ThemeProvider>
       <LanguageProvider initialLang={initialLang}>
-        <ConditionalNavbar />
-        <KeepAliveGate>
-          {children}
-        </KeepAliveGate>
-        <ConditionalFooter />
+        <div className="font-portfolio">
+          <ConditionalNavbar />
+          <KeepAliveGate>
+            {children}
+          </KeepAliveGate>
+          <ConditionalFooter />
+        </div>
       </LanguageProvider>
     </ThemeProvider>
   );

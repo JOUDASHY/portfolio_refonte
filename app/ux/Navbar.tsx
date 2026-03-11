@@ -5,14 +5,38 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
-import { useTheme } from "../components/ThemeProvider";
-import ThemeToggle from "./ui/ThemeToggle";
+
+// Flag SVG components for better cross-platform display
+const UKFlag = () => (
+  <svg viewBox="0 0 60 30" className="w-6 h-4 rounded-sm">
+    <clipPath id="s">
+      <path d="M0,0 v30 h60 v-30 z"/>
+    </clipPath>
+    <clipPath id="t">
+      <path d="M30,15 h30 v15 z v-15 h-30 z h-30 v-15 z v15 h30 z"/>
+    </clipPath>
+    <g clipPath="url(#s)">
+      <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/>
+      <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#t)" stroke="#C8102E" strokeWidth="4"/>
+      <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/>
+      <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/>
+    </g>
+  </svg>
+);
+
+const FRFlag = () => (
+  <svg viewBox="0 0 60 30" className="w-6 h-4 rounded-sm">
+    <path d="M0,0 h20 v30 h-20 z" fill="#002395"/>
+    <path d="M20,0 h20 v30 h-20 z" fill="#fff"/>
+    <path d="M40,0 h20 v30 h-20 z" fill="#ED2939"/>
+  </svg>
+);
 
 export default function Navbar() {
   // ULTRA COMPACT BUTTONS - FORCE RELOAD
   const [isOpen, setIsOpen] = useState(false);
   const { t, lang, setLang } = useLanguage();
-  const { theme, toggle } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -75,9 +99,9 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
-            <li className="flex items-center gap-0.5">
+            <li className="flex items-center gap-2">
               <button
-                className="rounded px-0.5 py-0.5 text-xs text-foreground/80 hover:text-foreground ring-1 ring-white/10 hover:ring-white/20 transition-colors min-w-0"
+                className="flex items-center gap-2 rounded px-3 py-1.5 text-sm text-foreground/80 hover:text-foreground ring-1 ring-white/10 hover:ring-white/20 transition-colors bg-white/5"
                 onClick={() => {
                   const next = lang === "en" ? "fr" : "en";
                   setLang(next);
@@ -89,10 +113,11 @@ export default function Navbar() {
                   }
                   router.replace("/" + parts.join("/"));
                 }}
+                title={lang === "en" ? "Switch to French" : "Switch to English"}
               >
-                {lang === "en" ? "FR" : "EN"}
+                {lang === "en" ? <UKFlag /> : <FRFlag />}
+                <span className="text-sm font-medium">{lang === "en" ? "EN" : "FR"}</span>
               </button>
-              <ThemeToggle />
             </li>
           </ul>
         </nav>
@@ -115,14 +140,13 @@ export default function Navbar() {
               ))}
               <li className="pt-1 sm:pt-2">
                 <button
-                  className="w-full rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm text-foreground/90 ring-1 ring-white/10 hover:bg-white/5 hover:text-foreground transition-colors"
+                  className="flex items-center justify-center gap-3 w-full rounded-md px-3 py-2 text-sm text-foreground/90 ring-1 ring-white/10 hover:bg-white/5 hover:text-foreground transition-colors bg-white/5"
                   onClick={() => setLang(lang === "en" ? "fr" : "en")}
+                  title={lang === "en" ? "Switch to French" : "Switch to English"}
                 >
-                  {lang === "en" ? "FR" : "EN"}
+                  <span className="scale-125">{lang === "en" ? <UKFlag /> : <FRFlag />}</span>
+                  <span className="text-base font-medium">{lang === "en" ? "EN" : "FR"}</span>
                 </button>
-              </li>
-              <li>
-                <ThemeToggle variant="block" />
               </li>
             </ul>
           </div>

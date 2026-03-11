@@ -14,11 +14,11 @@ export default function Skills() {
   const categories = loading ? ["Frontend", "Backend", "Tooling"] : Array.from(grouped.keys());
 
   return (
-    <section id="skills" className="relative bg-background py-16 sm:py-20 lg:py-24 border-b-2" style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
+    <section id="skills" className="relative bg-white py-16 sm:py-20 lg:py-24 border-b-2" style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 sm:mb-10 lg:mb-12">
-          <h2 className="text-var-title sm:text-3xl lg:text-4xl font-extrabold text-foreground">{t("skills.title")}</h2>
-          <p className="mt-2 text-var-body sm:text-lg text-foreground/70">{t("skills.subtitle")}</p>
+          <h2 className="text-var-title sm:text-3xl lg:text-4xl font-extrabold text-slate-800">{t("skills.title")}</h2>
+          <p className="mt-2 text-var-body sm:text-lg text-slate-600">{t("skills.subtitle")}</p>
         </div>
 
         {error && (
@@ -44,15 +44,15 @@ type Skill = { name: string; level: number };
 
 function Category({ title, skills, loading }: { title: string; skills: Skill[]; loading?: boolean }) {
   return (
-    <div className="rounded-xl sm:rounded-2xl card-border p-4 sm:p-6">
-      <h3 className="font-semibold text-foreground text-var-caption sm:text-base">{title}</h3>
+    <div className="rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 p-4 sm:p-6">
+      <h3 className="font-semibold text-slate-800 text-var-caption sm:text-base">{title}</h3>
       <ul className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
         {loading
           ? Array.from({ length: 4 }).map((_, idx) => (
-              <li key={idx} className="text-foreground/90">
+              <li key={idx} className="text-slate-700">
                 <div className="animate-pulse space-y-2">
-                  <div className="h-3 sm:h-4 w-24 sm:w-32 rounded bg-white/10 data-[theme=light]:bg-black/10" />
-                  <div className="h-1.5 sm:h-2 w-full rounded bg-white/10 data-[theme=light]:bg-black/10" />
+                  <div className="h-3 sm:h-4 w-24 sm:w-32 rounded bg-slate-200" />
+                  <div className="h-1.5 sm:h-2 w-full rounded bg-slate-200" />
                 </div>
               </li>
             ))
@@ -60,12 +60,12 @@ function Category({ title, skills, loading }: { title: string; skills: Skill[]; 
               const clamped = Math.max(0, Math.min(10, s.level || 0));
               const width = `${(clamped / 10) * 100}%`;
               return (
-                <li key={s.name} className="text-foreground/90">
+                <li key={s.name} className="text-slate-700">
                   <div className="flex items-center justify-between">
                     <span className="text-var-caption sm:text-sm">{s.name}</span>
-                    <span className="text-var-caption sm:text-sm text-foreground/70">{clamped}/10</span>
+                    <span className="text-var-caption sm:text-sm text-slate-500">{clamped}/10</span>
                   </div>
-                  <div className="mt-1.5 sm:mt-2 h-1.5 sm:h-2 rounded-full bg-white/10 data-[theme=light]:bg-black/10">
+                  <div className="mt-1.5 sm:mt-2 h-1.5 sm:h-2 rounded-full bg-slate-200">
                     <div className="h-1.5 sm:h-2 rounded-full bg-accent" style={{ width }} />
                   </div>
                 </li>

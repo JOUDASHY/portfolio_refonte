@@ -193,3 +193,75 @@ html {
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: both;
 }
+
+/* Voice Wave Animation */
+@keyframes voiceWave {
+  0%, 100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-voice-wave {
+  animation-name: voiceWave;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Heartbeat Animation */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  15% {
+    transform: scaleY(1);
+  }
+  30% {
+    transform: scaleY(0.6);
+  }
+  45% {
+    transform: scaleY(0.9);
+  }
+  60% {
+    transform: scaleY(0.5);
+  }
+}
+
+.animate-heartbeat {
+  animation-name: heartbeat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* ECG Monitor Animation */
+@keyframes ecg {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-ecg {
+  animation-name: ecg;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes scan {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.animate-scan {
+  animation-name: scan;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}

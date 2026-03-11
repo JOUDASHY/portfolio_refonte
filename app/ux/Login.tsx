@@ -44,22 +44,28 @@ export default function Login() {
   };
 
   return (
-    <section className="bg-white-var py-8 sm:py-12 relative min-h-screen flex items-center">
+    <section 
+      className="py-8 sm:py-12 relative min-h-screen flex items-center bg-cover bg-center"
+      style={{ backgroundImage: 'url(https://wallpapercave.com/wp/wp10027554.jpg)' }}
+    >
+      {/* Overlay for better readability */}
+      <div className="absolute inset-0 bg-black/50" />
+      
       {loading && <Loading />}
-      <div className={`mx-auto max-w-md px-4 sm:px-6 lg:px-8 ${loading ? "pointer-events-none select-none" : ""}`}>
-        <div className="rounded-2xl bg-white-var p-6 ring-1 ring-black/5 shadow-sm">
+      <div className={`relative mx-auto w-full max-w-2xl px-4 sm:px-8 lg:px-12 ${loading ? "pointer-events-none select-none" : ""}`}>
+        <div className="rounded-2xl bg-white-var p-10 sm:p-12 ring-1 ring-black/5 shadow-lg">
           <div className="flex justify-center">
             <Image
               src="/logo_nil.png"
               alt="Logo"
-              width={72}
-              height={72}
+              width={100}
+              height={100}
               className="object-contain"
               priority
             />
           </div>
-          <h1 className="text-2xl font-extrabold text-navy">{t("login.title")}</h1>
-          <p className="mt-1 text-navy/70">{t("login.subtitle")}</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-navy text-center">{t("login.title")}</h1>
+          <p className="mt-2 text-lg text-navy/70 text-center">{t("login.subtitle")}</p>
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             {error && (

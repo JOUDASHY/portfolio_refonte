@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useProfile } from "../hooks/useProfile";
 
@@ -11,14 +12,26 @@ export default function Footer() {
     <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-background shadow-lg shadow-black/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-3 items-start">
-          {/* Column 1: Portfolio Info */}
-          <div className="flex flex-col items-center sm:items-start gap-2">
-            <h3 className="text-foreground font-bold text-sm sm:text-base">
-              {loading ? "Loading..." : `${profile?.username || "Nilsen"}'s Portfolio`}
-            </h3>
-            <p className="text-foreground/70 text-xs sm:text-sm text-center sm:text-left">
-              {loading ? "Loading..." : "Développeur Web & Administrateur Système"}
-            </p>
+          {/* Column 1: Portfolio Info with Logo */}
+          <div className="flex flex-col items-center sm:items-start gap-3">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo_nil.png"
+                alt="Logo"
+                width={48}
+                height={48}
+                className="object-contain rounded-lg"
+                priority
+              />
+              <div>
+                <h3 className="text-foreground font-bold text-sm sm:text-base">
+                  {loading ? "Loading..." : `${profile?.username || "Nilsen"}'s Portfolio`}
+                </h3>
+                <p className="text-foreground/70 text-xs sm:text-sm">
+                  {loading ? "Loading..." : "Développeur Web & Administrateur Système"}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Column 2: Quick Links */}

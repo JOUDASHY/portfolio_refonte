@@ -107,15 +107,30 @@ export default function About() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl sm:rounded-3xl border border-accent/30 bg-slate-50 p-4 sm:p-6 lg:p-8 shadow-lg">
           <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-stretch">
-            {/* Left Side - Large Image */}
+            {/* Left Side - Large Image with Blue Ray Background */}
             <AnimatedBox className="md:w-2/5 flex-shrink-0">
               <div className="relative w-full h-full min-h-[350px] md:min-h-[450px] overflow-hidden rounded-2xl">
+                {/* Large Blue Ray Background */}
+                <div className="absolute inset-0 bg-[#000b31]">
+                  {/* Large diagonal stripes - only ~4 visible */}
+                  <div className="absolute inset-0" style={{
+                    background: `
+                      repeating-linear-gradient(
+                        135deg,
+                        #000b31 0%,
+                        #000b31 12.5%,
+                        #ffffff 12.5%,
+                        #ffffff 25%
+                      )
+                    `
+                  }} />
+                </div>
                 <Image 
                   src="/nilsen-Photoroom.png"
                   alt={profile?.username || "Profile"} 
                   fill 
                   sizes="(max-width: 768px) 100vw, 600px" 
-                  className="object-cover object-top" 
+                  className="object-cover object-top relative z-10" 
                   priority
                 />
               </div>

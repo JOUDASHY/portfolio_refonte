@@ -12,11 +12,30 @@ export default function Projects() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return (
-    <section id="projects" className="relative bg-background py-16 sm:py-20 lg:py-24 border-b-2" style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 sm:mb-10 lg:mb-12">
-          <h2 className="text-var-title sm:text-3xl lg:text-4xl font-extrabold text-foreground">{t("projects.title")}</h2>
-          <p className="mt-2 text-var-body sm:text-lg text-foreground/70">{t("projects.subtitle")}</p>
+    <section 
+      id="projects" 
+      className="relative bg-white py-20 sm:py-24 lg:py-32 border-b-2 overflow-hidden" 
+      style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}
+    >
+      {/* Background decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#f68c09]/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#000b31]/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-6">
+            <span className="w-2 h-2 rounded-full bg-[#f68c09] animate-pulse" />
+            <span className="text-sm font-medium text-[#000b31]">{t("projects.subtitle")}</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#000b31] mb-4">
+            {t("projects.title")}
+          </h2>
+          <p className="text-lg text-[#000b31]/70 max-w-2xl mx-auto">
+            Discover my latest work and creative projects
+          </p>
         </div>
         <ProjectGrid />
       </div>
@@ -51,7 +70,10 @@ function ProjectGrid() {
     return (
       <li
         ref={ref}
-        className={`${visible ? "animate-fade-in-up" : "opacity-0 translate-y-3"} group rounded-xl sm:rounded-2xl overflow-hidden card-border transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.25)]`}
+        className={`${visible ? "animate-fade-in-up" : "opacity-0 translate-y-8"} 
+          group rounded-2xl overflow-hidden bg-white border border-[#000b31]/10 
+          shadow-sm hover:shadow-2xl hover:shadow-[#f68c09]/10 
+          transition-all duration-500 hover:-translate-y-2`}
         style={visible ? { animationDelay: `${delayMs}ms` } : undefined}
       >
         {children}
@@ -61,29 +83,30 @@ function ProjectGrid() {
 
   if (error) {
     return (
-      <div className="mb-4 sm:mb-6 rounded-md bg-red-50 p-3 text-var-caption text-red-700 ring-1 ring-red-200">{error}</div>
+      <div className="mb-8 rounded-xl bg-[#f68c09]/10 p-4 text-[#000b31] border border-[#f68c09]/30 text-center">
+        {error}
+      </div>
     );
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
-            <li key={i} className="group rounded-xl sm:rounded-2xl overflow-hidden card-border">
-              <div className="relative h-28 sm:h-36 lg:h-48 w-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
-                <div className="absolute inset-0 p-4 sm:p-6">
-                  <div className="animate-pulse h-full w-full rounded-lg bg-white/10 data-[theme=light]:bg-black/10" />
+            <li key={i} className="group rounded-2xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
+              <div className="relative h-28 sm:h-36 lg:h-44 w-full bg-[#000b31]/5">
+                <div className="absolute inset-0 p-4">
+                  <div className="animate-pulse h-full w-full rounded-lg bg-[#000b31]/10" />
                 </div>
               </div>
-              <div className="p-3 sm:p-4 lg:p-6">
-                <div className="animate-pulse h-3 sm:h-4 w-28 sm:w-32 lg:w-40 bg-white/10 rounded data-[theme=light]:bg-black/10" />
-                <div className="mt-2 sm:mt-3 h-2.5 sm:h-3 w-16 sm:w-20 lg:w-24 bg-white/10 rounded data-[theme=light]:bg-black/10" />
+              <div className="p-3 sm:p-4">
+                <div className="animate-pulse h-4 w-32 rounded bg-[#000b31]/10" />
+                <div className="mt-3 h-3 w-20 rounded bg-[#000b31]/10" />
               </div>
             </li>
           ))
         : items.map((p, idx) => (
-            <AnimatedCard key={p.id} delayMs={idx * 120}>
+            <AnimatedCard key={p.id} delayMs={idx * 100}>
               <ProjectCard project={p} />
             </AnimatedCard>
           ))}
@@ -96,6 +119,7 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
   const [currentRating, setCurrentRating] = useState(project.initialStars);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleRating = async (score: number) => {
     setSubmitting(true);
@@ -116,7 +140,6 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
         throw new Error('Failed to submit rating');
       }
       
-      // Update local state optimistically
       setCurrentRating(score);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to submit rating");
@@ -126,60 +149,96 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
   };
 
   return (
-    <>
-      <div className="relative h-28 sm:h-36 lg:h-48 w-full">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent data-[theme=light]:from-black/5" />
-        <Image src={project.image} alt={project.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-4 sm:p-6" />
-        <div className="absolute left-2 top-2 sm:left-3 sm:top-3 lg:left-4 lg:top-4 rounded-full bg-black/40 px-2 py-0.5 sm:px-3 sm:py-1 text-var-caption sm:text-sm text-white backdrop-blur">
-          <span className="inline-flex items-center gap-0.5 sm:gap-1">
-            <StarIcon className="icon-xs sm:icon-sm text-accent" /> 
-            {currentRating}
+    <div 
+      className="h-full flex flex-col"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Image Container */}
+      <div className="relative h-28 sm:h-36 lg:h-44 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent">
+        <div className={`absolute inset-0 bg-[#f68c09]/10 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+        <Image 
+          src={project.image} 
+          alt={project.title} 
+          fill 
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" 
+          className={`object-contain p-3 sm:p-4 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`} 
+        />
+        
+        {/* Rating Badge */}
+        <div className="absolute left-2 top-2 sm:left-3 sm:top-3 rounded-full bg-[#000b31]/80 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm text-white backdrop-blur-sm border border-[#f68c09]/30">
+          <span className="inline-flex items-center gap-1">
+            <StarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-[#f68c09]" filled={true} /> 
+            <span className="font-semibold">{currentRating}</span>
+          </span>
+        </div>
+        
+        {/* Hover overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-t from-[#000b31]/60 to-transparent transition-opacity duration-300 flex items-end justify-center pb-4 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+          <span className="text-white text-sm font-medium px-4 py-2 rounded-full bg-[#f68c09] shadow-lg transform transition-transform duration-300 hover:scale-105">
+            {t("projects.view")}
           </span>
         </div>
       </div>
-      <div className="p-3 sm:p-4 lg:p-6">
-        <h3 className="text-var-caption sm:text-base text-foreground font-semibold tracking-wide">{project.title}</h3>
-        <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center justify-between">
-          <Stars value={currentRating} />
-          <div className="flex gap-1">
+      
+      {/* Content */}
+      <div className="p-2 sm:p-3 lg:p-4 flex-1 flex flex-col">
+        <h3 className="text-sm sm:text-base text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
+        
+        {/* Rating Section */}
+        <div className="mt-2 sm:mt-3 flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <Stars value={currentRating} size="sm" />
+          </div>
+          <span className="text-xs text-[#000b31]/50 font-medium">{currentRating}/5</span>
+        </div>
+        
+        {/* Rate buttons */}
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-xs text-[#000b31]/40">Rate:</span>
+          <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((score) => (
               <button
                 key={score}
-                className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+                className={`inline-flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded transition-all duration-200 ${
                   currentRating >= score
-                    ? 'bg-accent text-navy'
-                    : 'bg-foreground/20 text-foreground/60 hover:bg-foreground/30'
+                    ? 'bg-[#f68c09] text-[#000b31]'
+                    : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
                 } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
                 onClick={() => handleRating(score)}
                 disabled={submitting}
                 title={`Rate ${score} star${score > 1 ? 's' : ''}`}
               >
-                <StarIcon className="icon-xs sm:icon-sm" filled={currentRating >= score} />
+                <StarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" filled={currentRating >= score} />
               </button>
             ))}
           </div>
         </div>
+        
         {error && (
-          <div className="mt-2 text-xs text-red-500">{error}</div>
+          <div className="mt-2 text-xs text-[#f68c09] bg-[#f68c09]/10 px-2 py-1 rounded">{error}</div>
         )}
-        <div className="mt-2 sm:mt-3 lg:mt-5">
-          <a href={project.href || "#"} className="text-var-caption sm:text-sm text-foreground/80 hover:text-foreground underline">
-            {t("projects.view")}
-          </a>
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 
-function Stars({ value = 0, max = 5 }: { value?: number; max?: number }) {
+function Stars({ value = 0, max = 5, size = "md" }: { value?: number; max?: number; size?: "sm" | "md" | "lg" }) {
   const filled = Math.min(max, Math.round((value % (max + 1))));
+  const sizeClasses = {
+    sm: "w-3 h-3 sm:w-3.5 sm:h-3.5",
+    md: "w-4 h-4 sm:w-5 sm:h-5",
+    lg: "w-5 h-5 sm:w-6 sm:h-6"
+  };
   return (
-    <div className="flex items-center gap-0.5 sm:gap-1" aria-label={`${value} stars`}>
+    <div className="flex items-center gap-0.5" aria-label={`${value} stars`}>
       {Array.from({ length: max }).map((_, i) => (
-        <StarIcon key={i} className={`icon-xs sm:icon-sm lg:icon-md ${i < filled ? "text-accent" : "text-foreground/30"}`} filled={i < filled} />
+        <StarIcon 
+          key={i} 
+          className={`${sizeClasses[size]} ${i < filled ? "text-[#f68c09]" : "text-[#000b31]/20"}`} 
+          filled={i < filled} 
+        />
       ))}
-      <span className="ml-1 sm:ml-2 text-foreground/70 text-var-caption sm:text-sm">{value}</span>
     </div>
   );
 }

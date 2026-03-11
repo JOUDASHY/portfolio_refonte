@@ -6,6 +6,7 @@ import Skills from "../ux/Skills";
 import Education from "../ux/Education";
 import Projects from "../ux/Projects";
 import Experience from "../ux/Experience";
+import Internships from "../ux/Internships";
 import Contact from "../ux/Contact";
 import Banner from "../ux/Banner";
 import SocialDock from "../ux/SocialDock";
@@ -61,9 +62,11 @@ export default function Home() {
         overlayClass="bg-black/30"
       />
       <Experience />
-    
       <Contact />
+
       <SocialDock />
+      <Internships />
+
     </div>
   );
 }

@@ -187,7 +187,7 @@ export default function Contact() {
       setInvalid(true);
       return;
     }
-
+ 
     try {
       await send({ name: name.trim(), email: email.trim(), message: message.trim() });
       

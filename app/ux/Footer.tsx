@@ -9,25 +9,27 @@ export default function Footer() {
   const { profile, loading } = useProfile();
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-background shadow-lg shadow-black/10">
+    <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-[#000b31] shadow-lg shadow-black/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-3 items-start">
           {/* Column 1: Portfolio Info with Logo */}
           <div className="flex flex-col items-center sm:items-start gap-3">
             <div className="flex items-center gap-3">
-              <Image
-                src="/logo_nil.png"
-                alt="Logo"
-                width={48}
-                height={48}
-                className="object-contain rounded-lg"
-                priority
-              />
+              <div className="bg-[#f68c09] rounded-lg p-1">
+                <Image
+                  src="/logo_nil.png"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                  priority
+                />
+              </div>
               <div>
-                <h3 className="text-foreground font-bold text-sm sm:text-base">
+                <h3 className="text-white font-bold text-sm sm:text-base">
                   {loading ? "Loading..." : `${profile?.username || "Nilsen"}'s Portfolio`}
                 </h3>
-                <p className="text-foreground/70 text-xs sm:text-sm">
+                <p className="text-white/70 text-xs sm:text-sm">
                   {loading ? "Loading..." : "Développeur Web & Administrateur Système"}
                 </p>
               </div>
@@ -35,8 +37,8 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="flex flex-col items-center gap-3">
-            <h3 className="text-foreground font-bold text-sm sm:text-base">Quick Links</h3>
+          <div className="flex flex-col items-start sm:items-center gap-3">
+            <h3 className="text-white font-bold text-sm sm:text-base">Quick Links</h3>
             <div className="flex flex-col gap-2">
               {[
                 { href: "#home", label: "Home" },
@@ -49,9 +51,9 @@ export default function Footer() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors text-xs sm:text-sm"
+                  className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs sm:text-sm"
                 >
-                  <span className="text-accent">{'>'}</span>
+                  <span className="text-[#f68c09]">{'>'}</span>
                   {link.label}
                 </a>
               ))}
@@ -59,41 +61,41 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Contact Info */}
-          <div className="flex flex-col items-center sm:items-end gap-3">
-            <h3 className="text-foreground font-bold text-sm sm:text-base">Contact Info</h3>
+          <div className="flex flex-col items-start sm:items-end gap-3">
+            <h3 className="text-white font-bold text-sm sm:text-base">Contact Info</h3>
             <div className="flex flex-col gap-2">
               {profile?.phone_number && (
-                <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
+                <div className="flex items-center gap-2 text-white/70 text-xs sm:text-sm">
                   <PhoneIcon className="w-4 h-4" />
                   <span>+261 {profile.phone_number}</span>
                 </div>
               )}
-              <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
+              <div className="flex items-center gap-2 text-white/70 text-xs sm:text-sm">
                 <EmailIcon className="w-4 h-4" />
                 <span>{loading ? "Loading..." : profile?.email || "alitsiryeddynilsen@gmail.com"}</span>
               </div>
-              <div className="flex items-center gap-2 text-foreground/70 text-xs sm:text-sm">
+              <div className="flex items-center gap-2 text-white/70 text-xs sm:text-sm">
                 <LocationIcon className="w-4 h-4" />
                 <span>{loading ? "Loading..." : profile?.address || "Isada, Fianarantsoa"}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 mt-2">
               {profile?.link_linkedin && (
-                <a href={profile.link_linkedin} target="_blank" rel="noreferrer noopener" aria-label="LinkedIn" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+                <a href={profile.link_linkedin} target="_blank" rel="noreferrer noopener" aria-label="LinkedIn" className="rounded-full bg-[#f68c09] p-2 text-white hover:bg-[#f68c09]/80 transition-colors">
                   <LinkedInIcon className="w-4 h-4" />
                 </a>
               )}
               {profile?.link_facebook && (
-                <a href={profile.link_facebook} target="_blank" rel="noreferrer noopener" aria-label="Facebook" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+                <a href={profile.link_facebook} target="_blank" rel="noreferrer noopener" aria-label="Facebook" className="rounded-full bg-[#f68c09] p-2 text-white hover:bg-[#f68c09]/80 transition-colors">
                   <FacebookIcon className="w-4 h-4" />
                 </a>
               )}
               {profile?.link_github && (
-                <a href={profile.link_github} target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+                <a href={profile.link_github} target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="rounded-full bg-[#f68c09] p-2 text-white hover:bg-[#f68c09]/80 transition-colors">
                   <GitHubIcon className="w-4 h-4" />
                 </a>
               )}
-              <a href={`mailto:${profile?.email || "alitsiryeddynilsen@gmail.com"}`} aria-label="Email" className="rounded-full bg-accent p-2 text-white hover:bg-accent/80 transition-colors">
+              <a href={`mailto:${profile?.email || "alitsiryeddynilsen@gmail.com"}`} aria-label="Email" className="rounded-full bg-[#f68c09] p-2 text-white hover:bg-[#f68c09]/80 transition-colors">
                 <EmailIcon className="w-4 h-4" />
               </a>
             </div>
@@ -102,8 +104,8 @@ export default function Footer() {
 
         {/* Bottom Section */}
         <div className="mt-6 pt-4 border-t border-white/10">
-          <p className="text-center text-foreground/70 text-xs sm:text-sm">
-            Designed by <span className="text-accent font-semibold">{loading ? "Loading..." : profile?.username || "Nilsen"}</span>
+          <p className="text-center text-white/70 text-xs sm:text-sm">
+            Designed by <span className="text-[#f68c09] font-semibold">{loading ? "Loading..." : profile?.username || "Nilsen"}</span>
           </p>
         </div>
       </div>

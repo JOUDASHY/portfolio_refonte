@@ -51,11 +51,11 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-background/50 bg-background/80 border-b border-white/5">
+    <header className="fixed inset-x-0 top-0 z-50 backdrop-blur bg-[#000b31]/90 border-b border-white/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="h-12 sm:h-16 flex items-center justify-between">
           <Link href="#home" className="flex items-center gap-2 sm:gap-3">
-            <span className="relative block h-7 w-7 sm:h-9 sm:w-9 overflow-hidden rounded-full bg-accent">
+            <span className="relative block h-7 w-7 sm:h-9 sm:w-9 overflow-hidden rounded-full bg-[#f68c09]">
               <Image
                 src="/logo_nil.png"
                 alt="Nilsen logo"
@@ -65,12 +65,12 @@ export default function Navbar() {
                 priority
               />
             </span>
-            <span className="font-semibold tracking-wide text-xs sm:text-base text-foreground">{t("brand")}</span>
+            <span className="font-semibold tracking-wide text-xs sm:text-base text-white">{t("brand")}</span>
           </Link>
 
            <button
              aria-label="Toggle menu"
-             className="inline-flex items-center justify-center rounded-md p-1.5 sm:p-2 text-foreground/90 hover:text-foreground focus:outline-none focus:ring-2 ring-accent sm:hidden"
+             className="inline-flex items-center justify-center rounded-md p-1.5 sm:p-2 text-white/90 hover:text-white focus:outline-none focus:ring-2 ring-[#f68c09] sm:hidden"
              onClick={() => setIsOpen((v) => !v)}
            >
             <svg
@@ -93,7 +93,7 @@ export default function Navbar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
+                  className="text-white/80 hover:text-white transition-colors whitespace-nowrap"
                 >
                   {item.label}
                 </Link>
@@ -101,7 +101,7 @@ export default function Navbar() {
             ))}
             <li className="flex items-center gap-2">
               <button
-                className="flex items-center gap-2 rounded px-3 py-1.5 text-sm text-foreground/80 hover:text-foreground ring-1 ring-white/10 hover:ring-white/20 transition-colors bg-white/5"
+                className="flex items-center gap-2 rounded px-3 py-1.5 text-sm text-white/80 hover:text-white ring-1 ring-white/10 hover:ring-white/20 transition-colors bg-white/5"
                 onClick={() => {
                   const next = lang === "en" ? "fr" : "en";
                   setLang(next);
@@ -124,14 +124,14 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="sm:hidden border-t border-white/5">
+        <div className="sm:hidden border-t border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <ul className="space-y-1 py-2 sm:py-3 bg-background">
+            <ul className="space-y-1 py-2 sm:py-3 bg-[#000b31]">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="block rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-foreground/90 hover:bg-white/5 hover:text-foreground"
+                    className="block rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-white/90 hover:bg-white/5 hover:text-white"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.label}
@@ -140,7 +140,7 @@ export default function Navbar() {
               ))}
               <li className="pt-1 sm:pt-2">
                 <button
-                  className="flex items-center justify-center gap-3 w-full rounded-md px-3 py-2 text-sm text-foreground/90 ring-1 ring-white/10 hover:bg-white/5 hover:text-foreground transition-colors bg-white/5"
+                  className="flex items-center justify-center gap-3 w-full rounded-md px-3 py-2 text-sm text-white/90 ring-1 ring-white/10 hover:bg-white/5 hover:text-white transition-colors bg-white/5"
                   onClick={() => setLang(lang === "en" ? "fr" : "en")}
                   title={lang === "en" ? "Switch to French" : "Switch to English"}
                 >

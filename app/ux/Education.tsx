@@ -104,7 +104,7 @@ export default function Education() {
       >
         {/* Timeline connector */}
         {index !== 0 && (
-          <div className="absolute -top-8 left-8 w-0.5 h-8 bg-gradient-to-b from-[#f68c09]/30 to-[#f68c09]" />
+          <div className="absolute -top-3 left-6 sm:left-8 w-0.5 h-3 sm:h-4 bg-gradient-to-b from-[#f68c09]/30 to-[#f68c09]" />
         )}
         {children}
       </div>
@@ -124,23 +124,23 @@ export default function Education() {
         <div className="absolute top-1/2 right-0 w-96 h-96 bg-gradient-radial from-[#f68c09]/5 to-transparent rounded-full" />
       </div>
 
-      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-5xl px-3 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-6">
-            <GraduationIcon className="w-4 h-4 text-[#f68c09]" />
-            <span className="text-sm font-medium text-[#000b31]">{t("education.subtitle")}</span>
+        <div className="text-center mb-8 sm:mb-16">
+          <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-4 sm:py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-3 sm:mb-6">
+            <GraduationIcon className="w-3 h-3 sm:w-4 sm:h-4 text-[#f68c09]" />
+            <span className="text-xs sm:text-sm font-medium text-[#000b31]">{t("education.subtitle")}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#000b31] mb-4">
+          <h2 className="text-2xl sm:text-4xl lg:text-6xl font-extrabold text-[#000b31] mb-2 sm:mb-4">
             {t("education.title")}
           </h2>
-          <p className="text-lg text-[#000b31]/70 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
             My academic journey and educational background
           </p>
         </div>
 
         {error && (
-          <div className="mb-8 rounded-xl bg-[#f68c09]/10 p-4 text-[#000b31] border border-[#f68c09]/30 text-center">
+          <div className="mb-4 sm:mb-8 rounded-lg sm:rounded-xl bg-[#f68c09]/10 p-2 sm:p-4 text-[#000b31] border border-[#f68c09]/30 text-center text-xs sm:text-base">
             {error}
           </div>
         )}
@@ -150,49 +150,49 @@ export default function Education() {
           {/* Center line - desktop only */}
           <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#f68c09] via-[#f68c09]/50 to-[#f68c09]/20 -translate-x-1/2" />
           
-          <div className="space-y-8 md:space-y-0">
+          <div className="space-y-4 sm:space-y-8 md:space-y-0">
             {loading
               ? Array.from({ length: 3 }).map((_, idx) => (
-                  <div key={idx} className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8`}>
+                  <div key={idx} className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-8`}>
                     <div className="flex-1" />
-                    <div className="hidden md:flex w-4 h-4 rounded-full bg-[#f68c09] border-4 border-white shadow-lg z-10" />
+                    <div className="hidden md:flex w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-[#f68c09] border-2 sm:border-4 border-white shadow-lg z-10" />
                     <div className="flex-1">
-                      <div className="bg-white rounded-2xl p-6 border border-[#000b31]/10 shadow-sm">
-                        <div className="animate-pulse space-y-3">
-                          <div className="h-4 w-24 rounded bg-[#000b31]/10" />
-                          <div className="h-6 w-48 rounded bg-[#000b31]/10" />
-                          <div className="h-4 w-40 rounded bg-[#000b31]/10" />
+                      <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-[#000b31]/10 shadow-sm">
+                        <div className="animate-pulse space-y-2 sm:space-y-3">
+                          <div className="h-3 w-20 sm:h-4 sm:w-24 rounded bg-[#000b31]/10" />
+                          <div className="h-4 w-32 sm:h-6 sm:w-48 rounded bg-[#000b31]/10" />
+                          <div className="h-3 w-28 sm:h-4 sm:w-40 rounded bg-[#000b31]/10" />
                         </div>
                       </div>
                     </div>
                   </div>
                 ))
               : items.map((edu, idx) => (
-                  <AnimatedCard key={idx} delayMs={idx * 150} index={idx}>
-                    <div className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8`}>
+                  <AnimatedCard key={idx} delayMs={idx * 100} index={idx}>
+                    <div className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-8`}>
                       {/* Content side */}
                       <div className="flex-1 md:text-right">
-                        <div className={`bg-white rounded-2xl p-6 border border-[#000b31]/10 shadow-sm hover:shadow-xl hover:border-[#f68c09]/30 transition-all duration-500 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
+                        <div className={`bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-[#000b31]/10 shadow-sm hover:shadow-lg sm:hover:shadow-xl hover:border-[#f68c09]/30 transition-all duration-300 sm:duration-500 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
                           {/* Period badge */}
-                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-sm font-medium mb-3 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                            <CalendarIcon className="w-4 h-4" />
+                          <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-xs sm:text-sm font-medium mb-2 sm:mb-3 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                            <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span>{edu.period}</span>
                           </div>
                           
                           {/* Title */}
-                          <h3 className="text-xl font-bold text-[#000b31] mb-2 group-hover:text-[#f68c09] transition-colors">
+                          <h3 className="text-sm sm:text-xl font-bold text-[#000b31] mb-1 sm:mb-2 group-hover:text-[#f68c09] transition-colors">
                             {edu.title}
                           </h3>
                           
                           {/* School */}
-                          <p className="text-[#000b31]/70 font-medium mb-2">
+                          <p className="text-[#000b31]/70 font-medium text-xs sm:text-base mb-1 sm:mb-2">
                             {edu.school}
                           </p>
                           
                           {/* Location */}
                           {edu.detail && (
-                            <div className="flex items-center gap-2 text-[#000b31]/50 text-sm">
-                              <MapPinIcon className="w-4 h-4" />
+                            <div className="flex items-center gap-1 sm:gap-2 text-[#000b31]/50 text-xs sm:text-sm">
+                              <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                               <span>{edu.detail}</span>
                             </div>
                           )}
@@ -201,7 +201,7 @@ export default function Education() {
                       
                       {/* Center dot */}
                       <div className="hidden md:flex flex-col items-center justify-center z-10">
-                        <div className="w-5 h-5 rounded-full bg-[#f68c09] border-4 border-white shadow-lg group-hover:scale-125 transition-transform duration-300" />
+                        <div className="w-3 h-3 sm:w-5 sm:h-5 rounded-full bg-[#f68c09] border-2 sm:border-4 border-white shadow-lg group-hover:scale-125 transition-transform duration-300" />
                       </div>
                       
                       {/* Empty side for alignment */}

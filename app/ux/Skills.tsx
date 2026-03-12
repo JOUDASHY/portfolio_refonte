@@ -83,16 +83,16 @@ function SkillBar({ name, level, delay }: { name: string; level: number; delay: 
 
   return (
     <li ref={barRef} className="group">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-[#000b31] group-hover:text-[#f68c09] transition-colors">{name}</span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-[#f68c09]/10 text-[#f68c09] opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <span className="text-xs sm:text-sm font-medium text-[#000b31] group-hover:text-[#f68c09] transition-colors">{name}</span>
+          <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full bg-[#f68c09]/10 text-[#f68c09] opacity-0 group-hover:opacity-100 transition-opacity">
             {getLevelLabel(level)}
           </span>
         </div>
-        <span className="text-sm font-bold text-[#000b31]">{animatedLevel}/10</span>
+        <span className="text-xs sm:text-sm font-bold text-[#000b31]">{animatedLevel}/10</span>
       </div>
-      <div className="h-2.5 rounded-full bg-[#000b31]/10 overflow-hidden">
+      <div className="h-2 sm:h-2.5 rounded-full bg-[#000b31]/10 overflow-hidden">
         <div
           className={`h-full rounded-full ${getLevelColor(level)} transition-all duration-1000 ease-out relative`}
           style={{ width }}
@@ -130,33 +130,33 @@ function Category({ title, skills, loading, index }: { title: string; skills: Sk
   return (
     <div
       ref={cardRef}
-      className={`relative rounded-2xl bg-white border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-500 group overflow-hidden
+      className={`relative rounded-xl sm:rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-500 group overflow-hidden
         ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       {/* Decorative gradient blob */}
       <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#f68c09]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
       
       {/* Header */}
-      <div className="relative flex items-center gap-4 mb-6">
-        <div className="w-14 h-14 rounded-xl bg-[#000b31] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-          <svg className="w-7 h-7 text-[#f68c09]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+      <div className="relative flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-[#000b31] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+          <svg className="w-5 h-5 sm:w-7 sm:h-7 text-[#f68c09]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
           </svg>
         </div>
         <div>
-          <h3 className="text-lg font-bold text-[#000b31]">{title}</h3>
-          <p className="text-sm text-[#000b31]/50">{loading ? "..." : `${skills.length} skills`}</p>
+          <h3 className="text-sm sm:text-lg font-bold text-[#000b31]">{title}</h3>
+          <p className="text-xs sm:text-sm text-[#000b31]/50">{loading ? "..." : `${skills.length} skills`}</p>
         </div>
       </div>
 
       {/* Skills list */}
-      <ul className="space-y-4 relative">
+      <ul className="space-y-3 sm:space-y-4 relative">
         {loading
           ? Array.from({ length: 4 }).map((_, idx) => (
               <li key={idx}>
-                <div className="animate-pulse space-y-2">
-                  <div className="h-4 w-32 rounded bg-[#000b31]/10" />
-                  <div className="h-2.5 w-full rounded bg-[#000b31]/10" />
+                <div className="animate-pulse space-y-1.5 sm:space-y-2">
+                  <div className="h-3 w-24 sm:h-4 sm:w-32 rounded bg-[#000b31]/10" />
+                  <div className="h-2 sm:h-2.5 w-full rounded bg-[#000b31]/10" />
                 </div>
               </li>
             ))
@@ -166,13 +166,13 @@ function Category({ title, skills, loading, index }: { title: string; skills: Sk
       </ul>
 
       {/* Bottom decoration */}
-      <div className="mt-6 pt-4 border-t border-[#f68c09]/20 flex items-center justify-between text-xs text-[#000b31]/50">
+      <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-[#f68c09]/20 flex items-center justify-between text-[10px] sm:text-xs text-[#000b31]/50">
         <span>Proficiency</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((dot) => (
             <div
               key={dot}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+              className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-all duration-300 ${
                 !loading && skills.length > 0 && dot <= Math.ceil(skills.reduce((a, s) => a + s.level, 0) / skills.length / 2)
                   ? "bg-[#f68c09] scale-110"
                   : "bg-[#000b31]/20"
@@ -209,29 +209,29 @@ export default function Skills() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-[#f68c09]/10 to-transparent rounded-full" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#f68c09] animate-pulse" />
-            <span className="text-sm font-medium text-[#000b31]">{t("skills.subtitle")}</span>
+        <div className="text-center mb-8 sm:mb-16">
+          <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-4 sm:py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-3 sm:mb-6">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#f68c09] animate-pulse" />
+            <span className="text-xs sm:text-sm font-medium text-[#000b31]">{t("skills.subtitle")}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#000b31] mb-4">
+          <h2 className="text-2xl sm:text-4xl lg:text-6xl font-extrabold text-[#000b31] mb-2 sm:mb-4">
             {t("skills.title")}
           </h2>
-          <p className="text-lg text-[#000b31]/70 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
             Technologies and tools I use to bring ideas to life
           </p>
         </div>
 
         {error && (
-          <div className="mb-8 rounded-xl bg-[#f68c09]/10 p-4 text-[#000b31] border border-[#f68c09]/30 text-center">
+          <div className="mb-4 sm:mb-8 rounded-lg sm:rounded-xl bg-[#f68c09]/10 p-2 sm:p-4 text-[#000b31] border border-[#f68c09]/30 text-center text-xs sm:text-base">
             {error}
           </div>
         )}
 
         {/* Skills grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:gap-8 md:grid-cols-2 xl:grid-cols-4">
           {categories.map((cat, idx) => (
             <Category
               key={cat}
@@ -245,7 +245,7 @@ export default function Skills() {
 
         {/* Bottom stats */}
         {!loading && (
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="mt-8 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
             {[
               { label: "Total Skills", value: Array.from(grouped.values()).flat().length },
               { label: "Categories", value: grouped.size },
@@ -254,10 +254,10 @@ export default function Skills() {
             ].map((stat, idx) => (
               <div 
                 key={stat.label}
-                className="text-center p-6 rounded-xl bg-white border border-[#f68c09]/20 backdrop-blur-sm"
+                className="text-center p-3 sm:p-6 rounded-lg sm:rounded-xl bg-white border border-[#f68c09]/20 backdrop-blur-sm"
               >
-                <div className="text-3xl font-bold text-[#f68c09]">{stat.value}</div>
-                <div className="text-sm text-[#000b31]/60 mt-1">{stat.label}</div>
+                <div className="text-xl sm:text-3xl font-bold text-[#f68c09]">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-[#000b31]/60 mt-1">{stat.label}</div>
               </div>
             ))}
           </div>

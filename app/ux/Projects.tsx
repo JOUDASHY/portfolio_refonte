@@ -71,9 +71,9 @@ function ProjectGrid() {
       <li
         ref={ref}
         className={`${visible ? "animate-fade-in-up" : "opacity-0 translate-y-8"} 
-          group rounded-2xl overflow-hidden bg-white border border-[#000b31]/10 
+          group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 
           shadow-sm hover:shadow-2xl hover:shadow-[#f68c09]/10 
-          transition-all duration-500 hover:-translate-y-2`}
+          transition-all duration-500 hover:-translate-y-1`}
         style={visible ? { animationDelay: `${delayMs}ms` } : undefined}
       >
         {children}
@@ -90,18 +90,18 @@ function ProjectGrid() {
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
+    <ul className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
-            <li key={i} className="group rounded-2xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
-              <div className="relative h-28 sm:h-36 lg:h-44 w-full bg-[#000b31]/5">
-                <div className="absolute inset-0 p-4">
+            <li key={i} className="group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
+              <div className="relative h-20 sm:h-28 lg:h-36 w-full bg-[#000b31]/5">
+                <div className="absolute inset-0 p-2 sm:p-3">
                   <div className="animate-pulse h-full w-full rounded-lg bg-[#000b31]/10" />
                 </div>
               </div>
-              <div className="p-3 sm:p-4">
-                <div className="animate-pulse h-4 w-32 rounded bg-[#000b31]/10" />
-                <div className="mt-3 h-3 w-20 rounded bg-[#000b31]/10" />
+              <div className="p-2 sm:p-3">
+                <div className="animate-pulse h-3 w-20 rounded bg-[#000b31]/10" />
+                <div className="mt-2 h-2 w-16 rounded bg-[#000b31]/10" />
               </div>
             </li>
           ))
@@ -155,52 +155,52 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative h-28 sm:h-36 lg:h-44 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent">
+      <div className="relative h-20 sm:h-28 lg:h-36 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent">
         <div className={`absolute inset-0 bg-[#f68c09]/10 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
         <Image 
           src={project.image} 
           alt={project.title} 
           fill 
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" 
-          className={`object-contain p-3 sm:p-4 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`} 
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw" 
+          className={`object-contain p-2 sm:p-3 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`} 
         />
         
         {/* Rating Badge */}
-        <div className="absolute left-2 top-2 sm:left-3 sm:top-3 rounded-full bg-[#000b31]/80 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm text-white backdrop-blur-sm border border-[#f68c09]/30">
-          <span className="inline-flex items-center gap-1">
-            <StarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-[#f68c09]" filled={true} /> 
+        <div className="absolute left-1 top-1 sm:left-2 sm:top-2 rounded-full bg-[#000b31]/80 px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[10px] sm:text-xs text-white backdrop-blur-sm border border-[#f68c09]/30">
+          <span className="inline-flex items-center gap-0.5">
+            <StarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#f68c09]" filled={true} /> 
             <span className="font-semibold">{currentRating}</span>
           </span>
         </div>
         
         {/* Hover overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-[#000b31]/60 to-transparent transition-opacity duration-300 flex items-end justify-center pb-4 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="text-white text-sm font-medium px-4 py-2 rounded-full bg-[#f68c09] shadow-lg transform transition-transform duration-300 hover:scale-105">
+        <div className={`absolute inset-0 bg-gradient-to-t from-[#000b31]/60 to-transparent transition-opacity duration-300 flex items-end justify-center pb-2 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+          <span className="text-white text-[10px] sm:text-xs font-medium px-2 py-1 rounded-full bg-[#f68c09] shadow-lg">
             {t("projects.view")}
           </span>
         </div>
       </div>
       
       {/* Content */}
-      <div className="p-2 sm:p-3 lg:p-4 flex-1 flex flex-col">
-        <h3 className="text-sm sm:text-base text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
+      <div className="p-1.5 sm:p-2 lg:p-3 flex-1 flex flex-col">
+        <h3 className="text-[10px] sm:text-sm text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
         
         {/* Rating Section */}
-        <div className="mt-2 sm:mt-3 flex items-center justify-between">
-          <div className="flex items-center gap-1">
+        <div className="mt-1 sm:mt-2 flex items-center justify-between">
+          <div className="flex items-center gap-0.5">
             <Stars value={currentRating} size="sm" />
           </div>
-          <span className="text-xs text-[#000b31]/50 font-medium">{currentRating}/5</span>
+          <span className="text-[8px] sm:text-xs text-[#000b31]/50 font-medium">{currentRating}/5</span>
         </div>
         
         {/* Rate buttons */}
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-xs text-[#000b31]/40">Rate:</span>
+        <div className="mt-1 sm:mt-2 flex items-center justify-between">
+          <span className="text-[8px] sm:text-xs text-[#000b31]/40">Rate:</span>
           <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((score) => (
               <button
                 key={score}
-                className={`inline-flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded transition-all duration-200 ${
+                className={`inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded transition-all duration-200 ${
                   currentRating >= score
                     ? 'bg-[#f68c09] text-[#000b31]'
                     : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
@@ -209,14 +209,14 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
                 disabled={submitting}
                 title={`Rate ${score} star${score > 1 ? 's' : ''}`}
               >
-                <StarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" filled={currentRating >= score} />
+                <StarIcon className="w-2 h-2 sm:w-3 sm:h-3" filled={currentRating >= score} />
               </button>
             ))}
           </div>
         </div>
         
         {error && (
-          <div className="mt-2 text-xs text-[#f68c09] bg-[#f68c09]/10 px-2 py-1 rounded">{error}</div>
+          <div className="mt-1 text-[8px] text-[#f68c09] bg-[#f68c09]/10 px-1 py-0.5 rounded">{error}</div>
         )}
       </div>
     </div>

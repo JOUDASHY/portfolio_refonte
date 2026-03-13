@@ -150,7 +150,7 @@ export default function Experience() {
                             {/* Period badge */}
                             <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-[10px] sm:text-xs font-medium mb-1 sm:mb-2 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                               <CalendarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                              <span>{formatPeriodFr(r.period)}</span>
+                              <span>{formatPeriodFr(r.period, t("lang") || "fr")}</span>
                             </div>
                             
                             {/* Title */}
@@ -163,7 +163,14 @@ export default function Experience() {
                               <BuildingIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                               <span>{r.company}</span>
                             </div>
-                            
+
+                            {/* Type badge */}
+                            <div className={`mt-1 sm:mt-1.5 ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
+                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-[#000b31] text-white`}>
+                                {r.type === 'stage' ? 'Stage' : 'Professionnel'}
+                              </span>
+                            </div>
+
                             {/* Summary */}
                             {r.summary && (
                               <p className="text-[#000b31]/50 text-[10px] sm:text-xs mt-0.5 sm:mt-1">
@@ -203,21 +210,33 @@ export default function Experience() {
 }
 
 
-function formatPeriodFr(period: string | null | undefined): string {
+function formatPeriodFr(period: string | null | undefined, lang: string = "fr"): string {
   if (!period || typeof period !== "string") return "";
   // Split on en dash or hyphen ranges
   const parts = period.split(/\s+[–-]\s+/);
-  const format = (d: string) => {
+  
+  const nowText = lang === "en" ? "Now" : "Maintenant";
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const format = (d: string, isEndDate: boolean = false) => {
     // normalize YYYY-MM-DD
     const trimmed = d.trim();
     // Some backends may return only year-month or other; rely on Date parsing
     const date = new Date(trimmed);
     if (isNaN(date.getTime())) return trimmed; // fallback
+    
+    // If it's the end date and it's in the future, show "Now"/"Maintenant"
+    if (isEndDate && date.getTime() >= today.getTime()) {
+      return nowText;
+    }
+    
     // Use French locale with month in letters
     return date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   };
+  
   if (parts.length === 2) {
-    return `${format(parts[0])} – ${format(parts[1])}`;
+    return `${format(parts[0])} – ${format(parts[1], true)}`;
   }
   // Single date
   return format(period);

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 
 // Flag SVG components for better cross-platform display
@@ -36,9 +36,18 @@ const FRFlag = () => (
 export default function Navbar() {
   // ULTRA COMPACT BUTTONS - FORCE RELOAD
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { t, lang, setLang } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { href: "#home", label: t("nav.home") },
@@ -51,7 +60,11 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 backdrop-blur bg-[#000b31]/90 border-b border-white/10">
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? "backdrop-blur-md bg-[#000b31]/50 border-b border-white/10" 
+            : "bg-transparent border-b-0"
+        }`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="h-12 sm:h-16 flex items-center justify-between">
           <Link href="#home" className="flex items-center gap-2 sm:gap-3">

@@ -105,7 +105,7 @@ function SkillBar({ name, level, delay }: { name: string; level: number; delay: 
 }
 
 // Category card with animations
-function Category({ title, skills, loading, index }: { title: string; skills: Skill[]; loading?: boolean; index: number }) {
+function Category({ title, skills, loading, index, t }: { title: string; skills: Skill[]; loading?: boolean; index: number; t: (key: string) => string }) {
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const iconPath = categoryIcons[title] || categoryIcons["Tooling"];
@@ -167,7 +167,7 @@ function Category({ title, skills, loading, index }: { title: string; skills: Sk
 
       {/* Bottom decoration */}
       <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-[#f68c09]/20 flex items-center justify-between text-[10px] sm:text-xs text-[#000b31]/50">
-        <span>Proficiency</span>
+        <span>{t("skills.proficiency")}</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((dot) => (
             <div
@@ -220,7 +220,7 @@ export default function Skills() {
             {t("skills.title")}
           </h2>
           <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
-            Technologies and tools I use to bring ideas to life
+            {t("skills.description")}
           </p>
         </div>
 
@@ -239,6 +239,7 @@ export default function Skills() {
               skills={loading ? [] : grouped.get(cat) || []}
               loading={loading}
               index={idx}
+              t={t}
             />
           ))}
         </div>
@@ -247,10 +248,10 @@ export default function Skills() {
         {!loading && (
           <div className="mt-8 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
             {[
-              { label: "Total Skills", value: Array.from(grouped.values()).flat().length },
-              { label: "Categories", value: grouped.size },
-              { label: "Expert Level", value: Array.from(grouped.values()).flat().filter(s => s.level >= 8).length },
-              { label: "Years Exp.", value: "5+" },
+              { label: t("skills.stats.totalSkills"), value: Array.from(grouped.values()).flat().length },
+              { label: t("skills.stats.categories"), value: grouped.size },
+              { label: t("skills.stats.expertLevel"), value: Array.from(grouped.values()).flat().filter(s => s.level >= 8).length },
+              { label: t("skills.stats.yearsExp"), value: "5+" },
             ].map((stat, idx) => (
               <div 
                 key={stat.label}

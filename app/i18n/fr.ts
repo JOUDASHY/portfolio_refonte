@@ -1,4 +1,5 @@
 const fr = {
+  lang: "fr",
   brand: "Portfolio",
   nav: {
     home: "Accueil",
@@ -95,6 +96,7 @@ const fr = {
   skills: {
     title: "Compétences",
     subtitle: "Expériences techniques et outils",
+    description: "Technologies et outils que j'utilise pour donner vie aux idées",
     categories: {
       frontend: "Front‑end",
       backend: "Back‑end",
@@ -106,10 +108,18 @@ const fr = {
       advanced: "Avancé",
       expert: "Expert",
     },
+    proficiency: "Maîtrise",
+    stats: {
+      totalSkills: "Compétences totales",
+      categories: "Catégories",
+      expertLevel: "Niveau Expert",
+      yearsExp: "Années d'exp.",
+    },
   },
   education: {
     title: "Éducation",
     subtitle: "Parcours académique",
+    description: "Mon parcours académique et ma formation",
   },
   experience: {
     title: "Expérience professionnelle",

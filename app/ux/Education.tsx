@@ -135,7 +135,7 @@ export default function Education() {
             {t("education.title")}
           </h2>
           <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
-            My academic journey and educational background
+            {t("education.description")}
           </p>
         </div>
 

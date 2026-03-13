@@ -10,9 +10,11 @@ import { useBackofficeExperiences } from "../../../hooks/useBackofficeExperience
 
 type Experience = {
   id: string;
-  period: string;
+  date_debut: string;
+  date_fin: string;
   title: string;
   company: string;
+  type: "stage" | "professionnel";
   summary?: string;
   stack?: string[];
   updatedAt: string;
@@ -23,9 +25,11 @@ export default function ExperiencePage() {
   const { items, loading, error, setError, create, update, remove } = useBackofficeExperiences();
 
   const [form, setForm] = useState<Omit<Experience, "id" | "updatedAt">>({
-    period: "",
+    date_debut: "",
+    date_fin: "",
     title: "",
     company: "",
+    type: "professionnel",
     summary: "",
     stack: [],
   });
@@ -41,21 +45,24 @@ export default function ExperiencePage() {
         return (
           e.title.toLowerCase().includes(q) ||
           e.company.toLowerCase().includes(q) ||
-          e.period.toLowerCase().includes(q)
+          e.date_debut.toLowerCase().includes(q) ||
+          e.date_fin.toLowerCase().includes(q)
         );
       }),
     [items, query]
   );
 
   const columns: TableColumn<Experience>[] = [
-    { key: "period", header: "Période" },
+    { key: "date_debut", header: "Date début" },
+    { key: "date_fin", header: "Date fin" },
     { key: "title", header: "Titre" },
     { key: "company", header: "Société" },
+    { key: "type", header: "Type" },
     { key: "updatedAt", header: "Mis à jour" },
   ];
 
   function resetForm() {
-    setForm({ period: "", title: "", company: "", summary: "", stack: [] });
+    setForm({ date_debut: "", date_fin: "", title: "", company: "", type: "professionnel", summary: "", stack: [] });
     setEditingId(null);
     setIsFormOpen(false);
   }
@@ -77,8 +84,8 @@ export default function ExperiencePage() {
   function handleEdit(id: string) {
     const target = items.find((e) => e.id === id);
     if (!target) return;
-    const { period, title, company, summary, stack } = target;
-    setForm({ period, title, company, summary, stack: stack || [] });
+    const { date_debut, date_fin, title, company, type, summary, stack } = target;
+    setForm({ date_debut, date_fin, title, company, type, summary, stack: stack || [] });
     setEditingId(id);
     setIsFormOpen(true);
   }
@@ -108,7 +115,7 @@ export default function ExperiencePage() {
             variant="secondary"
             onClick={() => {
               setEditingId(null);
-              setForm({ period: "", title: "", company: "", summary: "", stack: [] });
+              setForm({ date_debut: "", date_fin: "", title: "", company: "", type: "professionnel", summary: "", stack: [] });
               setIsFormOpen(true);
             }}
           >
@@ -150,12 +157,20 @@ export default function ExperiencePage() {
         size="lg"
       >
         <div className="space-y-3">
-          <Input
-            label="Période"
-            placeholder="2024 – Présent"
-            value={form.period}
-            onChange={(e) => setForm((f) => ({ ...f, period: e.target.value }))}
-          />
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="Date début"
+              placeholder="2025-03-01"
+              value={form.date_debut}
+              onChange={(e) => setForm((f) => ({ ...f, date_debut: e.target.value }))}
+            />
+            <Input
+              label="Date fin"
+              placeholder="2026-03-01"
+              value={form.date_fin}
+              onChange={(e) => setForm((f) => ({ ...f, date_fin: e.target.value }))}
+            />
+          </div>
           <Input
             label="Titre"
             placeholder="Développeur Full‑Stack"
@@ -168,6 +183,17 @@ export default function ExperiencePage() {
             value={form.company}
             onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
           />
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Type</label>
+            <select
+              value={form.type}
+              onChange={(e) => setForm((f) => ({ ...f, type: e.target.value as "stage" | "professionnel" }))}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="professionnel">Professionnel</option>
+              <option value="stage">Stage</option>
+            </select>
+          </div>
           <Input
             label="Résumé"
             placeholder="Description courte…"

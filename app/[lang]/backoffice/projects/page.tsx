@@ -123,11 +123,18 @@ export default function ProjectsPage() {
 
   async function handleSubmit() {
     try {
-      if (editingId) await update(editingId, form);
-      else await create(form);
+      if (editingId) {
+        await update(editingId, form);
+        await NotificationService.showSuccessToast("Projet modifié avec succès");
+      } else {
+        await create(form);
+        await NotificationService.showSuccessToast("Projet ajouté avec succès");
+      }
       resetForm();
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
+      const msg = e instanceof Error ? e.message : "Échec de l'enregistrement";
+      setError(msg);
+      await NotificationService.showErrorToast(msg);
     }
   }
 

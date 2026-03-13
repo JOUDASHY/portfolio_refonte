@@ -8,6 +8,7 @@ export type UiExperience = {
   period: string;
   title: string;
   company: string;
+  type: "stage" | "professionnel";
   summary?: string | null;
 };
 
@@ -27,6 +28,7 @@ export function useExperiences() {
           period: `${e.date_debut} – ${e.date_fin}`,
           title: e.role,
           company: e.entreprise,
+          type: e.type as "stage" | "professionnel",
           summary: e.description ?? null,
         }));
         setItems(mapped);

@@ -6,11 +6,13 @@ import { useLanguage } from "../hooks/LanguageProvider";
 import { useTheme } from "../components/ThemeProvider";
 import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 import { useProfile } from "../hooks/useProfile";
+import { useCV } from "../hooks/useCV";
 
 export default function About() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const { profile, loading, error } = useProfile();
+  const { cv, getDownloadUrl } = useCV();
   const isDark = theme === "dark";
   function AnimatedBox({ children, delayMs = 0, className = "" }: { children: React.ReactNode; delayMs?: number; className?: string }) {
     const ref = useRef<HTMLDivElement | null>(null);
@@ -225,10 +227,17 @@ export default function About() {
                       <span className="text-var-caption sm:text-sm">Facebook</span>
                     </a>
                   )}
-                  <a href="/cv.pdf" className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-accent px-3 sm:px-5 py-1.5 sm:py-2 font-semibold text-white hover:brightness-110 transition-all duration-200">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm"><path d="M5 20h14v-2H5v2zM9 4h6v6h4l-7 7-7-7h4V4z"/></svg>
-                    <span className="text-var-caption sm:text-sm">Download CV</span>
-                  </a>
+                  {cv ? (
+                    <a 
+                      href={getDownloadUrl()} 
+                      target="_blank" 
+                      rel="noreferrer noopener" 
+                      className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-accent px-3 sm:px-5 py-1.5 sm:py-2 font-semibold text-white hover:brightness-110 transition-all duration-200"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm"><path d="M5 20h14v-2H5v2zM9 4h6v6h4l-7 7-7-7h4V4z"/></svg>
+                      <span className="text-var-caption sm:text-sm">Download CV</span>
+                    </a>
+                  ) : null}
                 </div>
               </AnimatedBox>
             </div>

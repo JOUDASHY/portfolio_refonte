@@ -6,8 +6,9 @@ import { LanguageProvider } from "../hooks/LanguageProvider";
 import KeepAliveGate from "../components/KeepAliveGate";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Nilsen Portfolio",
+  title: "Nilsen Tovohery – Portfolio",
+  description:
+    "Portfolio de Nilsen Tovohery, développeur full‑stack et administrateur systèmes basé à Fianarantsoa, Madagascar.",
 };
 
 export default async function LangLayout({

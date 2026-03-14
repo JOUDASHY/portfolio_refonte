@@ -13,17 +13,24 @@ const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <div>
         {label ? (
-          <label htmlFor={inputId} className="block text-var-caption sm:text-sm font-medium text-navy/80">
+          <label
+            htmlFor={inputId}
+            className="block text-sm font-medium text-foreground"
+          >
             {label}
           </label>
         ) : null}
         <input
           id={inputId}
           ref={ref}
-          className={`mt-1 w-full rounded-lg border border-black/10 bg-white px-2 py-1.5 sm:px-3 sm:py-2 text-var-caption sm:text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-accent ${className}`}
+          className={`mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring ${className}`}
           {...props}
         />
-        {hint ? <p className="mt-1 text-var-caption text-navy/60">{hint}</p> : null}
+        {hint ? (
+          <p className="mt-1 text-xs text-foreground/60">
+            {hint}
+          </p>
+        ) : null}
       </div>
     );
   }

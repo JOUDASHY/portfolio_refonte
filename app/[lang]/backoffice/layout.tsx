@@ -9,6 +9,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const links = [
     { href: "dashboard", label: "Accueil", icon: HomeIcon, match: "/backoffice/dashboard" },
+    { href: "prospects", label: "Prospection", icon: ProspectIcon, match: "/backoffice/prospects" },
     { href: "projects", label: "Projet", icon: ProjectIcon, match: "/backoffice/projects" },
     { href: "experience", label: "Expérience", icon: ExperienceIcon, match: "/backoffice/experience" },
     { href: "education", label: "Éducation", icon: EducationIcon, match: "/backoffice/education" },
@@ -43,6 +44,14 @@ function HomeIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M12 3l9 8h-3v9H6v-9H3l9-8z" />
+    </svg>
+  );
+}
+
+function ProspectIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M12 12a3 3 0 110-6 3 3 0 010 6zm0 2c-3.33 0-6 1.34-6 3v1h12v-1c0-1.66-2.67-3-6-3zm7-9h-3V3h3a2 2 0 012 2v3h-2V5zm-14 0h3V3H5a2 2 0 00-2 2v3h2V5zm0 14v-2H3v2a2 2 0 002 2h3v-2H5zm14 0v-2h-2v2h-3v2h3a2 2 0 002-2z" />
     </svg>
   );
 }

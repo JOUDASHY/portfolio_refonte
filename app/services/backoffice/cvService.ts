@@ -14,10 +14,13 @@ export const cvService = {
   // Get active CV info (public)
   getActive: () => apiNoAuth.get<CVModel>("cv/"),
   
+  // View CV in browser (public)
+  getViewUrl: () => {
+    return `${BASE_URL}cv/`;
+  },
+  
   // Download CV as PDF (public)
   getDownloadUrl: () => {
-    // BASE_URL is http://localhost:8000/api/ so we need to go up one level for cv endpoint
-    // or use the base without /api/ if cv is at /api/cv/
     return `${BASE_URL}cv/?download=true`;
   },
   

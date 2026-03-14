@@ -2,6 +2,22 @@
 
 import { apiAuth, apiNoAuth } from "../../lib/axiosClient";
 import type { Email, EmailResponse, HistoricMail } from "../../types/backoffice/email";
+import type { MessageTemplate } from "../../types/backoffice/prospect";
+
+export type SendMailEntreprisePayload = {
+  nomEntreprise: string;
+  emailEntreprise: string;
+  lieuEntreprise: string;
+  template_id?: number;
+  custom_subject?: string;
+  custom_body?: string;
+  contact_name?: string;
+  student_name?: string;
+  school_name?: string;
+  internship_type?: string;
+  internship_duration?: string;
+  internship_start_date?: string;
+};
 
 export const emailService = {
   list: () => apiAuth.get<Email[]>("emails/"),
@@ -16,7 +32,13 @@ export const emailService = {
   responseUpdate: (id: number | string, payload: Partial<EmailResponse>) => apiAuth.put<EmailResponse>(`email-responses/${id}/`, payload),
   responseRemove: (id: number | string) => apiAuth.delete(`email-responses/${id}/`),
 
-  sendMailEntreprise: (payload: { nomEntreprise: string; emailEntreprise: string; lieuEntreprise: string }) => apiAuth.post<{ message: string }>("mail_entreprise/", payload),
+  sendMailEntreprise: (payload: SendMailEntreprisePayload) =>
+    apiAuth.post<{ message: string }>("mail_entreprise/", payload),
+
+  listInternshipTemplates: (language: "fr" | "en") =>
+    apiAuth.get<MessageTemplate[]>("message-templates/", {
+      params: { usage_type: "internship", language },
+    }),
   listHistoric: () => apiAuth.get<HistoricMail[]>("historic-mails/"),
 };
 

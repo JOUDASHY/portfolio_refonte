@@ -14,3 +14,4 @@ export { visitService } from "./backoffice/visitService";
 export { facebookService } from "./backoffice/facebookService";
 export { myloginService } from "./backoffice/myloginService";
 export { cvService } from "./backoffice/cvService";
+export { prospectService } from "./backoffice/prospectService";

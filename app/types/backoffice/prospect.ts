@@ -20,6 +20,8 @@ export interface Prospect {
   contact_name?: string;
   email?: string;
   phone?: string;
+  whatsapp_phone?: string;
+  facebook_url?: string;
   address?: string;
   city?: string;
   google_maps_url?: string;
@@ -53,6 +55,8 @@ export interface ProspectMessage {
   id: number;
   prospect: number;
   template?: number;
+  channel?: "email" | "whatsapp" | "facebook" | string;
+  channel_display?: string;
   subject: string;
   body: string;
   status: MessageStatus;
@@ -60,15 +64,25 @@ export interface ProspectMessage {
   created_at: string;
 }
 
-export type TemplateStage = "initial" | "follow_up" | "proposal" | "closing";
+export type TemplateStage =
+  | "initial"
+  | "follow_up"
+  | "proposal"
+  | "closing"
+  | "thank_you"
+  | "acceptance";
 
 export interface MessageTemplate {
   id: number;
   name: string;
   language: "fr" | "en";
   stage: TemplateStage;
+  usage_type?: "prospecting" | "internship" | string;
+  stage_display?: string;
+  usage_type_display?: string;
   subject: string;
   body: string;
+  cover_letter_html?: string | null;
   is_default: boolean;
   created_at: string;
   updated_at: string;
@@ -94,6 +108,8 @@ export interface CreateProspectPayload {
   contact_name?: string;
   email?: string;
   phone?: string;
+  whatsapp_phone?: string;
+  facebook_url?: string;
   address?: string;
   city?: string;
   google_maps_url?: string;
@@ -115,6 +131,7 @@ export interface CreateNotePayload {
 
 export interface SendMessagePayload {
   template_id?: number;
+  channel?: "email" | "whatsapp" | "facebook" | string;
   subject?: string;
   body?: string;
 }
@@ -123,8 +140,10 @@ export interface CreateTemplatePayload {
   name: string;
   language: "fr" | "en";
   stage: TemplateStage;
+  usage_type: "prospecting" | "internship" | string;
   subject: string;
   body: string;
+  cover_letter_html?: string | null;
   is_default?: boolean;
 }
 
@@ -151,6 +170,8 @@ export const TEMPLATE_STAGE_LABELS: Record<TemplateStage, { fr: string; en: stri
   follow_up: { fr: "Relance", en: "Follow Up" },
   proposal: { fr: "Proposition", en: "Proposal" },
   closing: { fr: "Clôture", en: "Closing" },
+  thank_you: { fr: "Remerciement", en: "Thank you" },
+  acceptance: { fr: "Acceptation", en: "Acceptance" },
 };
 
 export const DEFAULT_TEMPLATES: Omit<MessageTemplate, "id" | "created_at" | "updated_at">[] = [

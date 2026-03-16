@@ -11,6 +11,7 @@ export type SendMailEntreprisePayload = {
   template_id?: number;
   custom_subject?: string;
   custom_body?: string;
+  custom_cover_letter_html?: string;
   contact_name?: string;
   student_name?: string;
   school_name?: string;

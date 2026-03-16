@@ -19,6 +19,8 @@ export default function NewProspectPage() {
     contact_name: "",
     email: "",
     phone: "",
+    whatsapp_phone: "",
+    facebook_url: "",
     address: "",
     city: "",
     google_maps_url: "",
@@ -82,6 +84,11 @@ export default function NewProspectPage() {
             onChange={(e: any) => setForm((f) => ({ ...f, phone: e.target.value }))}
           />
           <Input
+            label={lang === "fr" ? "WhatsApp (optionnel)" : "WhatsApp (optional)"}
+            value={form.whatsapp_phone}
+            onChange={(e: any) => setForm((f) => ({ ...f, whatsapp_phone: e.target.value }))}
+          />
+          <Input
             label={lang === "fr" ? "Adresse" : "Address"}
             value={form.address}
             onChange={(e: any) => setForm((f) => ({ ...f, address: e.target.value }))}
@@ -103,6 +110,11 @@ export default function NewProspectPage() {
             label={lang === "fr" ? "Site web" : "Website"}
             value={form.website_url}
             onChange={(e: any) => setForm((f) => ({ ...f, website_url: e.target.value }))}
+          />
+          <Input
+            label={lang === "fr" ? "Facebook URL (optionnel)" : "Facebook URL (optional)"}
+            value={form.facebook_url}
+            onChange={(e: any) => setForm((f) => ({ ...f, facebook_url: e.target.value }))}
           />
 
           <div>

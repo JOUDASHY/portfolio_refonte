@@ -59,7 +59,12 @@ export const prospectService = {
     ),
 
   // Templates
-  listTemplates: (params?: { language?: "fr" | "en"; stage?: string }) =>
+  listTemplates: (params?: {
+    language?: "fr" | "en";
+    stage?: string;
+    usage_type?: string;
+    is_default?: boolean;
+  }) =>
     apiAuth.get<MessageTemplate[]>("message-templates/", { params }),
 
   createTemplate: (payload: CreateTemplatePayload) =>
@@ -67,6 +72,9 @@ export const prospectService = {
 
   updateTemplate: (id: number, payload: CreateTemplatePayload) =>
     apiAuth.put<MessageTemplate>(`message-templates/${id}/`, payload),
+
+  patchTemplate: (id: number, payload: Partial<CreateTemplatePayload>) =>
+    apiAuth.patch<MessageTemplate>(`message-templates/${id}/`, payload),
 
   deleteTemplate: (id: number) =>
     apiAuth.delete(`message-templates/${id}/`),

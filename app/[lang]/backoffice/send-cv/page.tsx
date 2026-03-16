@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../../../hooks/LanguageProvider";
 import Button from "../../../ux/ui/Button";
 import Input from "../../../ux/ui/Input";
@@ -34,7 +34,105 @@ export default function SendCvPage() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | "">("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const [coverLetterHtml, setCoverLetterHtml] = useState("");
+  const [coverLetterText, setCoverLetterText] = useState("");
+  const [coverLetterMode, setCoverLetterMode] = useState<"simple" | "html">(
+    "simple"
+  );
   const [cvUrl, setCvUrl] = useState<string | null>(null);
+  const selectedTemplate =
+    selectedTemplateId === ""
+      ? undefined
+      : templates.find((t) => t.id === selectedTemplateId);
+  const coverLetterHtmlAvailable =
+    selectedTemplate?.cover_letter_html &&
+    selectedTemplate.cover_letter_html.trim().length > 0
+      ? selectedTemplate.cover_letter_html
+      : null;
+
+  function fixMisencodedUtf8(text: string | null | undefined): string {
+    if (!text) return "";
+    // Heuristic: only try to fix if we see typical misencoded chars
+    if (!/[ÃÂ]/.test(text)) return text;
+    try {
+      const bytes = Uint8Array.from(Array.from(text, (ch) => ch.charCodeAt(0)));
+      const decoder = new TextDecoder("utf-8");
+      return decoder.decode(bytes);
+    } catch {
+      return text;
+    }
+  }
+
+  function cleanMessageText(text: string | null | undefined): string {
+    const fixed = fixMisencodedUtf8(text);
+    return fixed
+      .replaceAll("\uFFFD", "") // � replacement char
+      .replaceAll("�S&", "•")
+      .replaceAll("�", "")
+      .replace(/\s{3,}/g, "  ")
+      .normalize("NFC");
+  }
+
+  function htmlToSimpleText(html: string): string {
+    try {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const contentEl = doc.querySelector(".content");
+      const text = (contentEl?.textContent || doc.body.textContent || "").trim();
+      return text.replace(/\n{3,}/g, "\n\n");
+    } catch {
+      return "";
+    }
+  }
+
+  function escapeHtml(text: string): string {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function buildCoverLetterHtmlFromText(text: string): string {
+    const safe = escapeHtml(text);
+    const paragraphs = safe
+      .split(/\n\s*\n/g)
+      .map((p) => p.trim())
+      .filter(Boolean)
+      .map((p) => `<p>${p.replace(/\n/g, "<br/>")}</p>`)
+      .join("\n");
+
+    return `<!DOCTYPE html>
+<html lang="${lang === "fr" ? "fr" : "en"}">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    @page { margin: 2cm; }
+    body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.6; }
+    .content { text-align: justify; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    ${paragraphs || "<p></p>"}
+  </div>
+</body>
+</html>`;
+  }
+
+  const coverLetterHtmlForPreview = useMemo(() => {
+    if (!coverLetterHtmlAvailable) return null;
+    if (coverLetterMode === "html") {
+      return (coverLetterHtml || coverLetterHtmlAvailable).trim();
+    }
+    return buildCoverLetterHtmlFromText(coverLetterText);
+  }, [
+    coverLetterHtmlAvailable,
+    coverLetterMode,
+    coverLetterHtml,
+    coverLetterText,
+    lang,
+  ]);
 
   useEffect(() => {
     async function loadTemplates() {
@@ -73,14 +171,28 @@ export default function SendCvPage() {
       setSelectedTemplateId("");
       setSubject("");
       setBody("");
+      setCoverLetterHtml("");
+      setCoverLetterText("");
+      setCoverLetterMode("simple");
       return;
     }
     const id = Number(value);
     setSelectedTemplateId(id);
     const tpl = templates.find((t) => t.id === id);
     if (tpl) {
-      setSubject(tpl.subject);
-      setBody(tpl.body);
+      const fixedSubject = cleanMessageText(tpl.subject);
+      const fixedBody = cleanMessageText(tpl.body);
+      const fixedCoverLetterHtml = tpl.cover_letter_html?.trim()
+        ? cleanMessageText(tpl.cover_letter_html)
+        : "";
+
+      setSubject(fixedSubject);
+      setBody(fixedBody);
+      setCoverLetterHtml(fixedCoverLetterHtml);
+      setCoverLetterText(
+        fixedCoverLetterHtml ? htmlToSimpleText(fixedCoverLetterHtml) : ""
+      );
+      setCoverLetterMode("simple");
     }
   }
 
@@ -95,12 +207,20 @@ export default function SendCvPage() {
         template_id: selectedTemplateId ? Number(selectedTemplateId) : undefined,
         custom_subject: subject || undefined,
         custom_body: body || undefined,
+        custom_cover_letter_html: coverLetterHtmlAvailable
+          ? (coverLetterMode === "html"
+              ? (coverLetterHtml || coverLetterHtmlAvailable)
+              : buildCoverLetterHtmlFromText(coverLetterText)) || undefined
+          : undefined,
       });
       setSuccessOpen(true);
       setForm({ nomEntreprise: "", emailEntreprise: "", lieuEntreprise: "" });
       setSelectedTemplateId("");
       setSubject("");
       setBody("");
+      setCoverLetterHtml("");
+      setCoverLetterText("");
+      setCoverLetterMode("simple");
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Échec de l'envoi");
     } finally {
@@ -116,12 +236,14 @@ export default function SendCvPage() {
       <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            {lang === "fr" ? "Envoyer mon CV à une entreprise" : "Send my CV to a company"}
+            {lang === "fr"
+              ? "Envoyer mon CV + message à une entreprise"
+              : "Send my CV + message to a company"}
           </h1>
           <p className="mt-1 text-foreground/60 text-sm">
             {lang === "fr"
-              ? "Renseignez l'entreprise, choisissez une lettre de motivation et envoyez votre CV automatiquement."
-              : "Fill in the company, choose a cover letter and send your CV automatically."}
+              ? "Renseignez l'entreprise, écrivez un COURT message d'email, puis (facultatif) une lettre de motivation PDF."
+              : "Fill in the company, write a SHORT email message, then optionally a PDF cover letter."}
           </p>
         </div>
         <a
@@ -209,7 +331,7 @@ export default function SendCvPage() {
             </div>
 
             <Input
-              label={lang === "fr" ? "Sujet de l'email" : "Email subject"}
+              label={lang === "fr" ? "Sujet de l'email (court)" : "Email subject (short)"}
               placeholder={
                 lang === "fr"
                   ? "Ex: Candidature stage développement web"
@@ -220,7 +342,11 @@ export default function SendCvPage() {
             />
 
             <Textarea
-              label={lang === "fr" ? "Lettre de motivation" : "Cover letter"}
+              label={
+                lang === "fr"
+                  ? "Message de l'email (court, dans le corps du mail)"
+                  : "Email message (short, in email body)"
+              }
               rows={8}
               value={body}
               onChange={(e) => setBody(e.target.value)}
@@ -230,6 +356,84 @@ export default function SendCvPage() {
                   : "Dear Sir or Madam,\n\nI would like to apply for..."
               }
             />
+
+            {coverLetterHtmlAvailable ? (
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-foreground">
+                    {lang === "fr"
+                      ? "Aperçu LM (PDF)"
+                      : "Cover letter preview (PDF)"}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCoverLetterMode("simple")}
+                      className={`rounded-lg px-2 py-1 text-xs ring-1 transition-colors ${
+                        coverLetterMode === "simple"
+                          ? "bg-white/20 text-foreground ring-white/20"
+                          : "bg-transparent text-foreground/60 ring-white/10 hover:bg-white/10"
+                      }`}
+                    >
+                      {lang === "fr" ? "Simple" : "Simple"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCoverLetterMode("html")}
+                      className={`rounded-lg px-2 py-1 text-xs ring-1 transition-colors ${
+                        coverLetterMode === "html"
+                          ? "bg-white/20 text-foreground ring-white/20"
+                          : "bg-transparent text-foreground/60 ring-white/10 hover:bg-white/10"
+                      }`}
+                    >
+                      {lang === "fr" ? "Avancé (HTML)" : "Advanced (HTML)"}
+                    </button>
+                  </div>
+                </div>
+
+                {coverLetterMode === "simple" ? (
+                  <Textarea
+                    label={
+                      lang === "fr"
+                        ? "Lettre de motivation (texte simple)"
+                        : "Cover letter (simple text)"
+                    }
+                    rows={8}
+                    value={coverLetterText}
+                    onChange={(e) => setCoverLetterText(e.target.value)}
+                    placeholder={
+                      lang === "fr"
+                        ? "Madame, Monsieur,\n\nJe me permets de vous proposer ma candidature..."
+                        : "Dear Sir/Madam,\n\nI would like to apply for..."
+                    }
+                  />
+                ) : (
+                  <Textarea
+                    label={
+                      lang === "fr"
+                        ? "LM (HTML) — mode avancé"
+                        : "Cover letter (HTML) — advanced mode"
+                    }
+                    rows={8}
+                    value={coverLetterHtml}
+                    onChange={(e) => setCoverLetterHtml(e.target.value)}
+                    placeholder={"<!DOCTYPE html>..."}
+                  />
+                )}
+                <div className="mt-2 overflow-hidden rounded-lg ring-1 ring-white/10 bg-white">
+                  <iframe
+                    title={
+                      lang === "fr"
+                        ? "Aperçu lettre de motivation"
+                        : "Cover letter preview"
+                    }
+                    className="h-[340px] w-full"
+                    sandbox=""
+                    srcDoc={coverLetterHtmlForPreview ?? ""}
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-auto pt-4 flex items-center justify-end gap-2">
@@ -244,6 +448,9 @@ export default function SendCvPage() {
                 setSelectedTemplateId("");
                 setSubject("");
                 setBody("");
+                setCoverLetterHtml("");
+                setCoverLetterText("");
+                setCoverLetterMode("simple");
               }}
             >
               {lang === "fr" ? "Réinitialiser" : "Reset"}

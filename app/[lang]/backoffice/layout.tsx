@@ -10,6 +10,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
   const links = [
     { href: "dashboard", label: "Accueil", icon: HomeIcon, match: "/backoffice/dashboard" },
     { href: "prospects", label: "Prospection", icon: ProspectIcon, match: "/backoffice/prospects" },
+    { href: "templates", label: "Templates", icon: TemplateIcon, match: "/backoffice/templates" },
     { href: "projects", label: "Projet", icon: ProjectIcon, match: "/backoffice/projects" },
     { href: "experience", label: "Expérience", icon: ExperienceIcon, match: "/backoffice/experience" },
     { href: "education", label: "Éducation", icon: EducationIcon, match: "/backoffice/education" },
@@ -140,6 +141,14 @@ function FacebookIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M22 12a10 10 0 10-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.16 1.8.16v2h-1c-1 0-1.3.62-1.3 1.26V12h2.3l-.37 3h-1.93v7A10 10 0 0022 12z" />
+    </svg>
+  );
+}
+
+function TemplateIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M6 2h9l5 5v15a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm8 1.5V8h4.5L14 3.5zM8 12h8v2H8v-2zm0 4h8v2H8v-2z" />
     </svg>
   );
 }

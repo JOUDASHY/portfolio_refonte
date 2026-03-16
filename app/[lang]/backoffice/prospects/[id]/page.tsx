@@ -21,12 +21,37 @@ export default function ProspectDetailPage() {
   const router = useRouter();
   const { t, lang } = useLanguage();
   const prospectId = parseInt(params.id as string);
-  
+
+  function fixMisencodedUtf8(text: string | null | undefined): string {
+    if (!text) return "";
+    if (!/[ÃÂ]/.test(text)) return text;
+    try {
+      const bytes = Uint8Array.from(Array.from(text, (ch) => ch.charCodeAt(0)));
+      return new TextDecoder("utf-8").decode(bytes);
+    } catch {
+      return text;
+    }
+  }
+
+  function cleanMessageText(text: string | null | undefined): string {
+    const fixed = fixMisencodedUtf8(text);
+    // Replace common "unknown character" replacement symbol and mojibake bullets
+    // NOTE: If the original bytes were already lost and replaced by �, we can't recover them.
+    return fixed
+      .replaceAll("\uFFFD", "") // � replacement char
+      .replaceAll("�S&", "•")
+      .replaceAll("�", "")
+      .replace(/\s{3,}/g, "  ")
+      .normalize("NFC");
+  }
+
   const [form, setForm] = useState({
     company_name: "",
     contact_name: "",
     email: "",
     phone: "",
+    whatsapp_phone: "",
+    facebook_url: "",
     address: "",
     city: "",
     google_maps_url: "",
@@ -50,6 +75,11 @@ export default function ProspectDetailPage() {
   const [messageBody, setMessageBody] = useState("");
   const [previewLoading, setPreviewLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [contactChannels, setContactChannels] = useState<{
+    email: boolean;
+    whatsapp: boolean;
+    facebook: boolean;
+  }>({ email: true, whatsapp: false, facebook: false });
 
   const {
     templates,
@@ -66,6 +96,8 @@ export default function ProspectDetailPage() {
           contact_name: data.contact_name || "",
           email: data.email || "",
           phone: data.phone || "",
+          whatsapp_phone: (data as any).whatsapp_phone || "",
+          facebook_url: (data as any).facebook_url || "",
           address: data.address || "",
           city: data.city || "",
           google_maps_url: data.google_maps_url || "",
@@ -77,7 +109,13 @@ export default function ProspectDetailPage() {
           status: data.status,
           notes: data.notes?.map((n) => n.content).join("\n") || "",
         });
-        setMessages(data.messages || []);
+        setMessages(
+          (data.messages || []).map((m) => ({
+            ...m,
+            subject: cleanMessageText(m.subject),
+            body: cleanMessageText(m.body),
+          }))
+        );
       }
       setLoading(false);
     }
@@ -91,8 +129,8 @@ export default function ProspectDetailPage() {
     setPreviewLoading(true);
     try {
       const { data } = await prospectService.previewMessage(prospectId, Number(selectedTemplateId));
-      setMessageSubject(data.subject);
-      setMessageBody(data.body);
+      setMessageSubject(cleanMessageText(data.subject));
+      setMessageBody(cleanMessageText(data.body));
     } catch {
       // laisser les champs tels quels en cas d'erreur
     } finally {
@@ -105,21 +143,191 @@ export default function ProspectDetailPage() {
       alert(lang === "fr" ? "Sujet et message obligatoires" : "Subject and message are required");
       return;
     }
-    setSending(true);
+    const selected = Object.entries(contactChannels)
+      .filter(([, v]) => v)
+      .map(([k]) => k);
+
+    if (selected.length === 0) {
+      alert(lang === "fr" ? "Choisis au moins un canal" : "Select at least one channel");
+      return;
+    }
+
+    const subject = cleanMessageText(messageSubject).trim();
+    const body = cleanMessageText(messageBody).trim();
+
+    // 1) Email = backend send/log
+    if (contactChannels.email) {
+      setSending(true);
+      try {
+        const { data } = await prospectService.sendMessage(prospectId, {
+          template_id: selectedTemplateId ? Number(selectedTemplateId) : undefined,
+          channel: "email",
+          subject,
+          body,
+        });
+        setMessages((prev) => [
+          {
+            ...data,
+            subject: cleanMessageText(data.subject),
+            body: cleanMessageText(data.body),
+          },
+          ...prev,
+        ]);
+      } catch {
+        alert(lang === "fr" ? "Échec de l'envoi email" : "Failed to send email");
+      } finally {
+        setSending(false);
+      }
+    }
+
+    // 2) WhatsApp = redirect (manual)
+    if (contactChannels.whatsapp) {
+      const phone = normalizePhoneForWaMe(form.whatsapp_phone || form.phone || "");
+      if (!phone) {
+        alert(lang === "fr" ? "Téléphone/WhatsApp manquant" : "Phone/WhatsApp is missing");
+      } else {
+        const wa = `https://wa.me/${phone}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
+        window.open(wa, "_blank", "noopener,noreferrer");
+      }
+    }
+
+    // 3) Facebook = redirect (manual)
+    if (contactChannels.facebook) {
+      const fbUrl =
+        form.facebook_url?.trim() ||
+        extractFacebookUrl(form.google_maps_url, form.website_url, form.notes);
+      if (!fbUrl) {
+        alert(
+          lang === "fr"
+            ? "Lien Facebook introuvable (mets-le dans Google Maps URL / Site web / Notes)"
+            : "Facebook link not found (put it in Google Maps URL / Website / Notes)"
+        );
+      } else {
+        const messengerUrl = getMessengerUrlFromFacebookUrl(fbUrl);
+        void copyToClipboardWithFallback(`${subject}\n\n${body}`).then(() => {
+          alert(
+            lang === "fr"
+              ? "Message copié. Ouveture de Messenger: collez avec Ctrl+V."
+              : "Message copied. Opening Messenger: paste with Ctrl+V."
+          );
+          window.open(messengerUrl, "_blank", "noopener,noreferrer");
+        });
+      }
+    }
+
+    // Clear editor (we keep history intact)
+    setMessageSubject("");
+    setMessageBody("");
+    if (contactChannels.email) {
+      alert(lang === "fr" ? "Email envoyé (si coché) + redirections ouvertes" : "Email sent (if checked) + redirects opened");
+    }
+  }
+
+  function extractFacebookUrl(...candidates: Array<string | null | undefined>): string | null {
+    for (const raw of candidates) {
+      if (!raw) continue;
+      const match = raw.match(/https?:\/\/(?:www\.)?(facebook\.com|fb\.watch)\/[^\s)"]+/i);
+      if (match) return match[0];
+      if (/facebook\.com|fb\.watch/i.test(raw) && raw.startsWith("http")) return raw;
+    }
+    return null;
+  }
+
+  function normalizePhoneForWaMe(phone: string): string {
+    // Keep digits only. wa.me expects international format without "+" or spaces.
+    return phone.replace(/[^\d]/g, "");
+  }
+
+  function getMessengerUrlFromFacebookUrl(fbUrl: string): string {
     try {
-      const { data } = await prospectService.sendMessage(prospectId, {
-        template_id: selectedTemplateId ? Number(selectedTemplateId) : undefined,
-        subject: messageSubject,
-        body: messageBody,
-      });
-      setMessages((prev) => [data, ...prev]);
-      setMessageSubject("");
-      setMessageBody("");
-      alert(lang === "fr" ? "Message enregistré dans l'historique" : "Message logged for this prospect");
+      const url = new URL(fbUrl);
+      const host = url.hostname.replace(/^www\./, "").toLowerCase();
+      if (host === "facebook.com") {
+        const path = url.pathname.replace(/^\/+/, "");
+        const username = path.split("/")[0];
+        if (username && !["pages", "profile.php"].includes(username)) {
+          return `https://m.me/${username}`;
+        }
+      }
+      return fbUrl;
     } catch {
-      alert(lang === "fr" ? "Échec de l'envoi du message" : "Failed to send message");
-    } finally {
-      setSending(false);
+      return fbUrl;
+    }
+  }
+
+  async function copyToClipboardWithFallback(text: string): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      window.prompt(
+        lang === "fr"
+          ? "Copiez ce message (Ctrl+C), puis collez-le dans Messenger (Ctrl+V) :"
+          : "Copy this message (Ctrl+C), then paste it in Messenger (Ctrl+V):",
+        text
+      );
+    }
+  }
+
+  function openContactRedirects() {
+    const subject = cleanMessageText(messageSubject).trim();
+    const body = cleanMessageText(messageBody).trim();
+
+    if (!subject || !body) {
+      alert(lang === "fr" ? "Sujet et message obligatoires" : "Subject and message are required");
+      return;
+    }
+
+    const selected = Object.entries(contactChannels)
+      .filter(([, v]) => v)
+      .map(([k]) => k);
+
+    if (selected.length === 0) {
+      alert(lang === "fr" ? "Choisis au moins un canal" : "Select at least one channel");
+      return;
+    }
+
+    if (contactChannels.email) {
+      if (!form.email?.trim()) {
+        alert(lang === "fr" ? "Email du prospect manquant" : "Prospect email is missing");
+      } else {
+        const mailto = `mailto:${encodeURIComponent(form.email.trim())}?subject=${encodeURIComponent(
+          subject
+        )}&body=${encodeURIComponent(body)}`;
+        window.open(mailto, "_blank", "noopener,noreferrer");
+      }
+    }
+
+    if (contactChannels.whatsapp) {
+      const phone = normalizePhoneForWaMe(form.whatsapp_phone || form.phone || "");
+      if (!phone) {
+        alert(lang === "fr" ? "Téléphone/WhatsApp manquant" : "Phone/WhatsApp is missing");
+      } else {
+        const wa = `https://wa.me/${phone}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
+        window.open(wa, "_blank", "noopener,noreferrer");
+      }
+    }
+
+    if (contactChannels.facebook) {
+      const fbUrl =
+        form.facebook_url?.trim() ||
+        extractFacebookUrl(form.google_maps_url, form.website_url, form.notes);
+      if (!fbUrl) {
+        alert(
+          lang === "fr"
+            ? "Lien Facebook introuvable (mets-le dans Google Maps URL / Site web / Notes)"
+            : "Facebook link not found (put it in Google Maps URL / Website / Notes)"
+        );
+      } else {
+        const messengerUrl = getMessengerUrlFromFacebookUrl(fbUrl);
+        void copyToClipboardWithFallback(`${subject}\n\n${body}`).then(() => {
+          alert(
+            lang === "fr"
+              ? "Message copié. Ouveture de Messenger: collez avec Ctrl+V."
+              : "Message copied. Opening Messenger: paste with Ctrl+V."
+          );
+          window.open(messengerUrl, "_blank", "noopener,noreferrer");
+        });
+      }
     }
   }
 
@@ -196,6 +404,12 @@ export default function ProspectDetailPage() {
             onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
           />
           <Input
+            label={lang === "fr" ? "WhatsApp (optionnel)" : "WhatsApp (optional)"}
+            placeholder={lang === "fr" ? "Ex: +261 34 12 345 67" : "e.g. +261 34 12 345 67"}
+            value={form.whatsapp_phone}
+            onChange={(e) => setForm((f) => ({ ...f, whatsapp_phone: e.target.value }))}
+          />
+          <Input
             label={lang === "fr" ? "Adresse" : "Address"}
             value={form.address}
             onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
@@ -213,6 +427,12 @@ export default function ProspectDetailPage() {
             label="Google Maps URL"
             value={form.google_maps_url}
             onChange={(e) => setForm((f) => ({ ...f, google_maps_url: e.target.value }))}
+          />
+          <Input
+            label={lang === "fr" ? "Facebook URL (optionnel)" : "Facebook URL (optional)"}
+            placeholder="https://facebook.com/..."
+            value={form.facebook_url}
+            onChange={(e) => setForm((f) => ({ ...f, facebook_url: e.target.value }))}
           />
           <Input
             label={lang === "fr" ? "Site web" : "Website"}
@@ -376,21 +596,62 @@ export default function ProspectDetailPage() {
               </p>
             )}
 
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handlePreview}
-                disabled={!selectedTemplateId || previewLoading}
-              >
-                {previewLoading
-                  ? lang === "fr"
-                    ? "Prévisualisation..."
-                    : "Previewing..."
-                  : lang === "fr"
-                  ? "Prévisualiser avec les données du prospect"
-                  : "Preview with prospect data"}
-              </Button>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap gap-3 text-sm">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={contactChannels.email}
+                    onChange={(e) =>
+                      setContactChannels((c) => ({ ...c, email: e.target.checked }))
+                    }
+                  />
+                  <span>{lang === "fr" ? "Email" : "Email"}</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={contactChannels.whatsapp}
+                    onChange={(e) =>
+                      setContactChannels((c) => ({ ...c, whatsapp: e.target.checked }))
+                    }
+                  />
+                  <span>{lang === "fr" ? "WhatsApp" : "WhatsApp"}</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={contactChannels.facebook}
+                    onChange={(e) =>
+                      setContactChannels((c) => ({ ...c, facebook: e.target.checked }))
+                    }
+                  />
+                  <span>{lang === "fr" ? "Facebook" : "Facebook"}</span>
+                </label>
+              </div>
+
+              <div className="text-xs text-foreground/60">
+                {lang === "fr"
+                  ? "Email = envoi automatique. WhatsApp/Facebook = redirection manuelle."
+                  : "Email = automatic send. WhatsApp/Facebook = manual redirect."}
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handlePreview}
+                  disabled={!selectedTemplateId || previewLoading}
+                >
+                  {previewLoading
+                    ? lang === "fr"
+                      ? "Prévisualisation..."
+                      : "Previewing..."
+                    : lang === "fr"
+                    ? "Prévisualiser avec les données du prospect"
+                    : "Preview with prospect data"}
+                </Button>
+              </div>
             </div>
 
             <Input
@@ -448,7 +709,7 @@ export default function ProspectDetailPage() {
                   className="rounded-lg border border-white/10 bg-black/10 p-3 text-sm space-y-1"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <div className="font-medium">{m.subject}</div>
+                    <div className="font-medium">{cleanMessageText(m.subject)}</div>
                     <span className="text-xs text-foreground/60">
                       {new Date(m.created_at).toLocaleString(lang === "fr" ? "fr-FR" : "en-US")}
                     </span>
@@ -465,7 +726,7 @@ export default function ProspectDetailPage() {
                     )}
                   </div>
                   <pre className="mt-1 whitespace-pre-wrap text-foreground/80 text-xs">
-                    {m.body}
+                    {cleanMessageText(m.body)}
                   </pre>
                 </div>
               ))}

@@ -129,6 +129,15 @@ export interface CreateNotePayload {
   content: string;
 }
 
+export interface ProspectRating {
+  id: number;
+  prospect: number;
+  rating: number; // 1-5
+  comment?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SendMessagePayload {
   template_id?: number;
   channel?: "email" | "whatsapp" | "facebook" | string;

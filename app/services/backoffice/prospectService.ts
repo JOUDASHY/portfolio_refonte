@@ -13,6 +13,7 @@ import type {
   CreateNotePayload,
   SendMessagePayload,
   CreateTemplatePayload,
+  ProspectRating,
 } from "../../types/backoffice/prospect";
 
 export const prospectService = {
@@ -78,4 +79,16 @@ export const prospectService = {
 
   deleteTemplate: (id: number) =>
     apiAuth.delete(`message-templates/${id}/`),
+
+  // Ratings
+  getRating: (prospectId: number) =>
+    apiAuth.get<ProspectRating>(`prospects/${prospectId}/rating/`),
+
+  setRating: (
+    prospectId: number,
+    payload: { rating: number; comment?: string }
+  ) => apiAuth.post<ProspectRating>(`prospects/${prospectId}/rating/`, payload),
+
+  deleteRating: (prospectId: number) =>
+    apiAuth.delete<void>(`prospects/${prospectId}/rating/`),
 };

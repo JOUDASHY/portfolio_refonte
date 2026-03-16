@@ -15,11 +15,13 @@ import {
   type ProspectMessage,
 } from "@/app/types/backoffice/prospect";
 import { useLanguage } from "@/app/hooks/LanguageProvider";
+import { useTheme } from "@/app/components/ThemeProvider";
 
 export default function ProspectDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { t, lang } = useLanguage();
+  const { theme } = useTheme();
   const prospectId = parseInt(params.id as string);
 
   function fixMisencodedUtf8(text: string | null | undefined): string {
@@ -87,6 +89,11 @@ export default function ProspectDetailPage() {
     error: templatesError,
   } = useMessageTemplates();
 
+  const [rating, setRating] = useState<number | null>(null);
+  const [ratingComment, setRatingComment] = useState("");
+  const [ratingHover, setRatingHover] = useState(0);
+  const [ratingSaving, setRatingSaving] = useState(false);
+
   useEffect(() => {
     async function load() {
       const data = await getDetail(prospectId);
@@ -116,6 +123,14 @@ export default function ProspectDetailPage() {
             body: cleanMessageText(m.body),
           }))
         );
+        try {
+          const { data: ratingData } = await prospectService.getRating(prospectId);
+          setRating(ratingData.rating);
+          setRatingComment(ratingData.comment || "");
+        } catch {
+          setRating(null);
+          setRatingComment("");
+        }
       }
       setLoading(false);
     }
@@ -220,6 +235,31 @@ export default function ProspectDetailPage() {
     setMessageBody("");
     if (contactChannels.email) {
       alert(lang === "fr" ? "Email envoyé (si coché) + redirections ouvertes" : "Email sent (if checked) + redirects opened");
+    }
+  }
+
+  async function handleSetRating(stars: number) {
+    setRatingSaving(true);
+    try {
+      const { data } = await prospectService.setRating(prospectId, {
+        rating: stars,
+        comment: ratingComment || undefined,
+      });
+      setRating(data.rating);
+      setRatingComment(data.comment || "");
+      alert(
+        lang === "fr"
+          ? `Note enregistrée: ${data.rating}/5 ⭐`
+          : `Rating saved: ${data.rating}/5 ⭐`
+      );
+    } catch {
+      alert(
+        lang === "fr"
+          ? "Échec de l'enregistrement de la note"
+          : "Failed to save rating"
+      );
+    } finally {
+      setRatingSaving(false);
     }
   }
 
@@ -374,9 +414,43 @@ export default function ProspectDetailPage() {
             {lang === "fr" ? "Modifier les informations" : "Edit information"}
           </p>
         </div>
-        <Button variant="secondary" onClick={() => router.push("/backoffice/prospects")}>
-          {lang === "fr" ? "Retour" : "Back"}
-        </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex gap-1 text-lg">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  disabled={ratingSaving}
+                  onClick={() => handleSetRating(star)}
+                  onMouseEnter={() => setRatingHover(star)}
+                  onMouseLeave={() => setRatingHover(0)}
+                  className={`transition-transform hover:scale-110 ${
+                    (ratingHover || rating || 0) >= star
+                      ? theme === "dark"
+                        ? "text-yellow-300"
+                        : "text-blue-400"
+                      : "text-foreground/30"
+                  }`}
+                >
+                  {(ratingHover || rating || 0) >= star ? "⭐" : "☆"}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-foreground/60">
+              {rating
+                ? lang === "fr"
+                  ? `Note: ${rating}/5`
+                  : `Rating: ${rating}/5`
+                : lang === "fr"
+                ? "Pas encore noté"
+                : "Not rated yet"}
+            </p>
+          </div>
+          <Button variant="secondary" onClick={() => router.push("/backoffice/prospects")}>
+            {lang === "fr" ? "Retour" : "Back"}
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -439,6 +513,27 @@ export default function ProspectDetailPage() {
             value={form.website_url}
             onChange={(e) => setForm((f) => ({ ...f, website_url: e.target.value }))}
           />
+
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">
+              {lang === "fr" ? "Commentaire sur la note" : "Rating comment"}
+            </label>
+            <Textarea
+              rows={3}
+              value={ratingComment}
+              onChange={(e) => setRatingComment(e.target.value)}
+              onBlur={() => {
+                if (rating) {
+                  void handleSetRating(rating);
+                }
+              }}
+              placeholder={
+                lang === "fr"
+                  ? "Budget, intérêt, timing... (facultatif)"
+                  : "Budget, interest, timing... (optional)"
+              }
+            />
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">

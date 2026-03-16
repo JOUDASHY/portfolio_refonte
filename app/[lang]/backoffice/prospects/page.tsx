@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Button from "@/app/ux/ui/Button";
 import SearchBar from "@/app/ux/ui/SearchBar";
 import { useProspects } from "@/app/hooks/useProspects";
+import { prospectService } from "@/app/services/backoffice/prospectService";
 import {
   PROSPECT_STATUS_LABELS,
   PROSPECT_SOURCE_LABELS,
@@ -71,6 +72,7 @@ export default function ProspectsPage() {
   const [filterSource, setFilterSource] = useState<string>("all");
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const { items, loading, error, remove, updateStatus } = useProspects();
+  const [ratings, setRatings] = useState<Record<number, number | null>>({});
 
   const filtered = useMemo(() => {
     return items.filter((prospect) => {
@@ -86,6 +88,39 @@ export default function ProspectsPage() {
       return matchesSearch && matchesSource;
     });
   }, [items, query, filterSource]);
+
+  // Optionally fetch ratings and show stars in cards
+  useEffect(() => {
+    let cancelled = false;
+    async function loadRatings() {
+      try {
+        const uniqueIds = Array.from(new Set(items.map((p) => p.id)));
+        const entries: [number, number | null][] = [];
+        for (const id of uniqueIds) {
+          try {
+            const { data } = await prospectService.getRating(id);
+            entries.push([id, data.rating]);
+          } catch {
+            // No rating or error: treat as null
+            entries.push([id, null]);
+          }
+        }
+        if (!cancelled) {
+          setRatings(Object.fromEntries(entries));
+        }
+      } catch {
+        // ignore global error, ratings are optional
+      }
+    }
+    if (items.length) {
+      void loadRatings();
+    } else {
+      setRatings({});
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [items]);
 
   async function handleDelete(id: number) {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce prospect ?")) return;
@@ -430,6 +465,24 @@ export default function ProspectsPage() {
                             </button>
                           </div>
                         </div>
+                        {ratings[prospect.id] != null && (
+                          <div className="mt-1 flex items-center gap-0.5 text-[10px]">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span
+                                key={star}
+                                className={
+                                  (ratings[prospect.id] || 0) >= star
+                                    ? theme === "dark"
+                                      ? "text-yellow-300"
+                                      : "text-blue-400"
+                                    : "text-foreground/30"
+                                }
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ))}
 

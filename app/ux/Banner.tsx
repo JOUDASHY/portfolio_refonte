@@ -12,6 +12,17 @@ type BannerProps = {
   children?: ReactNode;
 };
 
+type SplitBannerProps = {
+  title?: ReactNode;
+  subtitle?: ReactNode;
+  imageSrc: string;
+  imageAlt?: string;
+  reverse?: boolean;
+  heightClass?: string;
+  overlayClass?: string;
+  children?: ReactNode;
+};
+
 function normalizeYouTube(url: string): string | null {
   try {
     const u = new URL(url);
@@ -105,5 +116,54 @@ export default function Banner({
     </section>
   );
 }
+
+export function SplitBanner({
+  title,
+  subtitle,
+  imageSrc,
+  imageAlt,
+  reverse = false,
+  heightClass = "h-[260px] sm:h-[320px] lg:h-[380px]",
+  overlayClass = "bg-black/5",
+  children,
+}: SplitBannerProps) {
+  return (
+    <section className={`relative isolate ${heightClass} overflow-hidden`}>
+      <div className={`absolute inset-0 ${overlayClass}`} />
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          className={`grid w-full grid-cols-1 gap-4 sm:grid-cols-2 items-center ${
+            reverse ? "sm:flex-row-reverse" : ""
+          }`}
+        >
+          <div className="hidden sm:block h-full">
+            <div className="relative h-full w-full rounded-2xl overflow-hidden bg-black/10">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${imageSrc})` }}
+                aria-hidden="true"
+              />
+              <span className="sr-only">{imageAlt || ""}</span>
+            </div>
+          </div>
+          <div className="flex flex-col justify-center gap-2 sm:gap-3 text-[#000b31]">
+            {title ? (
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight text-[#f68c09]">
+                {title}
+              </h2>
+            ) : null}
+            {subtitle ? (
+              <p className="text-sm sm:text-base lg:text-lg text-[#000b31]/70">
+                {subtitle}
+              </p>
+            ) : null}
+            {children}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 

@@ -6,6 +6,7 @@ import { useLanguage } from "../hooks/LanguageProvider";
 import { useTheme } from "../components/ThemeProvider";
 import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 import { useProjects } from "../hooks/useProjects";
+import { ratingService } from "../services/backoffice/ratingService";
 
 export default function Projects() {
   const { t } = useLanguage();
@@ -125,22 +126,11 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
     setSubmitting(true);
     setError(null);
     try {
-      const response = await fetch('/api/rating/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          project_id: project.id,
-          score: score
-        })
+      const { data } = await ratingService.create({
+        project_id: project.id,
+        score,
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to submit rating');
-      }
-      
-      setCurrentRating(score);
+      setCurrentRating(data.score);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to submit rating");
     } finally {

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useSendEmail } from "../hooks/useSendEmail";
 import { useProfile } from "../hooks/useProfile";
-import { NotificationService } from "../services/notificationService";
+import { toast } from "react-toastify";
 
 // Heartbeat Connection Indicator Component - ECG Style
 function HeartbeatConnection() {
@@ -190,16 +190,12 @@ export default function Contact() {
  
     try {
       await send({ name: name.trim(), email: email.trim(), message: message.trim() });
-      
-      await NotificationService.showSuccess({
-        text: t("contact.successMessage")
-      });
+
+      toast.success(t("contact.successMessage"));
       
       resetForm();
     } catch {
-      await NotificationService.showError({
-        text: error || t("contact.errorMessage")
-      });
+      toast.error(error || t("contact.errorMessage"));
     }
   }
 

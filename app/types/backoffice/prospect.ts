@@ -143,6 +143,8 @@ export interface SendMessagePayload {
   channel?: "email" | "whatsapp" | "facebook" | string;
   subject?: string;
   body?: string;
+  attachments?: number[];
+  include_cv?: boolean;
 }
 
 export interface CreateTemplatePayload {

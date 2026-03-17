@@ -7,10 +7,13 @@ import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeFormations } from "../../../hooks/useBackofficeFormations";
+import Loading from "../../../ux/Loading";
+import { toast } from "react-toastify";
 
 type Training = {
   id: string;
-  period: string; // ex: 2023 – 2024
+  debut: string; // YYYY-MM-DD
+  fin: string; // YYYY-MM-DD
   title: string; // ex: Formation React Avancée
   provider: string; // ex: OpenClassrooms
   detail?: string; // ex: Certificat, contenu
@@ -20,8 +23,16 @@ type Training = {
 export default function TrainingPage() {
   const [query, setQuery] = useState("");
   const { items, loading, error, setError, create, update, remove } = useBackofficeFormations();
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  const [form, setForm] = useState<Omit<Training, "id" | "updatedAt">>({ period: "", title: "", provider: "", detail: "" });
+  const [form, setForm] = useState<Omit<Training, "id" | "updatedAt">>({
+    debut: "",
+    fin: "",
+    title: "",
+    provider: "",
+    detail: "",
+  });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -34,56 +45,78 @@ export default function TrainingPage() {
         return (
           t.title.toLowerCase().includes(q) ||
           t.provider.toLowerCase().includes(q) ||
-          t.period.toLowerCase().includes(q)
+          t.debut.toLowerCase().includes(q) ||
+          t.fin.toLowerCase().includes(q)
         );
       }),
     [items, query]
   );
 
   const columns: TableColumn<Training>[] = [
-    { key: "period", header: "Période" },
+    { key: "debut", header: "Début" },
+    { key: "fin", header: "Fin" },
     { key: "title", header: "Intitulé" },
     { key: "provider", header: "Organisme" },
     { key: "updatedAt", header: "Mis à jour" },
   ];
 
   function resetForm() {
-    setForm({ period: "", title: "", provider: "", detail: "" });
+    setForm({ debut: "", fin: "", title: "", provider: "", detail: "" });
     setEditingId(null);
     setIsFormOpen(false);
   }
 
   async function handleSubmit() {
+    setSubmitting(true);
+    setError(null);
     try {
-      if (editingId) await update(editingId, form);
-      else await create(form);
+      if (editingId) {
+        await update(editingId, form);
+        toast.success("Formation mise à jour");
+      } else {
+        await create(form);
+        toast.success("Formation ajoutée");
+      }
       resetForm();
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
+      const message = e instanceof Error ? e.message : "Échec de l'enregistrement";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
     }
   }
 
   function handleEdit(id: string) {
     const target = items.find((t) => t.id === id);
     if (!target) return;
-    const { period, title, provider, detail } = target;
-    setForm({ period, title, provider, detail: detail || "" });
+    const { debut, fin, title, provider, detail } = target;
+    setForm({ debut, fin, title, provider, detail: detail || "" });
     setEditingId(id);
     setIsFormOpen(true);
   }
 
   async function confirmDelete() {
     if (!deleteId) return;
+    setDeleting(true);
+    setError(null);
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
+      toast.success("Formation supprimée");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Échec de la suppression";
+      setError(message);
+      toast.error(message);
     } finally {
+      setDeleting(false);
       setDeleteId(null);
     }
   }
 
   return (
     <div className="space-y-6">
+      {(loading || submitting || deleting) && <Loading />}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Formations</h1>
         <div className="flex items-center gap-2">
@@ -93,9 +126,10 @@ export default function TrainingPage() {
           />
           <Button
             variant="secondary"
+            disabled={loading || submitting || deleting}
             onClick={() => {
               setEditingId(null);
-              setForm({ period: "", title: "", provider: "", detail: "" });
+              setForm({ debut: "", fin: "", title: "", provider: "", detail: "" });
               setIsFormOpen(true);
             }}
           >
@@ -117,8 +151,22 @@ export default function TrainingPage() {
           actionsHeader="Actions"
           actions={(row) => (
             <div className="inline-flex items-center gap-2">
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as Training).id)}>Éditer</Button>
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as Training).id)}>Supprimer</Button>
+              <Button
+                variant="ghost"
+                className="px-2 py-1 text-sm"
+                disabled={loading || submitting || deleting}
+                onClick={() => handleEdit((row as Training).id)}
+              >
+                Éditer
+              </Button>
+              <Button
+                variant="ghost"
+                className="px-2 py-1 text-sm"
+                disabled={loading || submitting || deleting}
+                onClick={() => setDeleteId((row as Training).id)}
+              >
+                Supprimer
+              </Button>
             </div>
           )}
         />
@@ -130,19 +178,38 @@ export default function TrainingPage() {
         title={editingId ? "Modifier la formation" : "Ajouter une formation"}
         footer={
           <>
-            <Button variant="secondary" onClick={resetForm}>Annuler</Button>
-            <Button onClick={handleSubmit}>{editingId ? "Enregistrer" : "Ajouter"}</Button>
+            <Button
+              variant="secondary"
+              onClick={resetForm}
+              disabled={loading || submitting || deleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={loading || submitting || deleting}
+            >
+              {editingId ? "Enregistrer" : "Ajouter"}
+            </Button>
           </>
         }
         size="lg"
       >
         <div className="space-y-3">
-          <Input
-            label="Période"
-            placeholder="2023 – 2024"
-            value={form.period}
-            onChange={(e) => setForm((f) => ({ ...f, period: e.target.value }))}
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Input
+              label="Début"
+              type="date"
+              value={form.debut}
+              onChange={(e) => setForm((f) => ({ ...f, debut: e.target.value }))}
+            />
+            <Input
+              label="Fin"
+              type="date"
+              value={form.fin}
+              onChange={(e) => setForm((f) => ({ ...f, fin: e.target.value }))}
+            />
+          </div>
           <Input
             label="Intitulé"
             placeholder="Formation React Avancée"
@@ -170,8 +237,19 @@ export default function TrainingPage() {
         title="Confirmer la suppression"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setDeleteId(null)}>Annuler</Button>
-            <Button onClick={confirmDelete}>Supprimer</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setDeleteId(null)}
+              disabled={loading || submitting || deleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={confirmDelete}
+              disabled={loading || submitting || deleting}
+            >
+              Supprimer
+            </Button>
           </>
         }
         size="sm"

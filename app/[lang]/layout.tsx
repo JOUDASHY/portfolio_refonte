@@ -4,6 +4,7 @@ import ConditionalFooter from "../components/ConditionalFooter";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { LanguageProvider } from "../hooks/LanguageProvider";
 import KeepAliveGate from "../components/KeepAliveGate";
+import ToastProvider from "../components/ToastProvider";
 
 export const metadata: Metadata = {
   title: "Nilsen Tovohery – Portfolio",
@@ -24,6 +25,7 @@ export default async function LangLayout({
     <ThemeProvider>
       <LanguageProvider initialLang={initialLang}>
         <div className="font-portfolio">
+          <ToastProvider />
           <ConditionalNavbar />
           <KeepAliveGate>
             {children}

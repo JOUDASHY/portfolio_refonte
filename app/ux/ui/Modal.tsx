@@ -70,25 +70,25 @@ export default function Modal({
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         ref={dialogRef}
-        className={`relative z-[1001] w-full ${sizeClass} mx-4 rounded-2xl bg-white/95 text-navy shadow-xl ring-1 ring-black/10 ${className}`}
+        className={`relative z-[1001] w-full ${sizeClass} mx-4 rounded-2xl bg-background text-foreground shadow-xl ring-1 ring-black/15 dark:ring-white/15 border border-black/10 dark:border-white/10 ${className}`}
       >
         {title ? (
-          <div className="flex items-center justify-between gap-4 border-b border-black/10 px-5 py-4">
-            <h2 id="modal-title" className="text-base font-semibold text-navy">{title}</h2>
+          <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
+            <h2 id="modal-title" className="text-base font-semibold text-foreground">{title}</h2>
             <button
               aria-label="Close"
               onClick={onClose}
-              className="rounded-md p-1 text-navy/70 hover:bg-black/5 hover:text-navy"
+              className="rounded-md p-1 text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M18.3 5.71L12 12.01 5.7 5.7 4.29 7.11 10.6 13.4l-6.3 6.3 1.41 1.41 6.3-6.3 6.3 6.3 1.41-1.41-6.3-6.3 6.3-6.3z"/></svg>
             </button>
           </div>
         ) : null}
 
-        <div className="px-5 py-4 text-navy">{children}</div>
+        <div className="px-5 py-4">{children}</div>
 
         {footer ? (
-          <div className="flex items-center justify-between gap-2 border-t border-black/10 px-5 py-4">
+          <div className="flex items-center justify-between gap-2 border-t border-border px-5 py-4">
             {footer}
           </div>
         ) : null}

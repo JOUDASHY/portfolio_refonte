@@ -6,7 +6,8 @@ import type { Formation } from "../types/models";
 
 export type BackofficeFormation = {
   id: string;
-  period: string; // ex: 2023 – 2024
+  debut: string; // YYYY-MM-DD
+  fin: string; // YYYY-MM-DD
   title: string; // titre
   provider: string; // formateur
   detail?: string; // description
@@ -16,19 +17,13 @@ export type BackofficeFormation = {
 function toUi(model: Formation): BackofficeFormation {
   return {
     id: String(model.id),
-    period: `${model.debut} – ${model.fin}`,
+    debut: String(model.debut || ""),
+    fin: String(model.fin || ""),
     title: model.titre,
     provider: model.formateur,
     detail: model.description,
     updatedAt: new Date().toISOString().slice(0, 10),
   };
-}
-
-function parsePeriod(period: string): { debut: string; fin: string } {
-  const norm = period.replace(/\s+–\s+|\s*-\s*/g, "-");
-  const [start, end] = norm.split("-");
-  const toDate = (v?: string) => (v && v.trim().length >= 4 ? v.trim() : new Date().getFullYear().toString());
-  return { debut: toDate(start), fin: toDate(end) };
 }
 
 export function useBackofficeFormations() {
@@ -55,26 +50,24 @@ export function useBackofficeFormations() {
   }, [refresh]);
 
   const create = useCallback(async (form: Omit<BackofficeFormation, "id" | "updatedAt">) => {
-    const { debut, fin } = parsePeriod(form.period);
     const payload: Partial<Formation> = {
       titre: form.title,
       formateur: form.provider,
       description: form.detail || undefined,
-      debut,
-      fin,
+      debut: form.debut,
+      fin: form.fin,
     };
     await formationService.create(payload);
     await refresh();
   }, [refresh]);
 
   const update = useCallback(async (id: string, form: Omit<BackofficeFormation, "id" | "updatedAt">) => {
-    const { debut, fin } = parsePeriod(form.period);
     const payload: Partial<Formation> = {
       titre: form.title,
       formateur: form.provider,
       description: form.detail || undefined,
-      debut,
-      fin,
+      debut: form.debut,
+      fin: form.fin,
     };
     await formationService.update(id, payload);
     await refresh();

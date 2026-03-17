@@ -9,10 +9,13 @@ import SearchBar from "../../../ux/ui/SearchBar";
 import { useBackofficeCompetences, type CompetenceForm } from "../../../hooks/useBackofficeCompetences";
 import Loading from "../../../ux/Loading";
 import SafeImage from "../../../ux/ui/SafeImage";
+import { toast } from "react-toastify";
 
 export default function SkillsPage() {
   const { items, loading, error, create, update, remove, setError } = useBackofficeCompetences();
   const [query, setQuery] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const [form, setForm] = useState<CompetenceForm>({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null });
   const [editingId, setEditingId] = useState<number | string | null>(null);
@@ -50,15 +53,23 @@ export default function SkillsPage() {
   }
 
   async function handleSubmit() {
+    setSubmitting(true);
+    setError(null);
     try {
       if (editingId) {
         await update(editingId, form);
+        toast.success("Compétence mise à jour");
       } else {
         await create(form);
+        toast.success("Compétence ajoutée");
       }
       resetForm();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
+      const message = e instanceof Error ? e.message : "Échec de l'enregistrement";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -73,24 +84,34 @@ export default function SkillsPage() {
 
   async function confirmDelete() {
     if (!deleteId) return;
+    setDeleting(true);
+    setError(null);
     try {
       await remove(deleteId);
       if (editingId === deleteId) resetForm();
+      toast.success("Compétence supprimée");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Échec de la suppression");
+      const message = e instanceof Error ? e.message : "Échec de la suppression";
+      setError(message);
+      toast.error(message);
     } finally {
+      setDeleting(false);
       setDeleteId(null);
     }
   }
 
   return (
     <div className="relative space-y-6">
-      {loading && <Loading />}
+      {(loading || submitting || deleting) && <Loading />}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Compétences</h1>
         <div className="flex items-center gap-2">
           <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
-          <Button variant="secondary" onClick={() => { setEditingId(null); setForm({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null }); setIsFormOpen(true); }}>
+          <Button
+            variant="secondary"
+            disabled={loading || submitting || deleting}
+            onClick={() => { setEditingId(null); setForm({ name: "", description: "", niveau: 5, categorie: "Front-end", imageFile: null }); setIsFormOpen(true); }}
+          >
             Nouvelle compétence
           </Button>
         </div>
@@ -109,8 +130,22 @@ export default function SkillsPage() {
           actionsHeader="Actions"
           actions={(row) => (
             <div className="inline-flex items-center gap-2">
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit(row.id)}>Éditer</Button>
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId(row.id)}>Supprimer</Button>
+              <Button
+                variant="ghost"
+                className="px-2 py-1 text-sm"
+                disabled={loading || submitting || deleting}
+                onClick={() => handleEdit(row.id)}
+              >
+                Éditer
+              </Button>
+              <Button
+                variant="ghost"
+                className="px-2 py-1 text-sm"
+                disabled={loading || submitting || deleting}
+                onClick={() => setDeleteId(row.id)}
+              >
+                Supprimer
+              </Button>
             </div>
           )}
           selectable={false}
@@ -123,8 +158,19 @@ export default function SkillsPage() {
         title={editingId ? "Modifier la compétence" : "Ajouter une compétence"}
         footer={
           <>
-            <Button variant="secondary" onClick={resetForm}>Annuler</Button>
-            <Button onClick={handleSubmit}>{editingId ? "Enregistrer" : "Ajouter"}</Button>
+            <Button
+              variant="secondary"
+              onClick={resetForm}
+              disabled={loading || submitting || deleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={loading || submitting || deleting}
+            >
+              {editingId ? "Enregistrer" : "Ajouter"}
+            </Button>
           </>
         }
         size="md"
@@ -151,9 +197,9 @@ export default function SkillsPage() {
             onChange={(e) => setForm((f) => ({ ...f, niveau: Math.max(0, Math.min(10, Number(e.target.value || 0))) }))}
           />
           <div>
-            <label className="block text-sm font-medium text-navy/80">Catégorie</label>
+            <label className="block text-sm font-medium text-foreground">Catégorie</label>
             <select
-              className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               value={form.categorie || ""}
               onChange={(e) => setForm((f) => ({ ...f, categorie: e.target.value }))}
             >
@@ -164,11 +210,11 @@ export default function SkillsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-navy/80">Image</label>
+            <label className="block text-sm font-medium text-foreground">Image</label>
             <input
               type="file"
               accept="image/*"
-              className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground file:text-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring"
               onChange={(e) => {
                 const file = e.target.files?.[0] || null;
                 setForm((f) => ({ ...f, imageFile: file }));
@@ -200,8 +246,19 @@ export default function SkillsPage() {
         title="Confirmer la suppression"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setDeleteId(null)}>Annuler</Button>
-            <Button onClick={confirmDelete}>Supprimer</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setDeleteId(null)}
+              disabled={loading || submitting || deleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={confirmDelete}
+              disabled={loading || submitting || deleting}
+            >
+              Supprimer
+            </Button>
           </>
         }
         size="sm"

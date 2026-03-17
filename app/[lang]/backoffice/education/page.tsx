@@ -8,8 +8,10 @@ import Table, { TableColumn } from "../../../ux/ui/Table";
 import Modal from "../../../ux/ui/Modal";
 import SearchBar from "../../../ux/ui/SearchBar";
 import SafeImage from "../../../ux/ui/SafeImage";
+import Loading from "../../../ux/Loading";
 import { educationService } from "../../../services/backoffice/educationService";
 import type { Education as EducationModel } from "../../../types/models";
+import { toast } from "react-toastify";
 
 type EducationRow = {
   id: string;
@@ -25,6 +27,8 @@ export default function EducationPage() {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<EducationRow[]>([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState<Omit<EducationRow, "id" | "image"> & { image?: string | null }>({
@@ -112,6 +116,8 @@ export default function EducationPage() {
   }
 
   async function handleSubmit() {
+    setSubmitting(true);
+    setError(null);
     try {
       if (editingId) {
         await educationService.updateForm(editingId, {
@@ -122,6 +128,7 @@ export default function EducationPage() {
           annee_fin: form.annee_fin,
           lieu: form.lieu,
         });
+        toast.success("Formation mise à jour");
       } else {
         await educationService.createForm({
           image: imageFile || undefined,
@@ -131,11 +138,16 @@ export default function EducationPage() {
           annee_fin: form.annee_fin,
           lieu: form.lieu,
         });
+        toast.success("Formation ajoutée");
       }
       await refresh();
       resetForm();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Échec de l'enregistrement");
+      const message = e instanceof Error ? e.message : "Échec de l'enregistrement";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -152,17 +164,26 @@ export default function EducationPage() {
 
   async function confirmDelete() {
     if (!deleteId) return;
+    setDeleting(true);
+    setError(null);
     try {
       await educationService.remove(deleteId);
       if (editingId === deleteId) resetForm();
       await refresh();
+      toast.success("Formation supprimée");
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Échec de la suppression";
+      setError(message);
+      toast.error(message);
     } finally {
+      setDeleting(false);
       setDeleteId(null);
     }
   }
 
   return (
     <div className="space-y-6">
+      {(loading || submitting || deleting) && <Loading />}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-foreground">Éducation</h1>
         <div className="flex items-center gap-2">
@@ -172,6 +193,7 @@ export default function EducationPage() {
           />
           <Button
             variant="secondary"
+            disabled={loading || submitting || deleting}
             onClick={() => {
               setEditingId(null);
               setForm({ nom_ecole: "", nom_parcours: "", annee_debut: new Date().getFullYear(), annee_fin: new Date().getFullYear(), lieu: "" });
@@ -183,6 +205,12 @@ export default function EducationPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-6">
         <Table
           columns={columns}
@@ -192,8 +220,22 @@ export default function EducationPage() {
           actionsHeader="Actions"
           actions={(row) => (
             <div className="inline-flex items-center gap-2">
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as EducationRow).id)}>Éditer</Button>
-              <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as EducationRow).id)}>Supprimer</Button>
+              <Button
+                variant="ghost"
+                className="px-2 py-1 text-sm"
+                disabled={loading || submitting || deleting}
+                onClick={() => handleEdit((row as EducationRow).id)}
+              >
+                Éditer
+              </Button>
+              <Button
+                variant="ghost"
+                className="px-2 py-1 text-sm"
+                disabled={loading || submitting || deleting}
+                onClick={() => setDeleteId((row as EducationRow).id)}
+              >
+                Supprimer
+              </Button>
             </div>
           )}
         />
@@ -205,8 +247,12 @@ export default function EducationPage() {
         title={editingId ? "Modifier la formation" : "Ajouter une formation"}
         footer={
           <>
-            <Button variant="secondary" onClick={resetForm}>Annuler</Button>
-            <Button onClick={handleSubmit}>{editingId ? "Enregistrer" : "Ajouter"}</Button>
+            <Button variant="secondary" onClick={resetForm} disabled={submitting || deleting || loading}>
+              Annuler
+            </Button>
+            <Button onClick={handleSubmit} disabled={submitting || deleting || loading}>
+              {editingId ? "Enregistrer" : "Ajouter"}
+            </Button>
           </>
         }
         size="lg"
@@ -247,11 +293,11 @@ export default function EducationPage() {
 
           {/* Image upload & preview */}
           <div>
-            <label className="block text-sm font-medium text-navy/80">Image</label>
+            <label className="block text-sm font-medium text-foreground">Image</label>
             <input
               type="file"
               accept="image/*"
-              className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-navy focus:outline-none focus:ring-2 focus:ring-accent"
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground file:text-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring"
               onChange={(e) => {
                 const file = e.target.files?.[0] || null;
                 setImageFile(file);
@@ -283,8 +329,12 @@ export default function EducationPage() {
         title="Confirmer la suppression"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setDeleteId(null)}>Annuler</Button>
-            <Button onClick={confirmDelete}>Supprimer</Button>
+            <Button variant="secondary" onClick={() => setDeleteId(null)} disabled={deleting || loading || submitting}>
+              Annuler
+            </Button>
+            <Button onClick={confirmDelete} disabled={deleting || loading || submitting}>
+              Supprimer
+            </Button>
           </>
         }
         size="sm"

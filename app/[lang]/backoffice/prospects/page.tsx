@@ -13,6 +13,7 @@ import {
 } from "@/app/types/backoffice/prospect";
 import { useLanguage } from "@/app/hooks/LanguageProvider";
 import { useTheme } from "@/app/components/ThemeProvider";
+import { toast } from "react-toastify";
 
 const STATUS_ORDER: ProspectStatus[] = [
   "new",
@@ -124,13 +125,26 @@ export default function ProspectsPage() {
 
   async function handleDelete(id: number) {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce prospect ?")) return;
-    await remove(id);
+    try {
+      await remove(id);
+      toast.success(lang === "fr" ? "Prospect supprimé" : "Prospect deleted");
+    } catch {
+      toast.error(lang === "fr" ? "Échec de la suppression" : "Delete failed");
+    }
   }
 
   async function handleDrop(targetStatus: ProspectStatus) {
     if (!draggingId) return;
-    await updateStatus(draggingId, targetStatus);
-    setDraggingId(null);
+    try {
+      await updateStatus(draggingId, targetStatus);
+      toast.success(
+        lang === "fr" ? "Statut mis à jour" : "Status updated"
+      );
+    } catch {
+      toast.error(lang === "fr" ? "Échec de la mise à jour" : "Update failed");
+    } finally {
+      setDraggingId(null);
+    }
   }
 
   const getStatusLabel = (status: string) => {

@@ -7,6 +7,7 @@ import Input from "@/app/ux/ui/Input";
 import Textarea from "@/app/ux/ui/Textarea";
 import { useProspects, useMessageTemplates } from "@/app/hooks/useProspects";
 import { prospectService } from "@/app/services/backoffice/prospectService";
+import { prospectAttachmentService } from "@/app/services/backoffice/prospectAttachmentService";
 import {
   PROSPECT_STATUS_LABELS,
   PROSPECT_SOURCE_LABELS,
@@ -16,6 +17,7 @@ import {
 } from "@/app/types/backoffice/prospect";
 import { useLanguage } from "@/app/hooks/LanguageProvider";
 import { useTheme } from "@/app/components/ThemeProvider";
+import { toast } from "react-toastify";
 
 export default function ProspectDetailPage() {
   const params = useParams();
@@ -77,6 +79,9 @@ export default function ProspectDetailPage() {
   const [messageBody, setMessageBody] = useState("");
   const [previewLoading, setPreviewLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
+  const [uploadingAttachments, setUploadingAttachments] = useState(false);
+  const [includeCv, setIncludeCv] = useState(false);
   const [contactChannels, setContactChannels] = useState<{
     email: boolean;
     whatsapp: boolean;
@@ -147,7 +152,7 @@ export default function ProspectDetailPage() {
       setMessageSubject(cleanMessageText(data.subject));
       setMessageBody(cleanMessageText(data.body));
     } catch {
-      // laisser les champs tels quels en cas d'erreur
+      toast.error(lang === "fr" ? "Échec de la prévisualisation" : "Preview failed");
     } finally {
       setPreviewLoading(false);
     }
@@ -155,7 +160,9 @@ export default function ProspectDetailPage() {
 
   async function handleSendMessage() {
     if (!messageSubject.trim() || !messageBody.trim()) {
-      alert(lang === "fr" ? "Sujet et message obligatoires" : "Subject and message are required");
+      toast.warning(
+        lang === "fr" ? "Sujet et message obligatoires" : "Subject and message are required"
+      );
       return;
     }
     const selected = Object.entries(contactChannels)
@@ -163,22 +170,43 @@ export default function ProspectDetailPage() {
       .map(([k]) => k);
 
     if (selected.length === 0) {
-      alert(lang === "fr" ? "Choisis au moins un canal" : "Select at least one channel");
+      toast.warning(lang === "fr" ? "Choisis au moins un canal" : "Select at least one channel");
       return;
     }
 
     const subject = cleanMessageText(messageSubject).trim();
     const body = cleanMessageText(messageBody).trim();
+    const shouldUploadAttachments = contactChannels.email && attachmentFiles.length > 0;
+    let attachmentIds: number[] = [];
 
     // 1) Email = backend send/log
     if (contactChannels.email) {
       setSending(true);
       try {
+        if (shouldUploadAttachments) {
+          setUploadingAttachments(true);
+          try {
+            const uploaded = await Promise.all(
+              attachmentFiles.map((file) => prospectAttachmentService.upload(file))
+            );
+            attachmentIds = uploaded.map((r) => r.data.id);
+            toast.success(
+              lang === "fr"
+                ? `${attachmentIds.length} pièce(s) jointe(s) uploadée(s)`
+                : `${attachmentIds.length} attachment(s) uploaded`
+            );
+          } finally {
+            setUploadingAttachments(false);
+          }
+        }
+
         const { data } = await prospectService.sendMessage(prospectId, {
           template_id: selectedTemplateId ? Number(selectedTemplateId) : undefined,
           channel: "email",
           subject,
           body,
+          attachments: attachmentIds.length ? attachmentIds : undefined,
+          include_cv: includeCv,
         });
         setMessages((prev) => [
           {
@@ -188,8 +216,9 @@ export default function ProspectDetailPage() {
           },
           ...prev,
         ]);
+        toast.success(lang === "fr" ? "Email enregistré/envoyé" : "Email logged/sent");
       } catch {
-        alert(lang === "fr" ? "Échec de l'envoi email" : "Failed to send email");
+        toast.error(lang === "fr" ? "Échec de l'envoi email" : "Failed to send email");
       } finally {
         setSending(false);
       }
@@ -199,10 +228,11 @@ export default function ProspectDetailPage() {
     if (contactChannels.whatsapp) {
       const phone = normalizePhoneForWaMe(form.whatsapp_phone || form.phone || "");
       if (!phone) {
-        alert(lang === "fr" ? "Téléphone/WhatsApp manquant" : "Phone/WhatsApp is missing");
+        toast.error(lang === "fr" ? "Téléphone/WhatsApp manquant" : "Phone/WhatsApp is missing");
       } else {
         const wa = `https://wa.me/${phone}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
         window.open(wa, "_blank", "noopener,noreferrer");
+        toast.info(lang === "fr" ? "Ouverture de WhatsApp" : "Opening WhatsApp");
       }
     }
 
@@ -212,7 +242,7 @@ export default function ProspectDetailPage() {
         form.facebook_url?.trim() ||
         extractFacebookUrl(form.google_maps_url, form.website_url, form.notes);
       if (!fbUrl) {
-        alert(
+        toast.error(
           lang === "fr"
             ? "Lien Facebook introuvable (mets-le dans Google Maps URL / Site web / Notes)"
             : "Facebook link not found (put it in Google Maps URL / Website / Notes)"
@@ -220,10 +250,10 @@ export default function ProspectDetailPage() {
       } else {
         const messengerUrl = getMessengerUrlFromFacebookUrl(fbUrl);
         void copyToClipboardWithFallback(`${subject}\n\n${body}`).then(() => {
-          alert(
+          toast.success(
             lang === "fr"
-              ? "Message copié. Ouveture de Messenger: collez avec Ctrl+V."
-              : "Message copied. Opening Messenger: paste with Ctrl+V."
+              ? "Message copié. Ouverture de Messenger (colle avec Ctrl+V)."
+              : "Message copied. Opening Messenger (paste with Ctrl+V)."
           );
           window.open(messengerUrl, "_blank", "noopener,noreferrer");
         });
@@ -233,9 +263,13 @@ export default function ProspectDetailPage() {
     // Clear editor (we keep history intact)
     setMessageSubject("");
     setMessageBody("");
-    if (contactChannels.email) {
-      alert(lang === "fr" ? "Email envoyé (si coché) + redirections ouvertes" : "Email sent (if checked) + redirects opened");
-    }
+    setAttachmentFiles([]);
+    setIncludeCv(false);
+    toast.success(
+      lang === "fr"
+        ? "Action terminée (envoi et/ou redirections)"
+        : "Done (send and/or redirects)"
+    );
   }
 
   async function handleSetRating(stars: number) {
@@ -247,13 +281,13 @@ export default function ProspectDetailPage() {
       });
       setRating(data.rating);
       setRatingComment(data.comment || "");
-      alert(
+      toast.success(
         lang === "fr"
           ? `Note enregistrée: ${data.rating}/5 ⭐`
           : `Rating saved: ${data.rating}/5 ⭐`
       );
     } catch {
-      alert(
+      toast.error(
         lang === "fr"
           ? "Échec de l'enregistrement de la note"
           : "Failed to save rating"
@@ -313,7 +347,9 @@ export default function ProspectDetailPage() {
     const body = cleanMessageText(messageBody).trim();
 
     if (!subject || !body) {
-      alert(lang === "fr" ? "Sujet et message obligatoires" : "Subject and message are required");
+      toast.warning(
+        lang === "fr" ? "Sujet et message obligatoires" : "Subject and message are required"
+      );
       return;
     }
 
@@ -322,28 +358,30 @@ export default function ProspectDetailPage() {
       .map(([k]) => k);
 
     if (selected.length === 0) {
-      alert(lang === "fr" ? "Choisis au moins un canal" : "Select at least one channel");
+      toast.warning(lang === "fr" ? "Choisis au moins un canal" : "Select at least one channel");
       return;
     }
 
     if (contactChannels.email) {
       if (!form.email?.trim()) {
-        alert(lang === "fr" ? "Email du prospect manquant" : "Prospect email is missing");
+        toast.error(lang === "fr" ? "Email du prospect manquant" : "Prospect email is missing");
       } else {
         const mailto = `mailto:${encodeURIComponent(form.email.trim())}?subject=${encodeURIComponent(
           subject
         )}&body=${encodeURIComponent(body)}`;
         window.open(mailto, "_blank", "noopener,noreferrer");
+        toast.info(lang === "fr" ? "Ouverture de l'email" : "Opening email");
       }
     }
 
     if (contactChannels.whatsapp) {
       const phone = normalizePhoneForWaMe(form.whatsapp_phone || form.phone || "");
       if (!phone) {
-        alert(lang === "fr" ? "Téléphone/WhatsApp manquant" : "Phone/WhatsApp is missing");
+        toast.error(lang === "fr" ? "Téléphone/WhatsApp manquant" : "Phone/WhatsApp is missing");
       } else {
         const wa = `https://wa.me/${phone}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
         window.open(wa, "_blank", "noopener,noreferrer");
+        toast.info(lang === "fr" ? "Ouverture de WhatsApp" : "Opening WhatsApp");
       }
     }
 
@@ -352,7 +390,7 @@ export default function ProspectDetailPage() {
         form.facebook_url?.trim() ||
         extractFacebookUrl(form.google_maps_url, form.website_url, form.notes);
       if (!fbUrl) {
-        alert(
+        toast.error(
           lang === "fr"
             ? "Lien Facebook introuvable (mets-le dans Google Maps URL / Site web / Notes)"
             : "Facebook link not found (put it in Google Maps URL / Website / Notes)"
@@ -360,10 +398,10 @@ export default function ProspectDetailPage() {
       } else {
         const messengerUrl = getMessengerUrlFromFacebookUrl(fbUrl);
         void copyToClipboardWithFallback(`${subject}\n\n${body}`).then(() => {
-          alert(
+          toast.success(
             lang === "fr"
-              ? "Message copié. Ouveture de Messenger: collez avec Ctrl+V."
-              : "Message copied. Opening Messenger: paste with Ctrl+V."
+              ? "Message copié. Ouverture de Messenger (colle avec Ctrl+V)."
+              : "Message copied. Opening Messenger (paste with Ctrl+V)."
           );
           window.open(messengerUrl, "_blank", "noopener,noreferrer");
         });
@@ -375,9 +413,11 @@ export default function ProspectDetailPage() {
     setSaving(true);
     try {
       await update(prospectId, form);
-      alert(lang === "fr" ? "Prospect mis à jour avec succès" : "Prospect updated successfully");
+      toast.success(
+        lang === "fr" ? "Prospect mis à jour avec succès" : "Prospect updated successfully"
+      );
     } catch (e) {
-      alert(lang === "fr" ? "Échec de la mise à jour" : "Update failed");
+      toast.error(lang === "fr" ? "Échec de la mise à jour" : "Update failed");
     } finally {
       setSaving(false);
     }
@@ -387,9 +427,10 @@ export default function ProspectDetailPage() {
     if (!confirm(lang === "fr" ? "Êtes-vous sûr ?" : "Are you sure?")) return;
     try {
       await remove(prospectId);
+      toast.success(lang === "fr" ? "Prospect supprimé" : "Prospect deleted");
       router.push("/backoffice/prospects");
     } catch (e) {
-      alert(lang === "fr" ? "Échec de la suppression" : "Delete failed");
+      toast.error(lang === "fr" ? "Échec de la suppression" : "Delete failed");
     }
   }
 
@@ -772,8 +813,59 @@ export default function ProspectDetailPage() {
               }
             />
 
+            {contactChannels.email && (
+              <div className="space-y-2">
+                <label className="inline-flex items-center gap-2 text-sm text-foreground/80">
+                  <input
+                    type="checkbox"
+                    checked={includeCv}
+                    onChange={(e) => setIncludeCv(e.target.checked)}
+                  />
+                  <span>
+                    {lang === "fr"
+                      ? "Inclure le CV automatiquement"
+                      : "Auto-attach CV"}
+                  </span>
+                </label>
+
+                <label className="block text-sm font-medium text-foreground">
+                  {lang === "fr" ? "Pièces jointes (email)" : "Attachments (email)"}
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground file:text-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring"
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []);
+                    setAttachmentFiles(files);
+                  }}
+                />
+                {attachmentFiles.length > 0 && (
+                  <div className="text-xs text-foreground/60 flex items-center justify-between gap-2">
+                    <span>
+                      {lang === "fr"
+                        ? `${attachmentFiles.length} fichier(s) sélectionné(s)`
+                        : `${attachmentFiles.length} file(s) selected`}
+                    </span>
+                    <button
+                      type="button"
+                      className="text-xs text-foreground/70 hover:text-foreground"
+                      onClick={() => setAttachmentFiles([])}
+                    >
+                      {lang === "fr" ? "Retirer" : "Clear"}
+                    </button>
+                  </div>
+                )}
+                <p className="text-[11px] text-foreground/50">
+                  {lang === "fr"
+                    ? "Les fichiers seront uploadés puis attachés à l’email."
+                    : "Files will be uploaded then attached to the email."}
+                </p>
+              </div>
+            )}
+
             <div className="flex justify-end">
-              <Button type="button" onClick={handleSendMessage} disabled={sending}>
+              <Button type="button" onClick={handleSendMessage} disabled={sending || uploadingAttachments}>
                 {sending
                   ? lang === "fr"
                     ? "Envoi..."

@@ -7,6 +7,7 @@ import { useProspects } from "@/app/hooks/useProspects";
 import { PROSPECT_SOURCE_LABELS } from "@/app/types/backoffice/prospect";
 import { useLanguage } from "@/app/hooks/LanguageProvider";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function NewProspectPage() {
   const router = useRouter();
@@ -35,10 +36,12 @@ export default function NewProspectPage() {
     setSaving(true);
     try {
       await create(form);
-      alert(lang === "fr" ? "Prospect créé avec succès" : "Prospect created successfully");
+      toast.success(
+        lang === "fr" ? "Prospect créé avec succès" : "Prospect created successfully"
+      );
       router.push("/backoffice/prospects");
     } catch (e) {
-      alert(lang === "fr" ? "Échec de la création" : "Creation failed");
+      toast.error(lang === "fr" ? "Échec de la création" : "Creation failed");
     } finally {
       setSaving(false);
     }

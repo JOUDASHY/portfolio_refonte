@@ -139,7 +139,81 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full space-y-6">
-      <div className="flex items-center justify-between gap-3">
+      {/* Cover Image Section - Full Width at Top */}
+      <div className="-mx-6 -mt-6 mb-2 relative">
+        <div className="relative h-80 sm:h-[400px] w-full overflow-hidden bg-gradient-to-r from-accent/20 to-navy/20">
+          <Image
+            src="https://s.yimg.com/ny/api/res/1.2/RnGAnxwsXF7tAqYtImzhVA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTI0MDA7aD0xNjAy/https://media.zenfs.com/en/azcentral-the-arizona-republic/3131e8a3a9fb9eb7e01ee94cd62fe3c8"
+            alt="Cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/20" />
+
+          {/* Avatar overlay on cover */}
+          <div className="absolute bottom-4 left-10 z-10 flex items-end gap-6">
+            <label className="cursor-pointer group">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+                id="avatar-input"
+              />
+              <div className="relative h-32 w-32 sm:h-40 sm:w-40 overflow-hidden rounded-full ring-4 ring-background bg-white group-hover:ring-accent transition-all shadow-xl">
+                <Image
+                  src={
+                    avatarPreview ||
+                    (profile?.image
+                      ? `${profile.image}${profile.image.includes('?') ? '&' : '?'}t=${imageCacheKey}`
+                      : "/logo_nil.png")
+                  }
+                  alt="Avatar"
+                  fill
+                  sizes="160px"
+                  className="object-cover"
+                  key={`avatar-${imageCacheKey}`}
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                  <svg
+                    className="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          {/* Change cover button */}
+          <div className="absolute bottom-6 right-6">
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleCoverChange}
+                className="hidden"
+              />
+              <Button variant="secondary" className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20">
+                Changer la couverture
+              </Button>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Name and Title Section below Cover */}
+      <div className="px-10 mb-4 pt-2">
+        <h1 className="text-3xl font-bold text-foreground">{form.name || profile?.username || "Utilisateur"}</h1>
+        <p className="text-foreground/70 text-lg font-medium">{form.title || "—"}</p>
+      </div>
+
+      <div className="flex items-center justify-between gap-3 pt-4">
         <div>
           <h1 className="text-xl font-semibold text-foreground">Profil utilisateur</h1>
           <p className="text-sm text-foreground/70">Gérez vos informations personnelles et professionnelles.</p>
@@ -155,129 +229,44 @@ export default function ProfilePage() {
         </Button>
       </div>
 
-      {/* Profile quick header card */}
-      <div className="mt-8 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-          <div>
-            <div className="text-lg font-semibold text-foreground">{form.name || profile?.username || "Utilisateur"}</div>
-            <div className="mt-0.5 text-sm text-foreground/70">{form.title || "—"}</div>
-            <div className="mt-2 inline-flex flex-wrap gap-2">
-              {form.email && <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-foreground ring-1 ring-white/15">{form.email}</span>}
-              {form.phone && <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-foreground ring-1 ring-white/15">{form.phone}</span>}
-              {form.location && <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-foreground ring-1 ring-white/15">{form.location}</span>}
-            </div>
+      {/* Profile quick links line */}
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-white/5 ring-1 ring-white/10">
+        <div className="flex items-center gap-3">
+          <div className="sm:hidden">
+            <div className="text-lg font-semibold text-foreground">{form.name || profile?.username}</div>
+            <div className="text-xs text-foreground/70">{form.title}</div>
           </div>
-          <div className="flex items-center gap-2">
-            {form.github && (
-              <a href={form.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.51 2.87 8.33 6.84 9.68.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.36-1.37-3.36-1.37-.45-1.18-1.11-1.49-1.11-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.9.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.09 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05a9.36 9.36 0 012.5-.35c.85 0 1.7.12 2.5.35 1.9-1.32 2.74-1.05 2.74-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.96-2.34 4.83-4.57 5.08.36.31.67.92.67 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.18.59.69.49A10.06 10.06 0 0022 12.26C22 6.58 17.52 2 12 2z"/></svg>
-                GitHub
-              </a>
-            )}
-            {form.linkedin && (
-              <a href={form.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M6.94 6.5A2.44 2.44 0 114.5 4.06 2.44 2.44 0 016.94 6.5zM4.75 8.75H9v10.69H4.75zM13.06 8.75H9.88v10.69h3.18v-5.77c0-1.52.29-2.99 2.17-2.99 1.85 0 1.88 1.72 1.88 3.08v5.68h3.18v-6.4c0-3.16-.68-5.6-4.37-5.6-1.77 0-2.96.97-3.47 1.9h-.05z"/></svg>
-                LinkedIn
-              </a>
-            )}
-            {form.website && (
-              <a href={form.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 17.93A8 8 0 1120 12a8 8 0 01-7 7.93z"/></svg>
-                Site
-              </a>
-            )}
+          <div className="flex flex-wrap gap-2">
+            {form.email && <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] sm:text-xs text-foreground ring-1 ring-white/15">{form.email}</span>}
+            {form.phone && <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] sm:text-xs text-foreground ring-1 ring-white/15">{form.phone}</span>}
+            {form.location && <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] sm:text-xs text-foreground ring-1 ring-white/15">{form.location}</span>}
           </div>
         </div>
-      </div>
-
-      {/* Cover Image Section */}
-      <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
-        <h2 className="mb-4 text-lg font-medium text-foreground">Image de couverture</h2>
-        <div className="relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-r from-accent/20 to-navy/20">
-          <Image
-            src="https://s.yimg.com/ny/api/res/1.2/RnGAnxwsXF7tAqYtImzhVA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTI0MDA7aD0xNjAy/https://media.zenfs.com/en/azcentral-the-arizona-republic/3131e8a3a9fb9eb7e01ee94cd62fe3c8"
-            alt="Cover"
-            fill
-            sizes="800px"
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/20" />
-          {/* Avatar overlay on cover */}
-          <div className="absolute -bottom-8 left-6">
-            <label className="cursor-pointer group">
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={handleAvatarChange} 
-                className="hidden" 
-                id="avatar-input"
-              />
-              <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-accent/60 bg-white group-hover:ring-accent/80 transition-all">
-                <Image
-                  src={
-                    avatarPreview || 
-                    (profile?.image 
-                      ? `${profile.image}${profile.image.includes('?') ? '&' : '?'}t=${imageCacheKey}` 
-                      : "/logo_nil.png")
-                  }
-                  alt="Avatar"
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                  key={`avatar-${imageCacheKey}`}
-                />
-                {/* Overlay au survol pour indiquer que c'est cliquable */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                  <svg 
-                    className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-            </label>
-            <div className="mt-2 text-center">
-              <p className="text-xs text-foreground/80">
-                {avatarFile ? (
-                  <span className="text-accent">Photo sélectionnée</span>
-                ) : (
-                  "Cliquez pour changer"
-                )}
-              </p>
-              {avatarFile && (
-                <p className="text-xs text-foreground/60 mt-1 truncate max-w-[96px]">{avatarFile.name}</p>
-              )}
-            </div>
-          </div>
-          <div className="absolute bottom-4 right-4">
-            <label className="cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleCoverChange}
-                className="hidden"
-              />
-              <Button variant="secondary" className="text-sm">
-                Changer l&apos;image
-              </Button>
-            </label>
-          </div>
+        <div className="flex items-center gap-2">
+          {form.github && (
+            <a href={form.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.51 2.87 8.33 6.84 9.68.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.36-1.37-3.36-1.37-.45-1.18-1.11-1.49-1.11-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.9.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.09 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05a9.36 9.36 0 012.5-.35c.85 0 1.7.12 2.5.35 1.9-1.32 2.74-1.05 2.74-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.96-2.34 4.83-4.57 5.08.36.31.67.92.67 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.18.59.69.49A10.06 10.06 0 0022 12.26C22 6.58 17.52 2 12 2z" /></svg>
+            </a>
+          )}
+          {form.linkedin && (
+            <a href={form.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M6.94 6.5A2.44 2.44 0 114.5 4.06 2.44 2.44 0 016.94 6.5zM4.75 8.75H9v10.69H4.75zM13.06 8.75H9.88v10.69h3.18v-5.77c0-1.52.29-2.99 2.17-2.99 1.85 0 1.88 1.72 1.88 3.08v5.68h3.18v-6.4c0-3.16-.68-5.6-4.37-5.6-1.77 0-2.96.97-3.47 1.9h-.05z" /></svg>
+            </a>
+          )}
+          {form.website && (
+            <a href={form.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 17.93A8 8 0 1120 12a8 8 0 01-7 7.93z" /></svg>
+            </a>
+          )}
         </div>
-        <p className="mt-2 text-xs text-foreground/60">
-          Recommandé: 1200x300px, JPG ou PNG jusqu&apos;à 5MB
-        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Profile Form full width */}
         <div className="lg:col-span-3 pt-12">
-        <Button onClick={() => setChangePwdOpen(true)}>Changer le mot de passe</Button>
+          <Button onClick={() => setChangePwdOpen(true)}>Changer le mot de passe</Button>
 
-    <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+          <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
             <h2 className="mb-4 text-lg font-medium text-foreground">Informations personnelles</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Input

@@ -18,7 +18,7 @@ export default function BackofficeNavbar({ onToggleSidebar }: { onToggleSidebar:
 
   return (
     <>
-      <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/10 border-black/15 bg-white/5 px-4 backdrop-blur shadow-sm">
+      <div className="fixed top-0 left-0 right-0 lg:left-64 z-50 flex h-14 items-center justify-between border-b border-white/10 border-black/15 bg-white/5 px-4 backdrop-blur shadow-sm">
         <div className="flex items-center gap-2 text-sm text-foreground/80">
           {/* Bouton toggle pour mobile */}
           <button
@@ -66,14 +66,14 @@ function TopbarRight({ onLogout }: { onLogout: () => void }) {
         className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-foreground/80 hover:bg-white/10 hover:text-foreground"
       >
         {theme === "dark" ? (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" /></svg>
         ) : (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z" /></svg>
         )}
         {theme === "dark" ? (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" /></svg>
         ) : (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.41 1.41 1.8-1.79-1.41-1.41-1.8 1.79zM20 13h3v-2h-3v2zm-2.64 6.19l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM13 1h-2v3h2V1zm6.78 4.22l-1.41-1.41-1.8 1.79 1.41 1.41 1.8-1.79z" /></svg>
         )}
         <span className="hidden sm:inline">{theme === "dark" ? "Dark" : "Light"}</span>
       </button>
@@ -92,8 +92,8 @@ function TopbarRight({ onLogout }: { onLogout: () => void }) {
         onClick={onLogout}
         className="ml-2 inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-foreground/80 hover:bg-white/10 hover:text-foreground"
       >
-        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z"/></svg>
-        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive sm:hidden"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z" /></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-responsive hidden sm:block"><path d="M10 17l1.41-1.41L8.83 13H21v-2H8.83l2.58-2.59L10 7l-5 5 5 5zM4 5h6V3H4c-1.1 0-2 .9-2 2v14a2 2 0 002 2h6v-2H4V5z" /></svg>
         <span className="hidden sm:inline">Logout</span>
       </button>
     </div>
@@ -122,7 +122,7 @@ function LogoutModal({ open, onCancel, onConfirm }: { open: boolean; onCancel: (
 function TopLink({ href, label, icon: Icon }: { href: string; label: string; icon: (p: SVGProps<SVGSVGElement>) => ReactElement }) {
   return (
     <Link href={href} className="inline-flex items-center gap-0.5 sm:gap-1.5 rounded-md px-1 sm:px-2 py-0.5 sm:py-1 text-foreground/80 hover:bg-white/10 hover:text-foreground">
-       <Icon className="icon-responsive" />
+      <Icon className="icon-responsive" />
       <span className="hidden sm:inline text-xs sm:text-xs" style={{ fontSize: '0.625rem' }}>{label}</span>
     </Link>
   );
@@ -149,7 +149,7 @@ function PaperPlaneIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" />
-              </svg>
+    </svg>
   );
 }
 

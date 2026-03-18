@@ -23,17 +23,17 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "credentials", label: "Mes Identifiants", icon: CredentialsIcon, match: "/backoffice/credentials" },
     { href: "facebook", label: "Facebook", icon: FacebookIcon, match: "/backoffice/facebook" },
   ];
-  
+
   return (
     <div className="min-h-screen bg-background">
-      <BackofficeSidebar 
-        links={links} 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
+      <BackofficeSidebar
+        links={links}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
       <div className="lg:pl-64">
         <BackofficeNavbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <main className="p-6">{children}</main>
+        <main className="p-6 pt-20 lg:pt-20">{children}</main>
       </div>
     </div>
   );

@@ -38,7 +38,8 @@ export default function Hero() {
             {t("hero.im")} <span className="text-cyan-300">{t("hero.name")}</span>
           </p>
           <p className="mt-4 sm:mt-6 text-var-body sm:text-lg lg:text-xl text-white/90">
-            {t("hero.passion")} <TypingText className="text-[#f68c09]" text={t("hero.webdev")} />
+            {t("hero.passion")}{" "}
+            <TypingText className="text-[#f68c09]" texts={[t("hero.webdev"), t("hero.devops")]} />
           </p>
 
           <div className="mt-6 sm:mt-8 lg:mt-10">
@@ -79,21 +80,74 @@ export default function Hero() {
 
 // old BackgroundNetwork SVG removed; replaced by Particles
 
-function TypingText({ text, className }: { text: string; className?: string }) {
+function TypingText({
+  texts,
+  className,
+  typeSpeedMs = 80,
+  deleteSpeedMs = 45,
+  pauseAfterTypeMs = 900,
+  pauseAfterDeleteMs = 250,
+}: {
+  texts: string[];
+  className?: string;
+  typeSpeedMs?: number;
+  deleteSpeedMs?: number;
+  pauseAfterTypeMs?: number;
+  pauseAfterDeleteMs?: number;
+}) {
+  const safeTexts = texts.filter(Boolean);
   const [displayed, setDisplayed] = useState("");
+  const [textIndex, setTextIndex] = useState(0);
+  const [mode, setMode] = useState<"typing" | "pausingAfterType" | "deleting" | "pausingAfterDelete">("typing");
 
   useEffect(() => {
-    setDisplayed("");
-    let index = 0;
-    const interval = setInterval(() => {
-      index += 1;
-      setDisplayed(text.slice(0, index));
-      if (index >= text.length) {
-        clearInterval(interval);
+    if (safeTexts.length === 0) return;
+
+    const current = safeTexts[textIndex % safeTexts.length];
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+
+    if (mode === "typing") {
+      if (displayed.length < current.length) {
+        timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), typeSpeedMs);
+      } else {
+        setMode("pausingAfterType");
       }
-    }, 80);
-    return () => clearInterval(interval);
-  }, [text]);
+    } else if (mode === "pausingAfterType") {
+      timeout = setTimeout(() => setMode("deleting"), pauseAfterTypeMs);
+    } else if (mode === "deleting") {
+      if (displayed.length > 0) {
+        timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length - 1)), deleteSpeedMs);
+      } else {
+        setMode("pausingAfterDelete");
+      }
+    } else if (mode === "pausingAfterDelete") {
+      timeout = setTimeout(() => {
+        setTextIndex((i) => (i + 1) % safeTexts.length);
+        setMode("typing");
+      }, pauseAfterDeleteMs);
+    }
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [
+    safeTexts.length,
+    textIndex,
+    displayed,
+    mode,
+    typeSpeedMs,
+    deleteSpeedMs,
+    pauseAfterTypeMs,
+    pauseAfterDeleteMs,
+  ]);
+
+  useEffect(() => {
+    // reset when language changes (texts content changes)
+    setDisplayed("");
+    setTextIndex(0);
+    setMode("typing");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [texts.join("||")]);
 
   return (
     <span className={className}>

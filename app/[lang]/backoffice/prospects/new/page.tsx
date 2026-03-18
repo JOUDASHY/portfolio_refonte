@@ -39,7 +39,7 @@ export default function NewProspectPage() {
       toast.success(
         lang === "fr" ? "Prospect créé avec succès" : "Prospect created successfully"
       );
-      router.push("/backoffice/prospects");
+      router.push(`/${lang}/backoffice/prospects`);
     } catch (e) {
       toast.error(lang === "fr" ? "Échec de la création" : "Creation failed");
     } finally {
@@ -58,7 +58,7 @@ export default function NewProspectPage() {
             {lang === "fr" ? "Ajouter un nouveau prospect" : "Add a new prospect"}
           </p>
         </div>
-        <Button variant="secondary" onClick={() => router.push("/backoffice/prospects")}>
+        <Button variant="secondary" onClick={() => router.push(`/${lang}/backoffice/prospects`)}>
           {lang === "fr" ? "Annuler" : "Cancel"}
         </Button>
       </div>

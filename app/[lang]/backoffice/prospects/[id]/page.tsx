@@ -428,7 +428,7 @@ export default function ProspectDetailPage() {
     try {
       await remove(prospectId);
       toast.success(lang === "fr" ? "Prospect supprimé" : "Prospect deleted");
-      router.push("/backoffice/prospects");
+      router.push(`/${lang}/backoffice/prospects`);
     } catch (e) {
       toast.error(lang === "fr" ? "Échec de la suppression" : "Delete failed");
     }
@@ -488,7 +488,7 @@ export default function ProspectDetailPage() {
                 : "Not rated yet"}
             </p>
           </div>
-          <Button variant="secondary" onClick={() => router.push("/backoffice/prospects")}>
+          <Button variant="secondary" onClick={() => router.push(`/${lang}/backoffice/prospects`)}>
             {lang === "fr" ? "Retour" : "Back"}
           </Button>
         </div>

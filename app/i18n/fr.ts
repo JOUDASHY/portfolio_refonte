@@ -16,6 +16,7 @@ const fr = {
     name: "Nilsen",
     passion: "Passionné par",
     webdev: "le développement web",
+    devops: "le DevOps",
     cta: "Découvrir plus",
   },
   banner: {
@@ -135,6 +136,19 @@ const fr = {
     submit: "Connexion",
   },
   footer: {
+    title: "Portfolio",
+    role: "Développeur Web & Administrateur Système",
+    quickLinks: "Liens rapides",
+    contactInfo: "Informations de contact",
+    designedBy: "Conçu par",
+    links: {
+      home: "Accueil",
+      about: "À propos",
+      skills: "Compétences",
+      projects: "Projets",
+      education: "Éducation",
+      experience: "Expérience",
+    },
     copyright: "Tous droits réservés",
     built: "Conçu et développé avec",
     contact: "Contact",

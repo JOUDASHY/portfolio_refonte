@@ -27,10 +27,10 @@ export default function Footer() {
               </div>
               <div>
                 <h3 className="text-white font-bold text-sm sm:text-base">
-                  {loading ? "Loading..." : `${profile?.username || "Nilsen"}'s Portfolio`}
+                  {loading ? t("loading") : `${profile?.username || "Nilsen"} ${t("footer.title")}`}
                 </h3>
                 <p className="text-white/70 text-xs sm:text-sm">
-                  {loading ? "Loading..." : "Développeur Web & Administrateur Système"}
+                  {loading ? t("loading") : t("footer.role")}
                 </p>
               </div>
             </div>
@@ -38,15 +38,15 @@ export default function Footer() {
 
           {/* Column 2: Quick Links */}
           <div className="flex flex-col items-start sm:items-center gap-3">
-            <h3 className="text-white font-bold text-sm sm:text-base">Quick Links</h3>
+            <h3 className="text-white font-bold text-sm sm:text-base">{t("footer.quickLinks")}</h3>
             <div className="flex flex-col gap-2">
               {[
-                { href: "#home", label: "Home" },
-                { href: "#about", label: "About" },
-                { href: "#skills", label: "Skills" },
-                { href: "#projects", label: "Projects" },
-                { href: "#education", label: "Education" },
-                { href: "#experience", label: "Experience" }
+                { href: "#home", label: t("footer.links.home") },
+                { href: "#about", label: t("footer.links.about") },
+                { href: "#skills", label: t("footer.links.skills") },
+                { href: "#projects", label: t("footer.links.projects") },
+                { href: "#education", label: t("footer.links.education") },
+                { href: "#experience", label: t("footer.links.experience") },
               ].map((link) => (
                 <a
                   key={link.href}
@@ -62,7 +62,7 @@ export default function Footer() {
 
           {/* Column 3: Contact Info */}
           <div className="flex flex-col items-start sm:items-end gap-3">
-            <h3 className="text-white font-bold text-sm sm:text-base">Contact Info</h3>
+            <h3 className="text-white font-bold text-sm sm:text-base">{t("footer.contactInfo")}</h3>
             <div className="flex flex-col gap-2">
               {profile?.phone_number && (
                 <div className="flex items-center gap-2 text-white/70 text-xs sm:text-sm">
@@ -105,7 +105,10 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-6 pt-4 border-t border-white/10">
           <p className="text-center text-white/70 text-xs sm:text-sm">
-            Designed by <span className="text-[#f68c09] font-semibold">{loading ? "Loading..." : profile?.username || "Nilsen"}</span>
+            {t("footer.designedBy")}{" "}
+            <span className="text-[#f68c09] font-semibold">
+              {loading ? t("loading") : profile?.username || "Nilsen"}
+            </span>
           </p>
         </div>
       </div>

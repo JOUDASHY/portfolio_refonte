@@ -16,6 +16,7 @@ const en = {
     name: "Nilsen",
     passion: "Passionate about",
     webdev: "web development",
+    devops: "DevOps",
     cta: "Discover More",
   },
   banner: {
@@ -135,6 +136,19 @@ const en = {
     submit: "Sign in",
   },
   footer: {
+    title: "Portfolio",
+    role: "Web Developer & System Administrator",
+    quickLinks: "Quick Links",
+    contactInfo: "Contact Info",
+    designedBy: "Designed by",
+    links: {
+      home: "Home",
+      about: "About",
+      skills: "Skills",
+      projects: "Projects",
+      education: "Education",
+      experience: "Experience",
+    },
     copyright: "All rights reserved",
     built: "Designed & built with",
     contact: "Contact",

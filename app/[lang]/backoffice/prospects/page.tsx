@@ -172,7 +172,7 @@ export default function ProspectsPage() {
               : "Visualize prospects by stage and move them through the pipeline in a clear board."}
           </p>
         </div>
-        <Link href="/backoffice/prospects/new">
+        <Link href={`/${lang}/backoffice/prospects/new`}>
           <Button variant="secondary" className="shadow-sm hover:shadow-md">
             {lang === "fr" ? "Nouveau prospect" : "New Prospect"}
           </Button>
@@ -450,7 +450,7 @@ export default function ProspectsPage() {
                           </span>
                           <div className="flex items-center gap-1">
                             <Link
-                              href={`/backoffice/prospects/${prospect.id}`}
+                              href={`/${lang}/backoffice/prospects/${prospect.id}`}
                               className="rounded p-1 text-foreground/60 hover:text-foreground hover:bg-white/10 transition-all"
                             >
                               <svg

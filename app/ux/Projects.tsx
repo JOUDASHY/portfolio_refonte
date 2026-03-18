@@ -13,31 +13,50 @@ export default function Projects() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return (
-    <section 
-      id="projects" 
-      className="relative bg-white py-20 sm:py-24 lg:py-32 border-b-2 overflow-hidden" 
+    <section
+      id="projects"
+      className="relative bg-white pb-20 sm:pb-24 lg:pb-32 border-b-2 overflow-hidden"
       style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}
     >
       {/* Background decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#f68c09]/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#000b31]/5 rounded-full blur-3xl" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-40 -right-40 w-80 h-80 bg-[#f68c09]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 -left-40 w-80 h-80 bg-[#000b31]/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-6">
+      {/* Brand blue wavy header for the title only */}
+      <div
+        className="relative pt-20 sm:pt-24 lg:pt-32 pb-32 sm:pb-40 mb-16 z-10 w-full"
+        style={{ backgroundColor: 'var(--blue)' }}
+      >
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 shadow-sm mb-6 backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-[#f68c09] animate-pulse" />
-            <span className="text-sm font-medium text-[#000b31]">{t("projects.subtitle")}</span>
+            <span className="text-sm font-medium" style={{ color: 'var(--jaune)' }}>{t("projects.subtitle")}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#000b31] mb-4">
+          <h2
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4"
+            style={{ color: 'var(--jaune)' }}
+          >
             {t("projects.title")}
           </h2>
-          <p className="text-lg text-[#000b31]/70 max-w-2xl mx-auto">
+          <p
+            className="text-lg max-w-2xl mx-auto"
+            style={{ color: 'var(--jaune)', opacity: 0.9 }}
+          >
             Discover my latest work and creative projects
           </p>
         </div>
+
+        {/* Wavy bottom limit */}
+        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-[0]">
+          <svg className="relative block w-full h-[60px] sm:h-[100px] lg:h-[140px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path fill="#ffffff" fillOpacity="1" d="M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,133.3C672,139,768,181,864,181.3C960,181,1056,139,1152,117.3C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
         <ProjectGrid />
       </div>
     </section>
@@ -94,23 +113,23 @@ function ProjectGrid() {
     <ul className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
-            <li key={i} className="group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
-              <div className="relative h-20 sm:h-28 lg:h-36 w-full bg-[#000b31]/5">
-                <div className="absolute inset-0 p-2 sm:p-3">
-                  <div className="animate-pulse h-full w-full rounded-lg bg-[#000b31]/10" />
-                </div>
+          <li key={i} className="group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
+            <div className="relative h-20 sm:h-28 lg:h-36 w-full bg-[#000b31]/5">
+              <div className="absolute inset-0 p-2 sm:p-3">
+                <div className="animate-pulse h-full w-full rounded-lg bg-[#000b31]/10" />
               </div>
-              <div className="p-2 sm:p-3">
-                <div className="animate-pulse h-3 w-20 rounded bg-[#000b31]/10" />
-                <div className="mt-2 h-2 w-16 rounded bg-[#000b31]/10" />
-              </div>
-            </li>
-          ))
+            </div>
+            <div className="p-2 sm:p-3">
+              <div className="animate-pulse h-3 w-20 rounded bg-[#000b31]/10" />
+              <div className="mt-2 h-2 w-16 rounded bg-[#000b31]/10" />
+            </div>
+          </li>
+        ))
         : items.map((p, idx) => (
-            <AnimatedCard key={p.id} delayMs={idx * 100}>
-              <ProjectCard project={p} />
-            </AnimatedCard>
-          ))}
+          <AnimatedCard key={p.id} delayMs={idx * 100}>
+            <ProjectCard project={p} />
+          </AnimatedCard>
+        ))}
     </ul>
   );
 }
@@ -139,7 +158,7 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
   };
 
   return (
-    <div 
+    <div
       className="h-full flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -147,22 +166,22 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
       {/* Image Container */}
       <div className="relative h-20 sm:h-28 lg:h-36 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent">
         <div className={`absolute inset-0 bg-[#f68c09]/10 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
-        <Image 
-          src={project.image} 
-          alt={project.title} 
-          fill 
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw" 
-          className={`object-contain p-2 sm:p-3 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`} 
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+          className={`object-contain p-2 sm:p-3 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
         />
-        
+
         {/* Rating Badge */}
         <div className="absolute left-1 top-1 sm:left-2 sm:top-2 rounded-full bg-[#000b31]/80 px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[10px] sm:text-xs text-white backdrop-blur-sm border border-[#f68c09]/30">
           <span className="inline-flex items-center gap-0.5">
-            <StarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#f68c09]" filled={true} /> 
+            <StarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#f68c09]" filled={true} />
             <span className="font-semibold">{currentRating}</span>
           </span>
         </div>
-        
+
         {/* Hover overlay */}
         <div className={`absolute inset-0 bg-gradient-to-t from-[#000b31]/60 to-transparent transition-opacity duration-300 flex items-end justify-center pb-2 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
           <span className="text-white text-[10px] sm:text-xs font-medium px-2 py-1 rounded-full bg-[#f68c09] shadow-lg">
@@ -170,11 +189,11 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
           </span>
         </div>
       </div>
-      
+
       {/* Content */}
       <div className="p-1.5 sm:p-2 lg:p-3 flex-1 flex flex-col">
         <h3 className="text-[10px] sm:text-sm text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
-        
+
         {/* Rating Section */}
         <div className="mt-1 sm:mt-2 flex items-center justify-between">
           <div className="flex items-center gap-0.5">
@@ -182,7 +201,7 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
           </div>
           <span className="text-[8px] sm:text-xs text-[#000b31]/50 font-medium">{currentRating}/5</span>
         </div>
-        
+
         {/* Rate buttons */}
         <div className="mt-1 sm:mt-2 flex items-center justify-between">
           <span className="text-[8px] sm:text-xs text-[#000b31]/40">Rate:</span>
@@ -190,11 +209,10 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
             {[1, 2, 3, 4, 5].map((score) => (
               <button
                 key={score}
-                className={`inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded transition-all duration-200 ${
-                  currentRating >= score
-                    ? 'bg-[#f68c09] text-[#000b31]'
-                    : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
-                } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
+                className={`inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded transition-all duration-200 ${currentRating >= score
+                  ? 'bg-[#f68c09] text-[#000b31]'
+                  : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
+                  } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
                 onClick={() => handleRating(score)}
                 disabled={submitting}
                 title={`Rate ${score} star${score > 1 ? 's' : ''}`}
@@ -204,7 +222,7 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
             ))}
           </div>
         </div>
-        
+
         {error && (
           <div className="mt-1 text-[8px] text-[#f68c09] bg-[#f68c09]/10 px-1 py-0.5 rounded">{error}</div>
         )}
@@ -223,10 +241,10 @@ function Stars({ value = 0, max = 5, size = "md" }: { value?: number; max?: numb
   return (
     <div className="flex items-center gap-0.5" aria-label={`${value} stars`}>
       {Array.from({ length: max }).map((_, i) => (
-        <StarIcon 
-          key={i} 
-          className={`${sizeClasses[size]} ${i < filled ? "text-[#f68c09]" : "text-[#000b31]/20"}`} 
-          filled={i < filled} 
+        <StarIcon
+          key={i}
+          className={`${sizeClasses[size]} ${i < filled ? "text-[#f68c09]" : "text-[#000b31]/20"}`}
+          filled={i < filled}
         />
       ))}
     </div>

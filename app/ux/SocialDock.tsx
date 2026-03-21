@@ -4,26 +4,26 @@ import { useProfile } from "../hooks/useProfile";
 
 export default function SocialDock() {
   const { profile, loading } = useProfile();
-  
+
   // Créer la liste des liens sociaux dynamiquement
   const items = [];
-  
+
   if (profile?.link_linkedin) {
     items.push({ href: profile.link_linkedin, label: "LinkedIn", icon: LinkedInIcon });
   }
-  
+
   if (profile?.link_github) {
     items.push({ href: profile.link_github, label: "GitHub", icon: GitHubIcon });
   }
-  
+
   if (profile?.link_facebook) {
     items.push({ href: profile.link_facebook, label: "Facebook", icon: FacebookIcon });
   }
-  
+
   // Afficher un skeleton pendant le chargement
   if (loading) {
     return (
-      <div className="pointer-events-auto fixed bottom-6 right-6 z-50">
+      <div className="pointer-events-auto fixed bottom-6 left-6 z-50">
         <div className="flex items-center gap-4 rounded-full bg-white/10 px-4 py-2 ring-2 ring-accent backdrop-blur-sm border border-accent/50">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy/50 animate-pulse" />
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy/50 animate-pulse" />
@@ -31,14 +31,14 @@ export default function SocialDock() {
       </div>
     );
   }
-  
+
   // Si aucun lien social n'est disponible, ne pas afficher le dock
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <div className="pointer-events-auto fixed bottom-6 right-6 z-50">
+    <div className="pointer-events-auto fixed bottom-6 left-6 z-50">
       <div className="flex items-center gap-4 rounded-full bg-white/10 px-4 py-2 ring-2 ring-accent backdrop-blur-sm border border-accent/50">
         {items.map(({ href, label, icon: Icon }) => (
           <a

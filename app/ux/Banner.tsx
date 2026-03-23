@@ -40,7 +40,7 @@ function normalizeYouTube(url: string): string | null {
       const id = u.searchParams.get("v");
       return id || null;
     }
-  } catch {}
+  } catch { }
   return null;
 }
 
@@ -54,7 +54,7 @@ export default function Banner({
   title,
   subtitle,
   bgSrc,
-  heightClass = "h-[280px] xs:h-[320px] sm:h-[420px] lg:h-[520px]",
+  heightClass = "h-[160px] xs:h-[200px] sm:h-[260px] lg:h-[320px]",
   overlayClass = "bg-black/40",
   align = "center",
   children,
@@ -63,8 +63,8 @@ export default function Banner({
     align === "left"
       ? "items-start text-left"
       : align === "right"
-      ? "items-end text-right"
-      : "items-center text-center";
+        ? "items-end text-right"
+        : "items-center text-center";
 
   const embedSrc = useMemo(() => toYouTubeEmbed(bgSrc), [bgSrc]);
 
@@ -91,7 +91,7 @@ export default function Banner({
           </div>
         </div>
       ) : (
-        <div 
+        <div
           className="absolute inset-0 -z-10 bg-fixed bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${bgSrc})`,
@@ -132,9 +132,8 @@ export function SplitBanner({
       <div className={`absolute inset-0 ${overlayClass}`} />
       <div className="relative z-10 mx-auto flex h-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
-          className={`grid w-full grid-cols-1 gap-4 sm:grid-cols-2 items-center ${
-            reverse ? "sm:flex-row-reverse" : ""
-          }`}
+          className={`grid w-full grid-cols-1 gap-4 sm:grid-cols-2 items-center ${reverse ? "sm:flex-row-reverse" : ""
+            }`}
         >
           <div className="hidden sm:block h-full">
             <div className="relative h-full w-full rounded-2xl overflow-hidden bg-black/10">

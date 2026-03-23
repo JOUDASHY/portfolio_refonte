@@ -28,5 +28,6 @@ export type { User } from "./backoffice/user";
 export type { Visit, MonthlyVisit } from "./backoffice/visit";
 export type { Facebook } from "./backoffice/facebook";
 export type { MyLogin } from "./backoffice/mylogin";
+export type { GalleryCategory, GalleryImage } from "./backoffice/gallery";
 
 

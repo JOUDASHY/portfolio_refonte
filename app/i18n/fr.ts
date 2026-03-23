@@ -7,6 +7,7 @@ const fr = {
     skills: "Compétences",
     education: "Éducation",
     projects: "Projets",
+    gallery: "Galerie",
     experience: "Expérience",
     contact: "Contact",
   },

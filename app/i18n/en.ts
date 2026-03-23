@@ -7,6 +7,7 @@ const en = {
     skills: "Skills",
     education: "Education",
     projects: "Projects",
+    gallery: "Gallery",
     experience: "Experience",
     contact: "Contact",
   },

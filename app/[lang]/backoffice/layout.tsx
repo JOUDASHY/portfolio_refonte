@@ -22,6 +22,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "training", label: "Formation", icon: TrainingIcon, match: "/backoffice/training" },
     { href: "credentials", label: "Mes Identifiants", icon: CredentialsIcon, match: "/backoffice/credentials" },
     { href: "facebook", label: "Facebook", icon: FacebookIcon, match: "/backoffice/facebook" },
+    { href: "gallery", label: "Galerie", icon: GalleryIcon, match: "/backoffice/gallery" },
   ];
 
   return (
@@ -149,6 +150,14 @@ function TemplateIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M6 2h9l5 5v15a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm8 1.5V8h4.5L14 3.5zM8 12h8v2H8v-2zm0 4h8v2H8v-2z" />
+    </svg>
+  );
+}
+
+function GalleryIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
     </svg>
   );
 }

@@ -5,6 +5,7 @@ import About from "../ux/About";
 import Skills from "../ux/Skills";
 import Education from "../ux/Education";
 import Projects from "../ux/Projects";
+import Gallery from "../ux/Gallery";
 import Experience from "../ux/Experience";
 import Internships from "../ux/Internships";
 import Contact from "../ux/Contact";
@@ -17,7 +18,7 @@ export default function Home() {
   // Enregistrement automatique des visites
   useVisitTracker();
   const { t } = useLanguage();
-  
+
   return (
     <div className="min-h-screen">
       <Hero />
@@ -30,7 +31,7 @@ export default function Home() {
       /> */}
 
       <About />
-       <Banner
+      <Banner
         bgSrc="https://wallpaperaccess.com/full/5675692.jpg"
         // bgSrc="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dit-jSj7hA_Y&psig=AOvVaw2MODuce4oSA5CaPg1Lp8gs&ust=1759584555746000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCNiH78mRiJADFQAAAAAdAAAAABAL"
         title={t("banner.collaboration")}
@@ -55,13 +56,15 @@ export default function Home() {
         overlayClass="bg-black/30"
       />
       <Projects />
-      <Banner
-        bgSrc="https://images.pexels.com/photos/943096/pexels-photo-943096.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        title={t("banner.fullStack")}
-        subtitle={t("banner.fullStackSubtitle")}
+      <Gallery />
+
+      {/* <Banner
+        bgSrc="https://img.freepik.com/premium-photo/creative-photographer-minimalist-desk-flatlay-generative-ai_1416-24896.jpg"
+        title="Momentum & Créativité"
+        subtitle="Capturer l'essence de chaque instant à travers mon objectif"
         align="center"
         overlayClass="bg-black/30"
-      />
+      /> */}
       <Experience />
       <Contact />
 

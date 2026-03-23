@@ -8,6 +8,7 @@ export type Profile = {
   link_facebook: string;
   link_github: string;
   link_linkedin: string;
+  link_instagram: string;
   phone_number: string;
   address: string;
 };

@@ -43,6 +43,7 @@ export const authService = {
     if (payload.link_facebook != null) form.append("link_facebook", String(payload.link_facebook));
     if (payload.link_linkedin != null) form.append("link_linkedin", String(payload.link_linkedin));
     if (payload.link_github != null) form.append("link_github", String(payload.link_github));
+    if (payload.link_instagram != null) form.append("link_instagram", String(payload.link_instagram));
     if (payload.phone_number != null) form.append("phone_number", String(payload.phone_number));
     if (payload.address != null) form.append("address", String(payload.address));
     const { data } = await apiAuth.put<{ message: string; data: Profile }>("profile/update/", form, {

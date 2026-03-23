@@ -20,6 +20,7 @@ type ProfileData = {
   website?: string;
   github?: string;
   linkedin?: string;
+  instagram?: string;
   twitter?: string;
 };
 
@@ -34,6 +35,7 @@ export default function ProfilePage() {
     website: "",
     github: "",
     linkedin: "",
+    instagram: "",
     twitter: "",
   });
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -63,6 +65,7 @@ export default function ProfilePage() {
         about: form.bio,
         link_github: form.github || null,
         link_linkedin: form.linkedin || null,
+        link_instagram: form.instagram || null,
         link_facebook: form.website || null,
         phone_number: form.phone || null,
         address: form.location || null,
@@ -122,6 +125,7 @@ export default function ProfilePage() {
         website: me.link_facebook || "",
         github: me.link_github || "",
         linkedin: me.link_linkedin || "",
+        instagram: me.link_instagram || "",
         twitter: "",
       }));
     } catch {
@@ -289,6 +293,11 @@ export default function ProfilePage() {
               <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M6.94 6.5A2.44 2.44 0 114.5 4.06 2.44 2.44 0 016.94 6.5zM4.75 8.75H9v10.69H4.75zM13.06 8.75H9.88v10.69h3.18v-5.77c0-1.52.29-2.99 2.17-2.99 1.85 0 1.88 1.72 1.88 3.08v5.68h3.18v-6.4c0-3.16-.68-5.6-4.37-5.6-1.77 0-2.96.97-3.47 1.9h-.05z" /></svg>
             </a>
           )}
+          {form.instagram && (
+            <a href={form.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM18 5C18.55 5 19 5.45 19 6C19 6.55 18.55 7 18 7C17.45 7 17 6.55 17 6C17 5.45 17.45 5 18 5ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" /></svg>
+            </a>
+          )}
           {form.website && (
             <a href={form.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-foreground/80 hover:bg-white/10">
               <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 17.93A8 8 0 1120 12a8 8 0 01-7 7.93z" /></svg>
@@ -365,6 +374,12 @@ export default function ProfilePage() {
                   placeholder="https://linkedin.com/in/username"
                   value={form.linkedin || ""}
                   onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))}
+                />
+                <Input
+                  label="Instagram"
+                  placeholder="https://instagram.com/username"
+                  value={form.instagram || ""}
+                  onChange={(e) => setForm((f) => ({ ...f, instagram: e.target.value }))}
                 />
                 <Input
                   label="Twitter"

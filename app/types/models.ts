@@ -6,6 +6,7 @@ export type Profile = {
   link_facebook: string | null;
   link_linkedin: string | null;
   link_github: string | null;
+  link_instagram: string | null;
   phone_number: string | null;
   address: string | null;
   username?: string;

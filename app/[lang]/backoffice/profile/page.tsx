@@ -6,6 +6,8 @@ import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
 import Modal from "../../../ux/ui/Modal";
 import { authService } from "../../../services/authService";
+import { webauthnService, type WebAuthnCredential } from "../../../services/backoffice/webauthnService";
+import { useWebAuthn } from "../../../hooks/useWebAuthn";
 import type { Profile } from "../../../types/models";
 
 type ProfileData = {
@@ -43,6 +45,11 @@ export default function ProfilePage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [imageCacheKey, setImageCacheKey] = useState<number>(Date.now());
   const [, setCoverFile] = useState<File | null>(null);
+
+  // WebAuthn state
+  const { registerFaceId, loading: webauthnLoading } = useWebAuthn();
+  const [credentials, setCredentials] = useState<WebAuthnCredential[]>([]);
+  const [deviceName, setDeviceName] = useState("");
 
   function handleSave() {
     setConfirmOpen(true);
@@ -126,7 +133,36 @@ export default function ProfilePage() {
 
   useEffect(() => {
     loadProfile();
+    fetchCredentials();
   }, []);
+
+  async function fetchCredentials() {
+    try {
+      const data = await webauthnService.getCredentials();
+      setCredentials(data);
+    } catch {
+      // noop
+    }
+  }
+
+  async function handleRegisterFaceId() {
+    const name = deviceName || (typeof window !== "undefined" ? window.navigator.userAgent.split(" ")[0] : "Appareil");
+    const res = await registerFaceId(name);
+    if (res.success) {
+      setDeviceName("");
+      fetchCredentials();
+    }
+  }
+
+  async function handleDeleteCredential(id: number) {
+    if (!confirm("Supprimer ce Face ID ?")) return;
+    try {
+      await webauthnService.deleteCredential(id);
+      fetchCredentials();
+    } catch {
+      // noop
+    }
+  }
 
   // Cleanup preview URL on unmount
   useEffect(() => {
@@ -344,6 +380,63 @@ export default function ProfilePage() {
                 Annuler
               </Button>
               <Button onClick={handleSave}>Enregistrer</Button>
+            </div>
+          </div>
+
+          {/* WebAuthn / Face ID Settings */}
+          <div className="mt-8 rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+            <h2 className="mb-4 text-lg font-medium text-foreground">Sécurité & Face ID</h2>
+            <p className="mb-6 text-sm text-foreground/70">
+              Ajoutez l'authentification biométrique pour vous connecter plus rapidement et en toute sécurité.
+            </p>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium text-foreground">Ajouter un appareil</h3>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Nom de l'appareil (ex: iPhone 15)"
+                    value={deviceName}
+                    onChange={(e) => setDeviceName(e.target.value)}
+                  />
+                  <Button
+                    onClick={handleRegisterFaceId}
+                    disabled={webauthnLoading}
+                    className="whitespace-nowrap"
+                  >
+                    {webauthnLoading ? "Scan..." : "Activer Face ID"}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium text-foreground">Appareils enregistrés ({credentials.length})</h3>
+                {credentials.length === 0 ? (
+                  <p className="text-xs text-foreground/50 italic text-center py-4 bg-white/5 rounded-xl">
+                    Aucun appareil enregistré.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {credentials.map((cred) => (
+                      <div key={cred.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl ring-1 ring-white/10 group">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{cred.device_name}</p>
+                          <p className="text-[10px] text-foreground/50">
+                            Ajouté le {new Date(cred.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteCredential(cred.id)}
+                          className="p-2 text-foreground/40 hover:text-red-400 transition-colors"
+                          title="Supprimer"
+                        >
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12z" /></svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

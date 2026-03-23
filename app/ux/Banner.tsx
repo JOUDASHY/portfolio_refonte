@@ -54,7 +54,7 @@ export default function Banner({
   title,
   subtitle,
   bgSrc,
-  heightClass = "h-[160px] xs:h-[200px] sm:h-[260px] lg:h-[320px]",
+  heightClass = "h-[280px] xs:h-[320px] sm:h-[420px] lg:h-[520px]",
   overlayClass = "bg-black/40",
   align = "center",
   children,

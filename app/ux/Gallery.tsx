@@ -20,7 +20,7 @@ export default function Gallery() {
 
     if (loading && images.length === 0) {
         return (
-            <section id="gallery" className="py-12 bg-[#000b31]">
+            <section id="gallery" className="py-20 bg-[#000b31]">
                 <div className="mx-auto max-w-7xl px-4 text-center">
                     <div className="animate-pulse">
                         <div className="mx-auto h-8 w-48 rounded bg-gray-200 dark:bg-gray-800 mb-4" />
@@ -37,26 +37,26 @@ export default function Gallery() {
     }
 
     return (
-        <section id="gallery" className="relative overflow-hidden py-12 sm:py-20 bg-[#000b31]">
+        <section id="gallery" className="relative overflow-hidden py-10 sm:py-28 bg-[#000b31]">
             {/* Decorative background elements */}
             <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
             <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-8 sm:mb-12">
-                    <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
+                <div className="text-center mb-8 sm:mb-16">
+                    <h2 className="text-2xl sm:text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
                         Ma <span className="text-accent">Galerie</span> Photo
                     </h2>
-                    <p className="mt-4 text-lg text-white/60 max-w-2xl mx-auto">
+                    <p className="mt-2 text-sm sm:text-lg text-white/60 max-w-2xl mx-auto px-4">
                         Découvrez mon univers à travers une sélection de moments, de projets et d'inspirations capturés au fil du temps.
                     </p>
                 </div>
 
                 {/* Filters */}
-                <div className="flex flex-wrap justify-center gap-2 mb-8">
+                <div className="flex flex-wrap justify-center gap-2 mb-10">
                     <button
                         onClick={() => updateFilters({ category: undefined })}
-                        className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${filters.category === undefined
+                        className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${filters.category === undefined
                             ? "bg-accent text-white shadow-lg shadow-accent/25"
                             : "bg-white/10 text-accent hover:bg-white/20"
                             }`}
@@ -67,7 +67,7 @@ export default function Gallery() {
                         <button
                             key={cat.id}
                             onClick={() => updateFilters({ category: cat.id })}
-                            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${filters.category === cat.id
+                            className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${filters.category === cat.id
                                 ? "bg-accent text-white shadow-lg shadow-accent/25"
                                 : "bg-white/10 text-accent hover:bg-white/20"
                                 }`}
@@ -78,7 +78,7 @@ export default function Gallery() {
                 </div>
 
                 {/* Masonry-like Grid */}
-                <div className="columns-2 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
+                <div className="columns-2 sm:columns-2 lg:columns-3 gap-2 sm:gap-6 space-y-2 sm:space-y-6">
                     {images.map((img) => (
                         <div
                             key={img.id}

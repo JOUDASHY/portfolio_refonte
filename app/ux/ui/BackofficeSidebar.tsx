@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { SVGProps, ReactElement } from "react";
+import { useProfile } from "../../hooks/useProfile";
 
 interface SidebarLink {
   href: string;
@@ -18,23 +19,22 @@ interface BackofficeSidebarProps {
   onClose: () => void;
 }
 
-function SidebarLink({ href, label, icon: Icon, active }: { 
-  href: string; 
-  label: string; 
-  icon: (p: SVGProps<SVGSVGElement>) => ReactElement; 
-  active?: boolean 
+function SidebarLink({ href, label, icon: Icon, active }: {
+  href: string;
+  label: string;
+  icon: (p: SVGProps<SVGSVGElement>) => ReactElement;
+  active?: boolean
 }) {
   return (
     <Link
       href={href}
-      className={`group flex items-center gap-0.5 sm:gap-2 rounded-lg px-1.5 sm:px-3 py-0.5 sm:py-2 text-xs ${
-        active ? "text-black shadow" : "text-white/80 hover:bg-white/10 hover:text-white"
-      }`}
+      className={`group flex items-center gap-0.5 sm:gap-2 rounded-lg px-1.5 sm:px-3 py-0.5 sm:py-2 text-xs ${active ? "text-black shadow" : "text-white/80 hover:bg-white/10 hover:text-white"
+        }`}
       style={active ? { backgroundColor: '#f68c09' } : {}}
     >
-              <span className={`flex h-4 w-4 sm:h-8 sm:w-8 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
-               <Icon className="icon-responsive" />
-             </span>
+      <span className={`flex h-4 w-4 sm:h-8 sm:w-8 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
+        <Icon className="icon-responsive" />
+      </span>
       <span className="text-xs sm:text-xs font-normal leading-tight" style={{ fontSize: '0.625rem' }}>{label}</span>
     </Link>
   );
@@ -42,36 +42,49 @@ function SidebarLink({ href, label, icon: Icon, active }: {
 
 export default function BackofficeSidebar({ links, isOpen, onClose }: BackofficeSidebarProps) {
   const pathname = usePathname();
+  const { profile, loading } = useProfile();
 
   return (
     <>
       {/* Overlay pour mobile */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           onClick={onClose}
         />
       )}
-      
+
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/10 border-black/15 bg-navy transform transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      }`}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/10 border-black/15 bg-navy transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}>
         <div className="flex h-full flex-col">
           <div className="px-4 pt-6">
             <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-accent">
               <Image src="/logo_nil.png" alt="Logo" width={84} height={84} className="object-contain" />
             </div>
-            <div className="mt-4 rounded-xl bg-white shadow-sm">
+            <div className="mt-4 rounded-xl bg-white shadow-sm overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
-                  <svg viewBox="0 0 24 24" className="h-7 w-7 fill-gray-400">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+                <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 border-2 border-accent/20 overflow-hidden">
+                  {profile?.image ? (
+                    <Image
+                      src={profile.image}
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <svg viewBox="0 0 24 24" className="h-7 w-7 fill-gray-400">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                  )}
                 </div>
-                <div className="leading-tight">
-                  <div className="font-semibold text-black text-lg">Nilsen</div>
-                  <div className="text-black/60 text-sm">Administrator</div>
+                <div className="leading-tight min-w-0">
+                  <div className="font-semibold text-black text-base truncate">
+                    {loading ? "..." : (profile?.username || "Admin")}
+                  </div>
+                  <div className="text-black/50 text-[11px] uppercase tracking-wider font-bold">
+                    Administrator
+                  </div>
                 </div>
               </div>
             </div>

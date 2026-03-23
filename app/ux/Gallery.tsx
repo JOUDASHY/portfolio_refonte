@@ -56,7 +56,7 @@ export default function Gallery() {
                 <div className="flex flex-wrap justify-center gap-2 mb-10">
                     <button
                         onClick={() => updateFilters({ category: undefined })}
-                        className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${filters.category === undefined
+                        className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-responsive-xs sm:text-sm font-medium transition-all ${filters.category === undefined
                             ? "bg-accent text-white shadow-lg shadow-accent/25"
                             : "bg-white/10 text-accent hover:bg-white/20"
                             }`}
@@ -67,7 +67,7 @@ export default function Gallery() {
                         <button
                             key={cat.id}
                             onClick={() => updateFilters({ category: cat.id })}
-                            className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${filters.category === cat.id
+                            className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-responsive-xs sm:text-sm font-medium transition-all ${filters.category === cat.id
                                 ? "bg-accent text-white shadow-lg shadow-accent/25"
                                 : "bg-white/10 text-accent hover:bg-white/20"
                                 }`}
@@ -101,13 +101,13 @@ export default function Gallery() {
 
                                 {/* Glass Overlay */}
                                 <div
-                                    className={`absolute inset-0 flex flex-col justify-end p-3 sm:p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500 ${hoveredId === img.id ? "opacity-100" : "opacity-0"
+                                    className={`absolute inset-0 flex flex-col justify-end p-3 sm:p-6 bg-black/60 transition-opacity duration-500 ${hoveredId === img.id ? "opacity-100" : "opacity-0"
                                         }`}
                                 >
-                                    <span className="text-[10px] sm:text-xs font-bold text-accent uppercase tracking-widest mb-1 sm:mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <span className="text-responsive-xs font-bold text-accent uppercase tracking-widest mb-1 sm:mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                                         {img.category_name}
                                     </span>
-                                    <h3 className="text-sm sm:text-xl font-bold text-white mb-1 sm:mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                                    <h3 className="text-responsive-sm sm:text-xl font-bold text-white mb-1 sm:mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
                                         {img.title}
                                     </h3>
                                     <p className="hidden sm:block text-xs sm:text-sm text-white/70 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-150">
@@ -130,7 +130,7 @@ export default function Gallery() {
 
                                 {/* Badge Featured */}
                                 {img.is_featured && (
-                                    <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-accent/20 backdrop-blur-md text-accent text-[8px] sm:text-[10px] font-bold uppercase tracking-wider ring-1 ring-accent/30 z-20">
+                                    <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-accent/20 backdrop-blur-md text-accent text-responsive-xs font-bold uppercase tracking-wider ring-1 ring-accent/30 z-20">
                                         Favori
                                     </div>
                                 )}

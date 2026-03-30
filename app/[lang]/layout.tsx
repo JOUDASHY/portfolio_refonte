@@ -13,6 +13,20 @@ const metaByLang: Record<string, Metadata> = {
     title: "Nilsen Tovohery – Développeur Full‑Stack & Admin Sys",
     description:
       "Développeur fullstack et administrateur système avec 2 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives.",
+    keywords: [
+      "Nilsen",
+      "Nilsen Tovohery",
+      "Nilsen développeur",
+      "Nilsen admin sys",
+      "Nilsen administrateur système",
+      "Nilsen fullstack",
+      "Nilsen Madagascar",
+      "Nilsen Fianarantsoa",
+      "développeur fullstack Madagascar",
+      "administrateur système Madagascar",
+      "développeur web Fianarantsoa",
+      "portfolio développeur Madagascar",
+    ],
     openGraph: {
       title: "Nilsen Tovohery – Développeur Full‑Stack & Admin Sys",
       description:
@@ -42,6 +56,20 @@ const metaByLang: Record<string, Metadata> = {
     title: "Nilsen Tovohery – Full‑Stack Developer & Sys Admin",
     description:
       "Full-stack developer and system administrator with 2 years of experience, designing performant, secure and scalable web solutions.",
+    keywords: [
+      "Nilsen",
+      "Nilsen Tovohery",
+      "Nilsen developer",
+      "Nilsen sys admin",
+      "Nilsen system administrator",
+      "Nilsen fullstack",
+      "Nilsen Madagascar",
+      "Nilsen Fianarantsoa",
+      "fullstack developer Madagascar",
+      "system administrator Madagascar",
+      "web developer Fianarantsoa",
+      "developer portfolio Madagascar",
+    ],
     openGraph: {
       title: "Nilsen Tovohery – Full‑Stack Developer & Sys Admin",
       description:

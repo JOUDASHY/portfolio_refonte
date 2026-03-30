@@ -45,10 +45,10 @@ export default function Gallery() {
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-8 sm:mb-16">
                     <h2 className="text-2xl sm:text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
-                        Ma <span className="text-accent">Galerie</span> Photo
+                        {t("gallery.title")} <span className="text-accent">{t("gallery.titleHighlight")}</span> {t("gallery.titleSuffix")}
                     </h2>
                     <p className="mt-2 text-sm sm:text-lg text-white/60 max-w-2xl mx-auto px-4">
-                        Découvrez mon univers à travers une sélection de moments, de projets et d'inspirations capturés au fil du temps.
+                        {t("gallery.subtitle")}
                     </p>
                 </div>
 
@@ -61,7 +61,7 @@ export default function Gallery() {
                             : "bg-white/10 text-accent hover:bg-white/20"
                             }`}
                     >
-                        Tous
+                        {t("gallery.all")}
                     </button>
                     {categories.map((cat) => (
                         <button
@@ -131,7 +131,7 @@ export default function Gallery() {
                                 {/* Badge Featured */}
                                 {img.is_featured && (
                                     <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-accent/20 backdrop-blur-md text-accent text-responsive-xs font-bold uppercase tracking-wider ring-1 ring-accent/30 z-20">
-                                        Favori
+                                        {t("gallery.featured")}
                                     </div>
                                 )}
                             </div>
@@ -142,7 +142,7 @@ export default function Gallery() {
                 {images.length === 0 && !loading && (
                     <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/20">
                         <svg viewBox="0 0 24 24" fill="currentColor" className="h-16 w-16 mx-auto text-accent/20 mb-4 font-light"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" /></svg>
-                        <p className="text-accent/60 font-medium">Aucune image trouvée dans cette catégorie.</p>
+                        <p className="text-accent/60 font-medium">{t("gallery.noImages")}</p>
                     </div>
                 )}
             </div>
@@ -192,7 +192,7 @@ export default function Gallery() {
                                 {selectedImage.title}
                             </h2>
                             <p className="text-sm text-foreground/70 leading-relaxed mb-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                                {selectedImage.description || "Aucune description disponible."}
+                                {selectedImage.description || t("gallery.noDescription")}
                             </p>
 
                             <div className="mt-auto space-y-4">
@@ -204,7 +204,7 @@ export default function Gallery() {
                                     ))}
                                 </div>
                                 <div className="pt-4 border-t border-foreground/10 flex items-center justify-between text-[10px] text-foreground/40 font-medium">
-                                    <span>Mis à jour le {new Date(selectedImage.updated_at).toLocaleDateString()}</span>
+                                    <span>{t("gallery.updatedAt")} {new Date(selectedImage.updated_at).toLocaleDateString()}</span>
                                     <span>ID: #{selectedImage.id}</span>
                                 </div>
                             </div>

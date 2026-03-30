@@ -1,4 +1,4 @@
-const en = {
+﻿const en = {
   lang: "en",
   brand: "Portfolio",
   nav: {
@@ -47,7 +47,7 @@ const en = {
     title: "About Me",
     subtitle: "Full‑Stack Developer",
     description:
-      "I am a passionate full-stack developer and system administrator based in Isada, Fianarantsoa. With a solid foundation in both software development and IT management, I design and build dynamic web applications and responsive websites using modern technologies like Django, Laravel, and React. In my role as a system administrator, I manage robust server infrastructures by implementing top-tier security measures, optimizing performance, and ensuring high availability. This dual expertise allows me to seamlessly integrate development with IT operations, providing comprehensive solutions that are both innovative and reliable. Whether I’m working on personal projects or tackling complex professional challenges, I continuously strive to refine my skills and apply best practices that bridge the gap between cutting-edge development and efficient system management.",
+      "Full-stack developer and system administrator with 2 years of experience, I design performant, secure and scalable web solutions. I work across both front-end and back-end, while ensuring system optimization. Detail-oriented and autonomous, I focus on delivering quality code and effectively meeting project requirements.",
     profile: {
       label: "Profile",
       location: "Location",
@@ -62,6 +62,17 @@ const en = {
       tooling: "CI/CD, Testing, Performance & Accessibility",
     },
     ctaContact: "Contact Me",
+  },
+  gallery: {
+    title: "My",
+    titleHighlight: "Gallery",
+    titleSuffix: "Photos",
+    subtitle: "Discover my world through a selection of moments, projects and inspirations captured over time.",
+    all: "All",
+    featured: "Featured",
+    noImages: "No images found in this category.",
+    noDescription: "No description available.",
+    updatedAt: "Updated on",
   },
   projects: {
     title: "Projects",
@@ -282,5 +293,6 @@ const en = {
 
 export type EnDict = typeof en;
 export default en;
+
 
 

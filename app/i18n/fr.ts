@@ -1,4 +1,4 @@
-const fr = {
+﻿const fr = {
   lang: "fr",
   brand: "Portfolio",
   nav: {
@@ -47,7 +47,7 @@ const fr = {
     title: "À propos de moi",
     subtitle: "Développeur Full‑Stack",
     description:
-      "Je suis un développeur full-stack et administrateur système passionné, basé à Isada, Fianarantsoa. Avec une solide base en développement logiciel et en gestion des systèmes d’information, je conçois et réalise des applications web dynamiques et des sites responsives en utilisant des technologies modernes comme Django, Laravel et React. En tant qu’administrateur système, je gère des infrastructures serveurs robustes en mettant en place des mesures de sécurité avancées, en optimisant les performances et en assurant une haute disponibilité. Cette double expertise me permet d’intégrer harmonieusement le développement et les opérations IT, afin de proposer des solutions complètes, innovantes et fiables. Que ce soit sur des projets personnels ou des défis professionnels complexes, je cherche constamment à améliorer mes compétences et à appliquer les meilleures pratiques pour concilier innovation et efficacité opérationnelle.",
+      "Développeur fullstack et administrateur système avec 2 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives. J'interviens aussi bien sur le front-end que le back-end, tout en assurant l'optimisation des systèmes. Rigoureux et autonome, je m'attache à produire un code de qualité et à répondre efficacement aux besoins des projets.",
     profile: {
       label: "Profil",
       location: "Localisation",
@@ -62,6 +62,17 @@ const fr = {
       tooling: "CI/CD, Tests, Performance et Accessibilité",
     },
     ctaContact: "Me contacter",
+  },
+  gallery: {
+    title: "Ma",
+    titleHighlight: "Galerie",
+    titleSuffix: "Photo",
+    subtitle: "Découvrez mon univers à travers une sélection de moments, de projets et d'inspirations capturés au fil du temps.",
+    all: "Tous",
+    featured: "Favori",
+    noImages: "Aucune image trouvée dans cette catégorie.",
+    noDescription: "Aucune description disponible.",
+    updatedAt: "Mis à jour le",
   },
   projects: {
     title: "Projets",
@@ -282,5 +293,6 @@ const fr = {
 
 export type FrDict = typeof fr;
 export default fr;
+
 
 

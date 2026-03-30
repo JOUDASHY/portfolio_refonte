@@ -157,7 +157,7 @@ export default function About() {
 
               <AnimatedBox delayMs={240}>
                 <p className="mt-4 sm:mt-6 text-var-caption sm:text-base text-slate-600 leading-relaxed">
-                  {profile?.about || t("about.description")}
+                  {t("about.description")}
                 </p>
               </AnimatedBox>
 

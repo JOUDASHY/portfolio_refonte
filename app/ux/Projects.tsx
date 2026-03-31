@@ -7,6 +7,7 @@ import { useTheme } from "../components/ThemeProvider";
 import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 import { useProjects } from "../hooks/useProjects";
 import { ratingService } from "../services/backoffice/ratingService";
+import Modal from "./ui/Modal";
 
 export default function Projects() {
   const { t } = useLanguage();
@@ -160,36 +161,36 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
 
   return (
     <>
-      {/* Lightbox */}
-      {lightboxOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-          onClick={() => setLightboxOpen(false)}
-        >
-          <button
-            className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all"
-            onClick={() => setLightboxOpen(false)}
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" /></svg>
-          </button>
-          <div
-            className="relative max-w-3xl w-full max-h-[85vh] flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={project.image}
-              alt={project.title}
-              width={900}
-              height={700}
-              className="object-contain max-h-[85vh] rounded-xl shadow-2xl"
-              unoptimized
-            />
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent rounded-b-xl">
-              <p className="text-white font-bold text-lg">{project.title}</p>
-            </div>
-          </div>
+      {/* Lightbox Modal */}
+      <Modal
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        size="xl"
+        className="!p-0 !bg-black overflow-hidden"
+      >
+        <div className="relative flex flex-col items-center justify-center min-h-[60vh] p-4">
+          <Image
+            src={project.image}
+            alt={project.title}
+            width={900}
+            height={700}
+            className="object-contain max-h-[70vh] w-auto rounded-lg"
+            unoptimized
+          />
+          <p className="mt-4 text-white font-bold text-lg text-center">{project.title}</p>
+          {project.href && (
+            <a
+              href={project.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-3 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#f68c09] text-white text-sm font-semibold hover:brightness-110 transition-all"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" /></svg>
+              {t("projects.view")}
+            </a>
+          )}
         </div>
-      )}
+      </Modal>
 
       <div
         className="h-full flex flex-col"

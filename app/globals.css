@@ -425,3 +425,11 @@ html {
 .animate-scroll {
   animation: scroll 20s linear infinite;
 }
+
+/* Tawk.to — hide text, show icon only */
+#tawk-bubble-container .tawk-text-truncate,
+#tawk-bubble-container span[class*="tawk-text"],
+.tawk-button-circle .tawk-text-truncate,
+.tawk-min-container .tawk-text-truncate {
+  display: none !important;
+}

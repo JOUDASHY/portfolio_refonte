@@ -85,7 +85,7 @@ export default function Modal({
           </div>
         ) : null}
 
-        <div className="px-5 py-4">{children}</div>
+        <div className={`${className.includes('!p-0') ? '' : 'px-5 py-4'}`}>{children}</div>
 
         {footer ? (
           <div className="flex items-center justify-between gap-2 border-t border-border px-5 py-4">

@@ -166,15 +166,25 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
         open={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
         size="xl"
-        className="!p-0 !bg-black overflow-hidden"
+        className="!p-0 !bg-[#0a0a0a] overflow-hidden"
       >
-        <div className="relative flex flex-col items-center justify-center min-h-[60vh] p-4">
+        <div className="relative flex flex-col items-center justify-center p-6 pt-10">
+          {/* Bouton X fermer */}
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-3 right-3 z-20 h-9 w-9 flex items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all"
+            aria-label="Fermer"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
           <Image
             src={project.image}
             alt={project.title}
             width={900}
             height={700}
-            className="object-contain max-h-[70vh] w-auto rounded-lg"
+            className="object-contain max-h-[65vh] w-auto rounded-lg"
             unoptimized
           />
           <p className="mt-4 text-white font-bold text-lg text-center">{project.title}</p>
@@ -183,7 +193,7 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
               href={project.href}
               target="_blank"
               rel="noreferrer noopener"
-              className="mt-3 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#f68c09] text-white text-sm font-semibold hover:brightness-110 transition-all"
+              className="mt-3 mb-2 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#f68c09] text-white text-sm font-semibold hover:brightness-110 transition-all"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" /></svg>
               {t("projects.view")}

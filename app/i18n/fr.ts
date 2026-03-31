@@ -77,6 +77,7 @@
   projects: {
     title: "Projets",
     subtitle: "Quelques réalisations récentes",
+    tagline: "Découvrez mes derniers travaux et projets créatifs",
     stars: "étoiles",
     addStar: "Ajouter une étoile",
     view: "Voir le projet",

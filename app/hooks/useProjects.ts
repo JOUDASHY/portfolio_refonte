@@ -29,7 +29,7 @@ export function useProjects() {
           title: p.nom,
           image: p.related_images?.[0]?.image || "/window.svg",
           href: p.projetlink || p.githublink || undefined,
-          initialStars: Math.max(0, Math.round((p.average_score ?? 0)))
+          initialStars: Math.max(0, p.average_score ?? 0)
         }));
         setItems(mapped);
       } catch (err: unknown) {

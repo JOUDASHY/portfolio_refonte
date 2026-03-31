@@ -44,7 +44,7 @@ export default function Projects() {
             className="text-lg max-w-2xl mx-auto"
             style={{ color: 'var(--jaune)', opacity: 0.9 }}
           >
-            Discover my latest work and creative projects
+            {t("projects.tagline")}
           </p>
         </div>
 
@@ -140,6 +140,7 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const handleRating = async (score: number) => {
     setSubmitting(true);
@@ -158,76 +159,124 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
   };
 
   return (
-    <div
-      className="h-full flex flex-col"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Image Container */}
-      <div className="relative h-20 sm:h-28 lg:h-36 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent">
-        <div className={`absolute inset-0 bg-[#f68c09]/10 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-          className={`object-contain p-2 sm:p-3 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
-        />
-
-        {/* Rating Badge */}
-        <div className="absolute left-1 top-1 sm:left-2 sm:top-2 rounded-full bg-[#000b31]/80 px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[10px] sm:text-xs text-white backdrop-blur-sm border border-[#f68c09]/30">
-          <span className="inline-flex items-center gap-0.5">
-            <StarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#f68c09]" filled={true} />
-            <span className="font-semibold">{currentRating}</span>
-          </span>
-        </div>
-
-        {/* Hover overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-[#000b31]/60 to-transparent transition-opacity duration-300 flex items-end justify-center pb-2 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-          <span className="text-white text-[10px] sm:text-xs font-medium px-2 py-1 rounded-full bg-[#f68c09] shadow-lg">
-            {t("projects.view")}
-          </span>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-1.5 sm:p-2 lg:p-3 flex-1 flex flex-col">
-        <h3 className="text-[10px] sm:text-sm text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
-
-        {/* Rating Section */}
-        <div className="mt-1 sm:mt-2 flex items-center justify-between">
-          <div className="flex items-center gap-0.5">
-            <Stars value={currentRating} size="sm" />
-          </div>
-          <span className="text-[8px] sm:text-xs text-[#000b31]/50 font-medium">{currentRating}/5</span>
-        </div>
-
-        {/* Rate buttons */}
-        <div className="mt-1 sm:mt-2 flex items-center justify-between">
-          <span className="text-[8px] sm:text-xs text-[#000b31]/40">Rate:</span>
-          <div className="flex gap-0.5">
-            {[1, 2, 3, 4, 5].map((score) => (
-              <button
-                key={score}
-                className={`inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded transition-all duration-200 ${currentRating >= score
-                  ? 'bg-[#f68c09] text-[#000b31]'
-                  : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
-                  } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
-                onClick={() => handleRating(score)}
-                disabled={submitting}
-                title={`Rate ${score} star${score > 1 ? 's' : ''}`}
-              >
-                <StarIcon className="w-2 h-2 sm:w-3 sm:h-3" filled={currentRating >= score} />
-              </button>
-            ))}
+    <>
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all"
+            onClick={() => setLightboxOpen(false)}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" /></svg>
+          </button>
+          <div
+            className="relative max-w-3xl w-full max-h-[85vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={project.image}
+              alt={project.title}
+              width={900}
+              height={700}
+              className="object-contain max-h-[85vh] rounded-xl shadow-2xl"
+              unoptimized
+            />
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent rounded-b-xl">
+              <p className="text-white font-bold text-lg">{project.title}</p>
+            </div>
           </div>
         </div>
+      )}
 
-        {error && (
-          <div className="mt-1 text-[8px] text-[#f68c09] bg-[#f68c09]/10 px-1 py-0.5 rounded">{error}</div>
-        )}
+      <div
+        className="h-full flex flex-col"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Image Container — clic ouvre lightbox */}
+        <div
+          className="relative h-20 sm:h-28 lg:h-36 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent cursor-zoom-in"
+          onClick={() => setLightboxOpen(true)}
+        >
+          <div className={`absolute inset-0 bg-[#f68c09]/10 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+            className={`object-contain p-2 sm:p-3 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+          />
+
+          {/* Rating Badge */}
+          <div className="absolute left-1 top-1 sm:left-2 sm:top-2 rounded-full bg-[#000b31]/80 px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[10px] sm:text-xs text-white backdrop-blur-sm border border-[#f68c09]/30">
+            <span className="inline-flex items-center gap-0.5">
+              <StarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#f68c09]" filled={true} />
+              <span className="font-semibold">{Number(currentRating).toFixed(1)}</span>
+            </span>
+          </div>
+
+          {/* Hover overlay — zoom icon */}
+          <div className={`absolute inset-0 bg-gradient-to-t from-[#000b31]/60 to-transparent transition-opacity duration-300 flex items-center justify-center ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-white/80"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm2.5-4h-2v2H9v-2H7V9h2V7h1v2h2v1z" /></svg>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-1.5 sm:p-2 lg:p-3 flex-1 flex flex-col">
+          <h3 className="text-[10px] sm:text-sm text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
+
+          {/* Rating Section */}
+          <div className="mt-1 sm:mt-2 flex items-center justify-between">
+            <div className="flex items-center gap-0.5">
+              <Stars value={currentRating} size="sm" />
+            </div>
+            <span className="text-[8px] sm:text-xs text-[#000b31]/50 font-medium">{Number(currentRating).toFixed(1)}/5</span>
+          </div>
+
+          {/* Rate buttons */}
+          <div className="mt-1 sm:mt-2 flex items-center justify-between">
+            <span className="text-[8px] sm:text-xs text-[#000b31]/40">{t("projects.rateProject")}:</span>
+            <div className="flex gap-0.5">
+              {[1, 2, 3, 4, 5].map((score) => (
+                <button
+                  key={score}
+                  className={`inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded transition-all duration-200 ${currentRating >= score
+                    ? 'bg-[#f68c09] text-[#000b31]'
+                    : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
+                    } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
+                  onClick={() => handleRating(score)}
+                  disabled={submitting}
+                  title={`Rate ${score} star${score > 1 ? 's' : ''}`}
+                >
+                  <StarIcon className="w-2 h-2 sm:w-3 sm:h-3" filled={currentRating >= score} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {error && (
+            <div className="mt-1 text-[8px] text-[#f68c09] bg-[#f68c09]/10 px-1 py-0.5 rounded">{error}</div>
+          )}
+
+          {/* Voir projet button */}
+          {project.href && (
+            <a
+              href={project.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-2 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31] text-white text-[9px] sm:text-xs font-semibold hover:bg-[#f68c09] transition-colors duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" /></svg>
+              {t("projects.view")}
+            </a>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

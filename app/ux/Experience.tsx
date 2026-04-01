@@ -161,7 +161,7 @@ export default function Experience() {
                             {/* Company */}
                             <div className={`flex items-center gap-1 text-[#000b31]/70 font-medium text-[10px] sm:text-xs ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                               <BuildingIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                              <span>{r.company}</span>
+                              <span>{t("experience.at")} {r.company}</span>
                             </div>
 
                             {/* Type badge */}

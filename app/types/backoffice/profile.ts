@@ -9,6 +9,7 @@ export type Profile = {
   link_github: string;
   link_linkedin: string;
   link_instagram: string;
+  link_whatsapp: string;
   phone_number: string;
   address: string;
 };

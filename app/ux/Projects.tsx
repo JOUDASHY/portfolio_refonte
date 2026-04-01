@@ -135,13 +135,20 @@ function ProjectGrid() {
   );
 }
 
-function ProjectCard({ project }: { project: { id: number; title: string; image: string; href?: string; initialStars: number } }) {
+function ProjectCard({ project }: { project: { id: number; title: string; image: string; images: string[]; href?: string; initialStars: number } }) {
   const { t } = useLanguage();
   const [currentRating, setCurrentRating] = useState(project.initialStars);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [imgIndex, setImgIndex] = useState(0);
+
+  const allImages = project.images.length > 0 ? project.images : [project.image];
+  const total = allImages.length;
+
+  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setImgIndex((i) => (i - 1 + total) % total); };
+  const next = (e: React.MouseEvent) => { e.stopPropagation(); setImgIndex((i) => (i + 1) % total); };
 
   const handleRating = async (score: number) => {
     setSubmitting(true);
@@ -179,15 +186,43 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
             </svg>
           </button>
-          <Image
-            src={project.image}
-            alt={project.title}
-            width={900}
-            height={700}
-            className="object-contain max-h-[65vh] w-auto rounded-lg"
-            unoptimized
-          />
-          <p className="mt-4 text-white font-bold text-lg text-center">{project.title}</p>
+
+          {/* Image + nav */}
+          <div className="relative flex items-center justify-center w-full">
+            {total > 1 && (
+              <button onClick={prev} className="absolute left-0 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-all">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+              </button>
+            )}
+            <Image
+              src={allImages[imgIndex]}
+              alt={`${project.title} ${imgIndex + 1}`}
+              width={900}
+              height={700}
+              className="object-contain max-h-[65vh] w-auto rounded-lg mx-12"
+              unoptimized
+            />
+            {total > 1 && (
+              <button onClick={next} className="absolute right-0 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-all">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+              </button>
+            )}
+          </div>
+
+          {/* Dots */}
+          {total > 1 && (
+            <div className="flex gap-1.5 mt-3">
+              {allImages.map((_, i) => (
+                <button key={i} onClick={() => setImgIndex(i)}
+                  className={`h-2 rounded-full transition-all ${i === imgIndex ? 'w-5 bg-[#f68c09]' : 'w-2 bg-white/30'}`}
+                />
+              ))}
+            </div>
+          )}
+
+          <p className="mt-3 text-white font-bold text-lg text-center">{project.title}</p>
+          {total > 1 && <p className="text-white/40 text-xs mt-1">{imgIndex + 1} / {total}</p>}
+
           {project.href && (
             <a
               href={project.href}

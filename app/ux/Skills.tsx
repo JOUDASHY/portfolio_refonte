@@ -251,7 +251,7 @@ export default function Skills() {
               { label: t("skills.stats.totalSkills"), value: Array.from(grouped.values()).flat().length },
               { label: t("skills.stats.categories"), value: grouped.size },
               { label: t("skills.stats.expertLevel"), value: Array.from(grouped.values()).flat().filter(s => s.level >= 8).length },
-              { label: t("skills.stats.yearsExp"), value: "5+" },
+              { label: t("skills.stats.yearsExp"), value: "2" },
             ].map((stat, idx) => (
               <div 
                 key={stat.label}

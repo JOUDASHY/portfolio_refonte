@@ -8,6 +8,7 @@ export type UiProject = {
   id: number;
   title: string;
   image: string;
+  images: string[];
   href?: string;
   initialStars: number;
 };
@@ -28,6 +29,7 @@ export function useProjects() {
           id: p.id,
           title: p.nom,
           image: p.related_images?.[0]?.image || "/window.svg",
+          images: p.related_images?.map((img) => img.image) || [],
           href: p.projetlink || p.githublink || undefined,
           initialStars: Math.max(0, p.average_score ?? 0)
         }));

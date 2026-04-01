@@ -138,6 +138,7 @@
   experience: {
     title: "Professional Experience",
     subtitle: "Developer roles and journey",
+    at: "at",
   },
   login: {
     title: "Sign in",

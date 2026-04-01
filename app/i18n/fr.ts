@@ -138,6 +138,7 @@
   experience: {
     title: "Expérience professionnelle",
     subtitle: "Parcours en tant que développeur",
+    at: "chez",
   },
   login: {
     title: "Se connecter",

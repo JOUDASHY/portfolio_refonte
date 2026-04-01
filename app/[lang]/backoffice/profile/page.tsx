@@ -21,6 +21,7 @@ type ProfileData = {
   github?: string;
   linkedin?: string;
   instagram?: string;
+  whatsapp?: string;
   twitter?: string;
 };
 
@@ -36,6 +37,7 @@ export default function ProfilePage() {
     github: "",
     linkedin: "",
     instagram: "",
+    whatsapp: "",
     twitter: "",
   });
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -67,6 +69,7 @@ export default function ProfilePage() {
         link_linkedin: form.linkedin || null,
         link_instagram: form.instagram || null,
         link_facebook: form.website || null,
+        link_whatsapp: form.whatsapp || null,
         phone_number: form.phone || null,
         address: form.location || null,
       });
@@ -126,6 +129,7 @@ export default function ProfilePage() {
         github: me.link_github || "",
         linkedin: me.link_linkedin || "",
         instagram: me.link_instagram || "",
+        whatsapp: me.link_whatsapp || "",
         twitter: "",
       }));
     } catch {
@@ -380,6 +384,12 @@ export default function ProfilePage() {
                   placeholder="https://instagram.com/username"
                   value={form.instagram || ""}
                   onChange={(e) => setForm((f) => ({ ...f, instagram: e.target.value }))}
+                />
+                <Input
+                  label="WhatsApp"
+                  placeholder="+261 34 00 000 00"
+                  value={form.whatsapp || ""}
+                  onChange={(e) => setForm((f) => ({ ...f, whatsapp: e.target.value }))}
                 />
                 <Input
                   label="Twitter"

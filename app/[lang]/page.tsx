@@ -1,5 +1,6 @@
 "use client";
 
+import Script from "next/script";
 import Hero from "../ux/Hero";
 import About from "../ux/About";
 import Skills from "../ux/Skills";
@@ -71,6 +72,20 @@ export default function Home() {
       <SocialDock />
       <Internships />
 
+      {/* Tawk.to live chat — landing page only */}
+      <Script id="tawk-script" strategy="afterInteractive">
+        {`
+          var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+          (function(){
+          var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+          s1.async=true;
+          s1.src='https://embed.tawk.to/69be5a32977ac51c36884226/1jk7p0m29';
+          s1.charset='UTF-8';
+          s1.setAttribute('crossorigin','*');
+          s0.parentNode.insertBefore(s1,s0);
+          })();
+        `}
+      </Script>
     </div>
   );
 }

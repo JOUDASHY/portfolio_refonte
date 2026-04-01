@@ -12,13 +12,21 @@ export default function Hero() {
       id="home"
       className="relative isolate flex items-center min-h-[calc(100vh-4rem)] pt-8 sm:pt-12 lg:pt-16 overflow-hidden border-b-2 border-white/10"
     >
-      {/* Background image */}
+      {/* Background image — hero2.jpg desktop, hero-mobile.jpg mobile */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/hero2.jpg"
           alt="Background"
           fill
-          className="object-cover"
+          className="object-cover hidden sm:block"
+          sizes="100vw"
+          priority
+        />
+        <Image
+          src="/hero-mobile.jpg"
+          alt="Background"
+          fill
+          className="object-cover block sm:hidden"
           sizes="100vw"
           priority
         />
@@ -29,7 +37,7 @@ export default function Hero() {
       
       <Particles />
 
-      <div className="relative z-20 mx-auto grid max-w-7xl grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-16 px-4 sm:px-6 lg:px-8">
+      <div className="relative z-20 mx-auto grid max-w-7xl grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-16 px-4 sm:px-6 lg:px-8 justify-items-end sm:justify-items-center">
         <div className="flex flex-col justify-center py-8 sm:py-12 order-2 lg:order-1 -mt-12 sm:-mt-16 lg:-mt-20">
           <p className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
             {t("hero.welcome")}
@@ -60,7 +68,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2">
+        <div className="relative flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2">
           <div className="absolute inset-0 rounded-full bg-[#f68c09]" />
           <div className="relative z-10 h-[92%] w-[92%]">
             <Image

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import ConditionalNavbar from "../components/ConditionalNavbar";
 import ConditionalFooter from "../components/ConditionalFooter";
 import { ThemeProvider } from "../components/ThemeProvider";

@@ -204,6 +204,12 @@ export default function SkillsPage() {
               onChange={(e) => setForm((f) => ({ ...f, categorie: e.target.value }))}
             >
               <option value="Front-end">Front-end</option>
+              <option value="Framework">Framework</option>
+              <option value="Langage de programmation">Langage de programmation</option>
+              <option value="Langage de modélisation">Langage de modélisation</option>
+              <option value="Base de données">Base de données</option>
+              <option value="DevOps">DevOps</option>
+              <option value="Système d'exploitation">Système d&apos;exploitation</option>
               <option value="Back-end">Back-end</option>
               <option value="Tooling">Tooling</option>
               <option value="Autre">Autre</option>

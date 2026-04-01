@@ -16,7 +16,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "education", label: "Éducation", icon: EducationIcon, match: "/backoffice/education" },
     { href: "awards", label: "Award", icon: AwardIcon, match: "/backoffice/awards" },
     { href: "skills", label: "Compétences", icon: SkillsIcon, match: "/backoffice/skills" },
-    { href: "send-cv", label: "Voir CV", icon: EyeIcon, match: "/backoffice/send-cv" },
+    { href: "cv", label: "Voir CV", icon: EyeIcon, match: "/backoffice/cv" },
     { href: "assistant", label: "Assistant IA", icon: AiIcon, match: "/backoffice/assistant" },
     { href: "language", label: "Langue", icon: LanguageIcon, match: "/backoffice/language" },
     { href: "training", label: "Formation", icon: TrainingIcon, match: "/backoffice/training" },

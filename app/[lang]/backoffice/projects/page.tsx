@@ -14,7 +14,7 @@ import { NotificationService } from "../../../services/notificationService";
 
 export default function ProjectsPage() {
   const [query, setQuery] = useState("");
-  const { items, setError, create, update, remove, refresh } = useBackofficeProjets();
+  const { items, setError, create, update, remove, refresh, toggleFeatured } = useBackofficeProjets();
 
   const [form, setForm] = useState<Omit<BackofficeProjet, "id" | "updatedAt">>({
     name: "",
@@ -22,6 +22,7 @@ export default function ProjectsPage() {
     techno: "",
     github: "",
     link: "",
+    isFeatured: false,
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -49,6 +50,26 @@ export default function ProjectsPage() {
   const columns: TableColumn<BackofficeProjet>[] = [
     { key: "name", header: "Nom" },
     { key: "techno", header: "Techno" },
+    {
+      key: "isFeatured",
+      header: "Modèle",
+      render: (row) => (
+        <button
+          onClick={() => toggleFeatured((row as BackofficeProjet).id)}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
+            (row as BackofficeProjet).isFeatured
+              ? "bg-[#f68c09]/20 text-[#f68c09] ring-1 ring-[#f68c09]/40"
+              : "bg-foreground/5 text-foreground/40 ring-1 ring-foreground/10 hover:bg-[#f68c09]/10"
+          }`}
+          title="Basculer modèle"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+          {(row as BackofficeProjet).isFeatured ? "Modèle" : "Non"}
+        </button>
+      ),
+    },
     {
       key: "relatedImages",
       header: "Images",
@@ -116,7 +137,7 @@ export default function ProjectsPage() {
   ];
 
   function resetForm() {
-    setForm({ name: "", description: "", techno: "", github: "", link: "" });
+    setForm({ name: "", description: "", techno: "", github: "", link: "", isFeatured: false });
     setEditingId(null);
     setIsFormOpen(false);
   }
@@ -141,8 +162,8 @@ export default function ProjectsPage() {
   function handleEdit(id: string) {
     const target = items.find((p) => p.id === id);
     if (!target) return;
-    const { name, description, techno, github, link } = target;
-    setForm({ name, description, techno, github: github || "", link: link || "" });
+    const { name, description, techno, github, link, isFeatured } = target;
+    setForm({ name, description, techno, github: github || "", link: link || "", isFeatured: isFeatured ?? false });
     setEditingId(id);
     setIsFormOpen(true);
   }
@@ -190,7 +211,7 @@ export default function ProjectsPage() {
             variant="secondary"
             onClick={() => {
               setEditingId(null);
-              setForm({ name: "", description: "", techno: "", github: "", link: "" });
+              setForm({ name: "", description: "", techno: "", github: "", link: "", isFeatured: false });
               setIsFormOpen(true);
             }}
           >
@@ -256,6 +277,18 @@ export default function ProjectsPage() {
             value={form.link}
             onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
           />
+          <div className="flex items-center gap-3 pt-1">
+            <input
+              type="checkbox"
+              id="isFeatured"
+              checked={form.isFeatured}
+              onChange={(e) => setForm((f) => ({ ...f, isFeatured: e.target.checked }))}
+              className="h-4 w-4 rounded border-input accent-accent"
+            />
+            <label htmlFor="isFeatured" className="text-sm font-medium text-foreground cursor-pointer">
+              Marquer comme projet modèle
+            </label>
+          </div>
         </div>
       </Modal>
 

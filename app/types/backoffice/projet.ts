@@ -5,6 +5,7 @@ export type Projet = {
   techno: string;
   githublink?: string | null;
   projetlink?: string | null;
+  is_featured: boolean;
   related_images: { id: number; projet: number; image: string }[];
   average_score: number | null;
 };

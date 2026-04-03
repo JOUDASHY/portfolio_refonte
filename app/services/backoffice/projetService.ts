@@ -7,7 +7,10 @@ export const projetService = {
   list: () => apiNoAuth.get<Projet[]>("projets/"),
   create: (payload: Partial<Projet>) => apiAuth.post<Projet>("projets/", payload),
   update: (id: number | string, payload: Partial<Projet>) => apiAuth.put<Projet>(`projets/${id}/`, payload),
+  patch: (id: number | string, payload: Partial<Projet>) => apiAuth.patch<Projet>(`projets/${id}/`, payload),
   remove: (id: number | string) => apiAuth.delete(`projets/${id}/`),
+  toggleFeatured: (id: number | string) => apiAuth.patch<Projet>(`projets/${id}/toggle-featured/`),
+  featured: () => apiNoAuth.get<Projet[]>("projets/featured/"),
 };
 
 

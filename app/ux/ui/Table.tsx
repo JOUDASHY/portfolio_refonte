@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import Checkbox from "./Checkbox";
 import Button from "./Button";
 
@@ -38,6 +38,11 @@ export default function DataTable<Row extends Record<string, unknown>>({
 }: DataTableProps<Row>) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+
+  // Reset to page 1 when data changes (e.g. filtering)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
 
   // Pagination logic
   const totalPages = Math.ceil(data.length / pageSize);

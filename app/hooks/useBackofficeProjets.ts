@@ -6,11 +6,12 @@ import type { Projet as ProjetModel } from "../types/models";
 
 export type BackofficeProjet = {
   id: string;
-  name: string; // nom
+  name: string;
   description: string;
   techno: string;
   github?: string;
   link?: string;
+  isFeatured: boolean;
   updatedAt: string;
   relatedImages?: { id: number; projet: number; image: string }[];
   averageScore?: number | null;
@@ -24,6 +25,7 @@ function toUi(model: ProjetModel): BackofficeProjet {
     techno: model.techno,
     github: model.githublink || undefined,
     link: model.projetlink || undefined,
+    isFeatured: model.is_featured ?? false,
     updatedAt: new Date().toISOString().slice(0, 10),
     relatedImages: Array.isArray(model.related_images) ? model.related_images : [],
     averageScore: model.average_score ?? null,
@@ -60,6 +62,7 @@ export function useBackofficeProjets() {
       techno: form.techno,
       githublink: form.github || undefined,
       projetlink: form.link || undefined,
+      is_featured: form.isFeatured,
     };
     await projetService.create(payload);
     await refresh();
@@ -72,8 +75,14 @@ export function useBackofficeProjets() {
       techno: form.techno,
       githublink: form.github || undefined,
       projetlink: form.link || undefined,
+      is_featured: form.isFeatured,
     };
     await projetService.update(id, payload);
+    await refresh();
+  }, [refresh]);
+
+  const toggleFeatured = useCallback(async (id: string) => {
+    await projetService.toggleFeatured(id);
     await refresh();
   }, [refresh]);
 
@@ -82,7 +91,7 @@ export function useBackofficeProjets() {
     setItems((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
-  return { items, loading, error, setError, refresh, create, update, remove } as const;
+  return { items, loading, error, setError, refresh, create, update, remove, toggleFeatured } as const;
 }
 
 

@@ -327,7 +327,6 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
 }
 
 function Stars({ value = 0, max = 5, size = "md" }: { value?: number; max?: number; size?: "sm" | "md" | "lg" }) {
-  const filled = Math.min(max, Math.round((value % (max + 1))));
   const sizeClasses = {
     sm: "w-3 h-3 sm:w-3.5 sm:h-3.5",
     md: "w-4 h-4 sm:w-5 sm:h-5",
@@ -335,14 +334,42 @@ function Stars({ value = 0, max = 5, size = "md" }: { value?: number; max?: numb
   };
   return (
     <div className="flex items-center gap-0.5" aria-label={`${value} stars`}>
-      {Array.from({ length: max }).map((_, i) => (
-        <StarIcon
-          key={i}
-          className={`${sizeClasses[size]} ${i < filled ? "text-[#f68c09]" : "text-[#000b31]/20"}`}
-          filled={i < filled}
-        />
-      ))}
+      {Array.from({ length: max }).map((_, i) => {
+        const fill = Math.min(1, Math.max(0, value - i)); // 0, 0.5, or 1
+        return (
+          <StarPartial key={i} fill={fill} className={sizeClasses[size]} />
+        );
+      })}
     </div>
+  );
+}
+
+function StarPartial({ fill, className }: { fill: number; className?: string }) {
+  const id = `star-clip-${Math.random().toString(36).slice(2)}`;
+  // fill: 0 = empty, 0.5 = half, 1 = full
+  const pct = Math.round(fill * 100);
+  return (
+    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden>
+      <defs>
+        <clipPath id={id}>
+          <rect x="0" y="0" width={pct / 5} height="20" />
+        </clipPath>
+      </defs>
+      {/* Empty star */}
+      <path
+        fill="currentColor"
+        className="text-[#000b31]/20"
+        d="M10 1.618l2.292 4.628.289.583.644.094 5.109.742-3.695 3.601-.469.457.111.651.869 5.062L10 14.347l-4.75 2.389.869-5.062.111-.651-.469-.457L2.066 7.665l5.109-.742.644-.094.289-.583L10 1.618m0-1.618L6.854 5.091.976 5.944l4.258 4.148L4.07 19.09 10 16.001l5.93 3.089-1.164-6.998 4.258-4.148-5.878-.853L10 0z"
+      />
+      {/* Filled star clipped to fill% */}
+      {pct > 0 && (
+        <path
+          fill="#f68c09"
+          clipPath={`url(#${id})`}
+          d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.953L10 0l2.951 5.957 6.561.953-4.756 4.635 1.122 6.545z"
+        />
+      )}
+    </svg>
   );
 }
 

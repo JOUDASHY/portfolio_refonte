@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useTheme } from "../components/ThemeProvider";
@@ -65,7 +66,7 @@ export default function Projects() {
 }
 
 function ProjectGrid() {
-  const { t } = useLanguage();
+  const { lang } = useLanguage();
   const { items, loading, error } = useProjects();
 
   function AnimatedCard({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
@@ -128,14 +129,14 @@ function ProjectGrid() {
         ))
         : items.map((p, idx) => (
           <AnimatedCard key={p.id} delayMs={idx * 100}>
-            <ProjectCard project={p} />
+            <ProjectCard project={p} lang={lang} />
           </AnimatedCard>
         ))}
     </ul>
   );
 }
 
-function ProjectCard({ project }: { project: { id: number; title: string; image: string; images: string[]; href?: string; initialStars: number } }) {
+function ProjectCard({ project, lang }: { project: { id: number; title: string; image: string; images: string[]; href?: string; initialStars: number }; lang: string }) {
   const { t } = useLanguage();
   const [currentRating, setCurrentRating] = useState(project.initialStars);
   const [submitting, setSubmitting] = useState(false);
@@ -320,6 +321,16 @@ function ProjectCard({ project }: { project: { id: number; title: string; image:
               {t("projects.view")}
             </a>
           )}
+
+          {/* Détails page */}
+          <Link
+            href={`/${lang}/projects/${project.id}`}
+            className="mt-1 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31]/10 text-[#000b31] text-[9px] sm:text-xs font-semibold hover:bg-[#000b31]/20 transition-colors duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            {t("projects.details")}
+          </Link>
         </div>
       </div>
     </>

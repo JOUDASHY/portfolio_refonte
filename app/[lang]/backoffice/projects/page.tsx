@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Input from "../../../ux/ui/Input";
 import Button from "../../../ux/ui/Button";
@@ -13,6 +14,8 @@ import { imageProjetService } from "../../../services/backoffice/imageProjetServ
 import { NotificationService } from "../../../services/notificationService";
 
 export default function ProjectsPage() {
+  const { lang } = useParams<{ lang: string }>();
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const { items, setError, create, update, remove, refresh, toggleFeatured } = useBackofficeProjets();
 
@@ -228,6 +231,7 @@ export default function ProjectsPage() {
         actionsHeader="Actions"
         actions={(row) => (
           <div className="inline-flex items-center gap-2">
+            <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => router.push(`/${lang}/backoffice/projects/${(row as BackofficeProjet).id}`)}>Détails</Button>
             <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => handleEdit((row as BackofficeProjet).id)}>Éditer</Button>
             <Button variant="ghost" className="px-2 py-1 text-sm" onClick={() => setDeleteId((row as BackofficeProjet).id)}>Supprimer</Button>
           </div>

@@ -85,6 +85,7 @@
     rateProject: "Rate this project",
     averageRating: "Average rating",
     totalRatings: "Total ratings",
+    details: "View details",
   },
   contact: {
     title: "Contact",

@@ -99,7 +99,11 @@ export default function BackofficeSidebar({ links, isOpen, onClose }: Backoffice
                   href={`./${href}`}
                   label={label}
                   icon={Icon}
-                  active={Boolean(pathname && pathname.includes(match))}
+                  active={Boolean(pathname && (
+                    pathname === match ||
+                    pathname.endsWith(match) ||
+                    (pathname.includes(match) && pathname.charAt(pathname.indexOf(match) + match.length) === '/')
+                  ))}
                 />
               ))}
             </nav>

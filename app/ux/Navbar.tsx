@@ -41,6 +41,9 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // On light-bg pages (e.g. project detail), always show the dark navbar
+  const isLightPage = /\/projects\/\d+/.test(pathname || "");
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -61,7 +64,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled || isLightPage
       ? "backdrop-blur-md bg-[#000b31]/50 border-b border-white/10"
       : "bg-transparent border-b-0"
       }`}>

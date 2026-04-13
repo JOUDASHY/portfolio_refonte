@@ -86,6 +86,7 @@
     averageRating: "Average rating",
     totalRatings: "Total ratings",
     details: "View details",
+    detail: "Project details",
   },
   contact: {
     title: "Contact",
@@ -172,7 +173,7 @@
     follow: "Follow",
   },
   mailing: {
-    title: "Mailing History",
+    title: "Contact Mailing",
     subtitle: "Manage and view the history of all your sent emails",
     newEmail: "New Email",
     export: "Export",

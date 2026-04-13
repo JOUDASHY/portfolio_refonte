@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { SVGProps, ReactElement } from "react";
 import { useTheme } from "../../components/ThemeProvider";
@@ -120,10 +120,26 @@ function LogoutModal({ open, onCancel, onConfirm }: { open: boolean; onCancel: (
 }
 
 function TopLink({ href, label, icon: Icon }: { href: string; label: string; icon: (p: SVGProps<SVGSVGElement>) => ReactElement }) {
+  const pathname = usePathname();
+  const { theme } = useTheme();
+  const isActive = pathname ? (
+    pathname === href.replace("./", "/") ||
+    pathname.endsWith("/" + href.replace("./", "")) ||
+    new RegExp(`/${href.replace("./", "")}(/|$)`).test(pathname)
+  ) : false;
   return (
-    <Link href={href} className="inline-flex items-center gap-0.5 sm:gap-1.5 rounded-md px-1 sm:px-2 py-0.5 sm:py-1 text-foreground/80 hover:bg-white/10 hover:text-foreground">
+    <Link
+      href={href}
+      className={`inline-flex items-center gap-0.5 sm:gap-1.5 rounded-md px-1 sm:px-2 py-0.5 sm:py-1 transition-colors ${
+        isActive
+          ? theme === "dark"
+            ? "text-[#f68c09] bg-[#000b31]/40 font-semibold"
+            : "text-[#000b31] bg-[#000b31]/15 font-semibold"
+          : "text-foreground/80 hover:bg-white/10 hover:text-foreground"
+      }`}
+    >
       <Icon className="icon-responsive" />
-      <span className="hidden sm:inline text-xs sm:text-xs" style={{ fontSize: '0.625rem' }}>{label}</span>
+      <span className="hidden sm:inline text-xs" style={{ fontSize: '0.625rem' }}>{label}</span>
     </Link>
   );
 }

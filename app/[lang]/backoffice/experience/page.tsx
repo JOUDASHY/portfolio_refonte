@@ -58,6 +58,15 @@ export default function ExperiencePage() {
     { key: "title", header: "Titre" },
     { key: "company", header: "Société" },
     { key: "type", header: "Type" },
+    {
+      key: "summary",
+      header: "Description",
+      render: (row) => (
+        <span className="text-xs text-foreground/60 line-clamp-2 max-w-[200px] block">
+          {(row as Experience).summary || "—"}
+        </span>
+      ),
+    },
     { key: "updatedAt", header: "Mis à jour" },
   ];
 
@@ -194,12 +203,16 @@ export default function ExperiencePage() {
               <option value="stage">Stage</option>
             </select>
           </div>
-          <Input
-            label="Résumé"
-            placeholder="Description courte…"
-            value={form.summary || ""}
-            onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
-          />
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Description</label>
+            <textarea
+              rows={4}
+              placeholder="Décrivez les missions, responsabilités…"
+              value={form.summary || ""}
+              onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+            />
+          </div>
           <Input
             label="Stack (séparée par des virgules)"
             placeholder="Next.js, TypeScript, Node.js"

@@ -173,7 +173,7 @@ export default function Experience() {
 
                             {/* Summary */}
                             {r.summary && (
-                              <p className="text-[#000b31]/50 text-[10px] sm:text-xs mt-0.5 sm:mt-1">
+                              <p className="text-[#000b31]/60 text-[10px] sm:text-xs mt-1 sm:mt-1.5 leading-relaxed line-clamp-3">
                                 {r.summary}
                               </p>
                             )}

@@ -68,14 +68,13 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2">
-          <div className="absolute inset-0 rounded-full bg-[#f68c09]" />
-          <div className="relative z-10 h-[92%] w-[92%]">
+        <div className="relative flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2 rounded-full bg-[#f68c09] overflow-hidden">
+          <div className="relative z-10 h-[88%] w-[88%]">
             <Image
               src="/logo_nil.png"
               alt="Nilsen eagle logo"
               fill
-              sizes="(max-width: 475px) 200px, (max-width: 640px) 240px, (max-width: 1024px) 320px, 380px"
+              sizes="(max-width: 475px) 176px, (max-width: 640px) 211px, (max-width: 1024px) 282px, 334px"
               className="object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
               priority
             />

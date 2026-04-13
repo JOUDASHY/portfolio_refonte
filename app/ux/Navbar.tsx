@@ -53,15 +53,21 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
-    { href: "#home", label: t("nav.home") },
-    { href: "#about", label: t("nav.about") },
-    { href: "#skills", label: t("nav.skills") },
-    { href: "#education", label: t("nav.education") },
-    { href: "#projects", label: t("nav.projects") },
-    { href: "#gallery", label: t("nav.gallery") },
-    { href: "#experience", label: t("nav.experience") },
-    { href: "#contact", label: t("nav.contact") },
+    { href: `/${lang}`, label: t("nav.home"), match: null },
+    { href: `/${lang}/about`, label: t("nav.about"), match: "about" },
+    { href: `/${lang}/skills`, label: t("nav.skills"), match: "skills" },
+    { href: `/${lang}/education`, label: t("nav.education"), match: "education" },
+    { href: `/${lang}/projects`, label: t("nav.projects"), match: "projects" },
+    { href: `/${lang}/gallery`, label: t("nav.gallery"), match: "gallery" },
+    { href: `/${lang}/experience`, label: t("nav.experience"), match: "experience" },
+    { href: `/${lang}/contact`, label: t("nav.contact"), match: "contact" },
   ];
+
+  const isActive = (match: string | null) => {
+    if (!pathname) return false;
+    if (match === null) return pathname === `/${lang}` || pathname === `/${lang}/`;
+    return new RegExp(`/${match}(/|$)`).test(pathname);
+  };
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled || isLightPage
@@ -70,7 +76,7 @@ export default function Navbar() {
       }`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="h-12 sm:h-16 flex items-center justify-between">
-          <Link href="#home" className="flex items-center gap-2 sm:gap-3">
+          <Link href={`/${lang}`} className="flex items-center gap-2 sm:gap-3">
             <span className="relative block h-7 w-7 sm:h-9 sm:w-9 overflow-hidden rounded-full bg-[#f68c09]">
               <Image
                 src="/logo_nil.png"
@@ -107,16 +113,22 @@ export default function Navbar() {
 
             {/* Desktop Menu */}
             <ul className="hidden sm:flex items-center gap-4 lg:gap-6 text-xs sm:text-sm">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-white/80 hover:text-white transition-colors whitespace-nowrap"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {navItems.map((item) => {
+                const active = isActive(item.match);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={`relative transition-colors whitespace-nowrap pb-0.5 ${active ? "text-[#f68c09] font-semibold" : "text-white/80 hover:text-white"}`}
+                    >
+                      {item.label}
+                      {active && (
+                        <span className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-[#f68c09]" />
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
 
             {/* Mobile Toggle */}
@@ -147,17 +159,20 @@ export default function Navbar() {
         <div className="sm:hidden border-t border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ul className="space-y-1 py-2 sm:py-3 bg-[#000b31]">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="block rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-white/90 hover:bg-white/5 hover:text-white"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {navItems.map((item) => {
+                const active = isActive(item.match);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={`block rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-colors ${active ? "text-[#f68c09] font-semibold bg-white/5" : "text-white/90 hover:bg-white/5 hover:text-white"}`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

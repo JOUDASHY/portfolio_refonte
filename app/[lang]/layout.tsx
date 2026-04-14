@@ -70,6 +70,7 @@ const metaByLang: Record<string, Metadata> = {
       "Nilsen Fianarantsoa",
       "Nilsen portfolio",
       "Nilsen Tovohery portfolio",
+      "Nilsen's portfolio",
       "fullstack developer Madagascar",
       "system administrator Madagascar",
       "web developer Fianarantsoa",

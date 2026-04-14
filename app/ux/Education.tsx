@@ -176,41 +176,32 @@ export default function Education() {
                   <div className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-8`}>
                     {/* Content side */}
                     <div className="flex-1 md:text-right">
-                      <div className={`bg-white rounded-lg sm:rounded-xl p-2 sm:p-4 border border-[#000b31]/10 shadow-sm hover:shadow-lg hover:border-[#f68c09]/30 transition-all duration-300 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
+                      <div className={`bg-white rounded-lg p-1 sm:p-2 border border-[#000b31]/10 shadow-sm hover:shadow-md hover:border-[#f68c09]/30 transition-all duration-300 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
                         {/* Period badge */}
-                        <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-[10px] sm:text-xs font-medium mb-1 sm:mb-2 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                          <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <div className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-[10px] sm:text-xs font-medium mb-1 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                          <CalendarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                           <span>{edu.period}</span>
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-xs sm:text-base font-bold text-[#000b31] mb-1 sm:mb-1.5 group-hover:text-[#f68c09] transition-colors">
+                        <h3 className="text-xs sm:text-sm font-bold text-[#000b31] mb-0.5 group-hover:text-[#f68c09] transition-colors">
                           {edu.title}
                         </h3>
 
                         {/* School and Image */}
-                        <div className={`flex items-center gap-2 mb-1 sm:mb-2 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center gap-1.5 mb-0.5 sm:mb-1 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
                           {edu.image && (
-                            <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-lg overflow-hidden border border-[#000b31]/10 flex-shrink-0 bg-white">
-                              <Image
-                                src={edu.image}
-                                alt={edu.school}
-                                fill
-                                className="object-contain p-1"
-                              />
+                            <div className="relative w-6 h-6 sm:w-8 sm:h-8 rounded overflow-hidden border border-[#000b31]/10 flex-shrink-0 bg-white">
+                              <Image src={edu.image} alt={edu.school} fill className="object-contain p-0.5" />
                             </div>
                           )}
-                          <div>
-                            <p className="text-[#000b31]/70 font-medium text-[10px] sm:text-sm">
-                              {edu.school}
-                            </p>
-                          </div>
+                          <p className="text-[#000b31]/70 font-medium text-[10px] sm:text-xs">{edu.school}</p>
                         </div>
 
                         {/* Location */}
                         {edu.detail && (
-                          <div className="flex items-center gap-1 text-[#000b31]/50 text-[10px] sm:text-xs">
-                            <MapPinIcon className="w-3 h-3" />
+                          <div className="flex items-center gap-0.5 text-[#000b31]/50 text-[10px] sm:text-xs">
+                            <MapPinIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                             <span>{edu.detail}</span>
                           </div>
                         )}

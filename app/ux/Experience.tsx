@@ -99,9 +99,7 @@ export default function Experience() {
         <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-[#000b31]/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:h-[700px]">
-        {/* Content - Left side */}
-        <div className="w-full lg:flex-1 lg:pr-[420px] px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10 flex flex-col overflow-y-auto">
+      <div className="relative mx-auto max-w-5xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10">
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8">
             <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-2 sm:mb-3">
@@ -146,37 +144,37 @@ export default function Experience() {
                       <div className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4`}>
                         {/* Content side */}
                         <div className="flex-1 md:text-right">
-                          <div className={`bg-white rounded-xl p-2 sm:p-3 border border-[#000b31]/10 shadow-sm hover:shadow-lg hover:border-[#f68c09]/30 transition-all duration-300 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
-                            {/* Period badge */}
-                            <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-[10px] sm:text-xs font-medium mb-1 sm:mb-2 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                              <CalendarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                              <span>{formatPeriodFr(r.period, t("lang") || "fr")}</span>
-                            </div>
-                            
-                            {/* Title */}
-                            <h3 className="text-xs sm:text-sm font-bold text-[#000b31] mb-0.5 sm:mb-1 group-hover:text-[#f68c09] transition-colors">
-                              {r.title}
-                            </h3>
-                            
-                            {/* Company */}
-                            <div className={`flex items-center gap-1 text-[#000b31]/70 font-medium text-[10px] sm:text-xs ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                              <BuildingIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                              <span>{t("experience.at")} {r.company}</span>
-                            </div>
+                          <div className={`bg-white rounded-xl p-3 sm:p-5 border border-[#000b31]/10 shadow-sm hover:shadow-lg hover:border-[#f68c09]/30 transition-all duration-300 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+                              {/* Period badge */}
+                              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-[10px] sm:text-xs font-medium shrink-0">
+                                <CalendarIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                                <span>{formatPeriodFr(r.period, t("lang") || "fr")}</span>
+                              </div>
 
-                            {/* Type badge */}
-                            <div className={`mt-1 sm:mt-1.5 ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
-                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-[#000b31] text-white`}>
+                              {/* Title */}
+                              <h3 className="text-xs sm:text-sm font-bold text-[#000b31] group-hover:text-[#f68c09] transition-colors shrink-0">
+                                {r.title}
+                              </h3>
+
+                              {/* Company */}
+                              <div className="flex items-center gap-1 text-[#000b31]/70 font-medium text-[10px] sm:text-xs shrink-0">
+                                <BuildingIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                                <span>{t("experience.at")} {r.company}</span>
+                              </div>
+
+                              {/* Type badge */}
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-[#000b31] text-white shrink-0">
                                 {r.type === 'stage' ? 'Stage' : 'Professionnel'}
                               </span>
-                            </div>
 
-                            {/* Summary */}
-                            {r.summary && (
-                              <p className="text-[#000b31]/60 text-[10px] sm:text-xs mt-1 sm:mt-1.5 leading-relaxed line-clamp-3">
-                                {r.summary}
-                              </p>
-                            )}
+                              {/* Summary */}
+                              {r.summary && (
+                                <p className="text-[#000b31]/60 text-[10px] sm:text-xs leading-relaxed w-full">
+                                  {r.summary}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                         
@@ -192,18 +190,6 @@ export default function Experience() {
                   ))}
             </div>
           </div>
-        </div>
-
-        {/* Image - Stuck to the right side, auto width based on height */}
-        <div className="hidden lg:flex absolute right-0 top-0 h-[700px] items-center justify-center bg-[#000b31]">
-          <Image
-            src="/bann.jpg"
-            alt="Experience"
-            height={550}
-            width={400}
-            className="h-full w-auto object-contain"
-          />
-        </div>
       </div>
     </section>
   );

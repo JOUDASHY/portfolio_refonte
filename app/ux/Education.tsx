@@ -116,7 +116,7 @@ export default function Education() {
   return (
     <section
       id="education"
-      className="relative py-20 sm:py-24 lg:py-32 border-b-2 bg-white overflow-hidden"
+      className="relative border-b-2 bg-white overflow-hidden"
       style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}
     >
       {/* Background decorations */}
@@ -126,31 +126,33 @@ export default function Education() {
         <div className="absolute top-1/2 right-0 w-96 h-96 bg-gradient-radial from-[#f68c09]/5 to-transparent rounded-full" />
       </div>
 
-      <div className="relative mx-auto max-w-5xl px-3 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8 sm:mb-16">
-          <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-4 sm:py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-3 sm:mb-6">
-            <GraduationIcon className="w-3 h-3 sm:w-4 sm:h-4 text-[#f68c09]" />
-            <span className="text-xs sm:text-sm font-medium text-[#000b31]">{t("education.subtitle")}</span>
+      <div className="flex flex-col lg:flex-row lg:h-[700px]">
+        {/* Content */}
+        <div className="w-full lg:flex-1 lg:pr-[420px] px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10 flex flex-col overflow-y-auto">
+          {/* Header */}
+          <div className="text-center mb-8 sm:mb-16">
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-4 sm:py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-3 sm:mb-6">
+              <GraduationIcon className="w-3 h-3 sm:w-4 sm:h-4 text-[#f68c09]" />
+              <span className="text-xs sm:text-sm font-medium text-[#000b31]">{t("education.subtitle")}</span>
+            </div>
+            <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-[#000b31] mb-2 sm:mb-4">
+              {t("education.title")}
+            </h2>
+            <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
+              {t("education.description")}
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-4xl lg:text-6xl font-extrabold text-[#000b31] mb-2 sm:mb-4">
-            {t("education.title")}
-          </h2>
-          <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
-            {t("education.description")}
-          </p>
-        </div>
 
-        {error && (
-          <div className="mb-4 sm:mb-8 rounded-lg sm:rounded-xl bg-[#f68c09]/10 p-2 sm:p-4 text-[#000b31] border border-[#f68c09]/30 text-center text-xs sm:text-base">
-            {error}
-          </div>
-        )}
+          {error && (
+            <div className="mb-4 sm:mb-8 rounded-lg sm:rounded-xl bg-[#f68c09]/10 p-2 sm:p-4 text-[#000b31] border border-[#f68c09]/30 text-center text-xs sm:text-base">
+              {error}
+            </div>
+          )}
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Center line - desktop only */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#f68c09] via-[#f68c09]/50 to-[#f68c09]/20 -translate-x-1/2" />
+          {/* Timeline */}
+          <div className="relative">
+            {/* Center line - desktop only */}
+            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#f68c09] via-[#f68c09]/50 to-[#f68c09]/20 -translate-x-1/2" />
 
           <div className="space-y-4 sm:space-y-8 md:space-y-0">
             {loading
@@ -174,22 +176,22 @@ export default function Education() {
                   <div className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-8`}>
                     {/* Content side */}
                     <div className="flex-1 md:text-right">
-                      <div className={`bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-[#000b31]/10 shadow-sm hover:shadow-lg sm:hover:shadow-xl hover:border-[#f68c09]/30 transition-all duration-300 sm:duration-500 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
+                      <div className={`bg-white rounded-lg sm:rounded-xl p-2 sm:p-4 border border-[#000b31]/10 shadow-sm hover:shadow-lg hover:border-[#f68c09]/30 transition-all duration-300 group ${idx % 2 !== 0 ? 'md:text-left' : ''}`}>
                         {/* Period badge */}
-                        <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-xs sm:text-sm font-medium mb-2 sm:mb-3 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                        <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-[10px] sm:text-xs font-medium mb-1 sm:mb-2 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                           <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>{edu.period}</span>
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-sm sm:text-xl font-bold text-[#000b31] mb-1 sm:mb-2 group-hover:text-[#f68c09] transition-colors">
+                        <h3 className="text-xs sm:text-base font-bold text-[#000b31] mb-1 sm:mb-1.5 group-hover:text-[#f68c09] transition-colors">
                           {edu.title}
                         </h3>
 
                         {/* School and Image */}
-                        <div className={`flex items-center gap-3 mb-2 sm:mb-3 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center gap-2 mb-1 sm:mb-2 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
                           {edu.image && (
-                            <div className="relative w-10 h-10 sm:w-16 sm:h-16 rounded-lg overflow-hidden border border-[#000b31]/10 flex-shrink-0 bg-white">
+                            <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-lg overflow-hidden border border-[#000b31]/10 flex-shrink-0 bg-white">
                               <Image
                                 src={edu.image}
                                 alt={edu.school}
@@ -199,7 +201,7 @@ export default function Education() {
                             </div>
                           )}
                           <div>
-                            <p className="text-[#000b31]/70 font-medium text-xs sm:text-base">
+                            <p className="text-[#000b31]/70 font-medium text-[10px] sm:text-sm">
                               {edu.school}
                             </p>
                           </div>
@@ -207,8 +209,8 @@ export default function Education() {
 
                         {/* Location */}
                         {edu.detail && (
-                          <div className="flex items-center gap-1 sm:gap-2 text-[#000b31]/50 text-xs sm:text-sm">
-                            <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <div className="flex items-center gap-1 text-[#000b31]/50 text-[10px] sm:text-xs">
+                            <MapPinIcon className="w-3 h-3" />
                             <span>{edu.detail}</span>
                           </div>
                         )}
@@ -226,6 +228,18 @@ export default function Education() {
                 </AnimatedCard>
               ))}
           </div>
+        </div>
+        </div>
+
+        {/* Image - Stuck to the right side */}
+        <div className="hidden lg:flex absolute right-0 top-0 h-[700px] items-center justify-center bg-[#000b31]">
+          <Image
+            src="/bann.jpg"
+            alt="Education"
+            height={550}
+            width={400}
+            className="h-full w-auto object-contain"
+          />
         </div>
       </div>
     </section>

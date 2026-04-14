@@ -57,33 +57,26 @@ function HeartbeatConnection() {
     }
   };
   
-  // Generate ECG path - classic heartbeat pattern
+  // Generate ECG path - classic heartbeat pattern, doubled for seamless loop
   const generateECGPath = () => {
     const points = [];
-    const width = 300;
+    const width = 600; // doubled width for seamless loop
     const height = 80;
     const baseline = height / 2;
     
     for (let x = 0; x <= width; x += 2) {
       let y = baseline;
-      
-      // Create repeating heartbeat pattern
       const cycle = x % 100;
       
       if (cycle >= 10 && cycle < 15) {
-        // P wave (small bump)
         y = baseline - 10 * Math.sin((cycle - 10) * Math.PI / 5);
       } else if (cycle >= 20 && cycle < 25) {
-        // Q dip
         y = baseline + 5;
       } else if (cycle >= 25 && cycle < 30) {
-        // R spike (big peak)
         y = baseline - 50;
       } else if (cycle >= 30 && cycle < 35) {
-        // S dip
         y = baseline + 15;
       } else if (cycle >= 40 && cycle < 50) {
-        // T wave (medium bump)
         y = baseline - 15 * Math.sin((cycle - 40) * Math.PI / 10);
       }
       
@@ -109,7 +102,7 @@ function HeartbeatConnection() {
         </div>
         
         {/* ECG Line */}
-        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 300 80" preserveAspectRatio="none">
           <defs>
             <linearGradient id="ecgGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor={getColor()} stopOpacity="0" />
@@ -118,16 +111,22 @@ function HeartbeatConnection() {
               <stop offset="100%" stopColor={getColor()} stopOpacity="0" />
             </linearGradient>
           </defs>
-          <path
-            d={generateECGPath()}
-            fill="none"
-            stroke="url(#ecgGradient)"
-            strokeWidth="2"
-            className="animate-ecg"
-            style={{
-              animationDuration: `${getSpeed()}s`
-            }}
-          />
+          <g style={{
+            animation: `ecgScroll ${getSpeed()}s linear infinite`,
+          }}>
+            <path
+              d={generateECGPath()}
+              fill="none"
+              stroke={getColor()}
+              strokeWidth="2"
+            />
+          </g>
+          <style>{`
+            @keyframes ecgScroll {
+              from { transform: translateX(0); }
+              to { transform: translateX(-300px); }
+            }
+          `}</style>
         </svg>
         
         {/* Scan line */}

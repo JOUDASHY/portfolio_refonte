@@ -122,7 +122,7 @@ export default function About() {
                 />
                 <Image
                   src="/nilsen-Photoroom.png"
-                  alt={profile?.username || "Profile"}
+                  alt={profile?.username ? `${profile.username} – Développeur Full-Stack Madagascar` : "Nilsen Tovohery – Développeur Full-Stack Madagascar"}
                   fill
                   sizes="(max-width: 768px) 100vw, 600px"
                   className="object-cover object-top relative z-10"

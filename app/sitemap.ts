@@ -6,15 +6,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "https://portfolio.unityfianar.site";
 
   const lastModified = new Date();
+  const langs = ["fr", "en"];
 
-  // Public routes only (exclude backoffice/login/maintenance)
-  const routes = ["/", "/fr", "/en"];
+  const sections = ["about", "skills", "education", "projects", "gallery", "experience", "contact"];
 
-  return routes.map((path) => ({
-    url: `${siteUrl}${path}`,
-    lastModified,
-    changeFrequency: "weekly",
-    priority: path === "/" ? 1 : 0.9,
-  }));
+  const entries: MetadataRoute.Sitemap = [
+    // Root redirect
+    { url: `${siteUrl}/`, lastModified, changeFrequency: "weekly", priority: 1.0 },
+  ];
+
+  for (const lang of langs) {
+    // Home
+    entries.push({
+      url: `${siteUrl}/${lang}`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    });
+
+    // Section pages
+    for (const section of sections) {
+      entries.push({
+        url: `${siteUrl}/${lang}/${section}`,
+        lastModified,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      });
+    }
+  }
+
+  return entries;
 }
 

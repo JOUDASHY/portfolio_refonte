@@ -48,7 +48,8 @@ export default function Home() {
         align="center"
         overlayClass="bg-black/30"
       />
-      <Education />
+      <Experience />
+
       <Banner
         bgSrc="https://images.wallpapersden.com/image/download/keyboard-keys-buttons_Z2dsbW6UmZqaraWkpJRpbG1nrWdqa2k.jpg"
         title={t("banner.sysAdmin")}
@@ -58,6 +59,8 @@ export default function Home() {
       />
       <Projects />
       <Gallery />
+      <Education />
+
 
       {/* <Banner
         bgSrc="https://img.freepik.com/premium-photo/creative-photographer-minimalist-desk-flatlay-generative-ai_1416-24896.jpg"
@@ -66,7 +69,6 @@ export default function Home() {
         align="center"
         overlayClass="bg-black/30"
       /> */}
-      <Experience />
       <Contact />
 
       <SocialDock />

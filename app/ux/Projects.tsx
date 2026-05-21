@@ -112,11 +112,11 @@ function ProjectGrid() {
   }
 
   return (
-    <ul className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
+    <ul className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-3 xl:gap-8">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
           <li key={i} className="group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
-            <div className="relative h-20 sm:h-28 lg:h-36 w-full bg-[#000b31]/5">
+            <div className="relative h-20 sm:h-28 lg:h-44 xl:h-52 w-full bg-[#000b31]/5">
               <div className="absolute inset-0 p-2 sm:p-3">
                 <div className="animate-pulse h-full w-full rounded-lg bg-[#000b31]/10" />
               </div>
@@ -245,7 +245,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
       >
         {/* Image Container — clic ouvre lightbox */}
         <div
-          className="relative h-20 sm:h-28 lg:h-36 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent cursor-zoom-in"
+          className="relative h-20 sm:h-28 lg:h-44 xl:h-52 w-full overflow-hidden bg-gradient-to-br from-[#000b31]/5 to-transparent cursor-zoom-in"
           onClick={() => setLightboxOpen(true)}
         >
           <div className={`absolute inset-0 bg-[#f68c09]/10 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />

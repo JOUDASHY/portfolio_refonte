@@ -47,7 +47,7 @@
     title: "About Me",
     subtitle: "Full‑Stack Developer",
     description:
-      "Full-stack developer and system administrator with 2 years of experience, I design performant, secure and scalable web solutions. I work across both front-end and back-end, while ensuring system optimization. Detail-oriented and autonomous, I focus on delivering quality code and effectively meeting project requirements.",
+      "Full-stack developer and system administrator with 3 years of experience, I design performant, secure and scalable web solutions. I work across both front-end and back-end, while ensuring system optimization. Detail-oriented and autonomous, I focus on delivering quality code and effectively meeting project requirements.",
     profile: {
       label: "Profile",
       location: "Location",

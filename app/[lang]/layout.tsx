@@ -13,7 +13,7 @@ const metaByLang: Record<string, Metadata> = {
   fr: {
     title: "Nilsen Tovohery – Développeur Full‑Stack & Admin Sys",
     description:
-      "Développeur fullstack et administrateur système avec 2 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives.",
+      "Développeur fullstack et administrateur système avec 3 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives.",
     keywords: [
       "Nilsen",
       "Nilsen Tovohery",
@@ -58,7 +58,7 @@ const metaByLang: Record<string, Metadata> = {
   en: {
     title: "Nilsen Tovohery – Full‑Stack Developer & Sys Admin",
     description:
-      "Full-stack developer and system administrator with 2 years of experience, designing performant, secure and scalable web solutions.",
+      "Full-stack developer and system administrator with 3 years of experience, designing performant, secure and scalable web solutions.",
     keywords: [
       "Nilsen",
       "Nilsen Tovohery",

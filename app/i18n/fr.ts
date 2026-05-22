@@ -47,7 +47,7 @@
     title: "À propos de moi",
     subtitle: "Développeur Full‑Stack",
     description:
-      "Développeur fullstack et administrateur système avec 2 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives. J'interviens aussi bien sur le front-end que le back-end, tout en assurant l'optimisation des systèmes. Rigoureux et autonome, je m'attache à produire un code de qualité et à répondre efficacement aux besoins des projets.",
+      "Développeur fullstack et administrateur système avec 3 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives. J'interviens aussi bien sur le front-end que le back-end, tout en assurant l'optimisation des systèmes. Rigoureux et autonome, je m'attache à produire un code de qualité et à répondre efficacement aux besoins des projets.",
     profile: {
       label: "Profil",
       location: "Localisation",

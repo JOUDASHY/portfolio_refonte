@@ -30,7 +30,11 @@ export function useCV() {
     return cvService.getDownloadUrl();
   }, []);
 
-  return { cv, loading, error, getDownloadUrl, refresh: fetchActiveCV };
+  const getViewUrl = useCallback(() => {
+    return cvService.getViewUrl();
+  }, []);
+
+  return { cv, loading, error, getDownloadUrl, getViewUrl, refresh: fetchActiveCV };
 }
 
 export function useBackofficeCV() {

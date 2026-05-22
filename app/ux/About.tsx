@@ -12,7 +12,7 @@ export default function About() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const { profile, loading, error } = useProfile();
-  const { cv, getDownloadUrl } = useCV();
+  const { cv, getDownloadUrl, getViewUrl } = useCV();
   const isDark = theme === "dark";
   function AnimatedBox({ children, delayMs = 0, className = "" }: { children: React.ReactNode; delayMs?: number; className?: string }) {
     const ref = useRef<HTMLDivElement | null>(null);
@@ -233,15 +233,26 @@ export default function About() {
                     </a>
                   )}
                   {cv ? (
-                    <a
-                      href={getDownloadUrl()}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-accent px-3 sm:px-5 py-1.5 sm:py-2 font-semibold text-white hover:brightness-110 transition-all duration-200"
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm"><path d="M5 20h14v-2H5v2zM9 4h6v6h4l-7 7-7-7h4V4z" /></svg>
-                      <span className="text-var-caption sm:text-sm">Download CV</span>
-                    </a>
+                    <>
+                      <a
+                        href={cv.file_url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-slate-200 px-3 sm:px-5 py-1.5 sm:py-2 font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-300 transition-all duration-200"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        <span className="text-var-caption sm:text-sm">Voir CV</span>
+                      </a>
+                      <a
+                        href={getDownloadUrl()}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-accent px-3 sm:px-5 py-1.5 sm:py-2 font-semibold text-white hover:brightness-110 transition-all duration-200"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="icon-xs sm:icon-sm"><path d="M5 20h14v-2H5v2zM9 4h6v6h4l-7 7-7-7h4V4z" /></svg>
+                        <span className="text-var-caption sm:text-sm">Download CV</span>
+                      </a>
+                    </>
                   ) : null}
                 </div>
               </AnimatedBox>

@@ -50,13 +50,13 @@ export default function Home() {
       />
       <Experience />
 
-      <Banner
+      {/* <Banner
         bgSrc="https://images.wallpapersden.com/image/download/keyboard-keys-buttons_Z2dsbW6UmZqaraWkpJRpbG1nrWdqa2k.jpg"
         title={t("banner.sysAdmin")}
         subtitle={t("banner.sysAdminSubtitle")}
         align="center"
         overlayClass="bg-black/30"
-      />
+      /> */}
       <Projects />
       <Gallery />
       <Education />

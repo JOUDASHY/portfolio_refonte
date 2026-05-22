@@ -131,6 +131,17 @@ export default function Navbar() {
               })}
             </ul>
 
+            {/* Login button */}
+            <Link
+              href={`/${lang}/login`}
+              className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#f68c09]/20 text-[#f68c09] hover:bg-[#f68c09]/30 transition-all border border-white/30"
+              title="Login"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 sm:w-4 sm:h-4">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+              </svg>
+            </Link>
+
             {/* Mobile Toggle */}
             <button
               aria-label="Toggle menu"

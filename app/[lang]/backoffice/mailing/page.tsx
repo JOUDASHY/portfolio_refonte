@@ -157,9 +157,9 @@ export default function MailingHistoryPage() {
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-lg sm:text-2xl font-bold text-foreground">{t("mailing.title")}</h2>
         <div className="flex items-center gap-2">
-          <Button variant="primary" className="text-xs sm:text-sm px-2 sm:px-4" onClick={() => setSendEmailOpen(true)}>
+          {/* <Button variant="primary" className="text-xs sm:text-sm px-2 sm:px-4" onClick={() => setSendEmailOpen(true)}>
             {t("mailing.newEmail")}
-          </Button>
+          </Button> */}
           <Button variant="secondary" className="text-xs sm:text-sm px-2 sm:px-4">
             {t("mailing.export")}
           </Button>

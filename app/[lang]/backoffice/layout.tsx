@@ -17,6 +17,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "awards", label: "Award", icon: AwardIcon, match: "/backoffice/awards" },
     { href: "skills", label: "Compétences", icon: SkillsIcon, match: "/backoffice/skills" },
     { href: "cv", label: "Voir CV", icon: EyeIcon, match: "/backoffice/cv" },
+    { href: "cv-dynamic", label: "CV Dynamique", icon: CvDynamicIcon, match: "/backoffice/cv-dynamic" },
     { href: "assistant", label: "Assistant IA", icon: AiIcon, match: "/backoffice/assistant" },
     { href: "language", label: "Langue", icon: LanguageIcon, match: "/backoffice/language" },
     { href: "training", label: "Formation", icon: TrainingIcon, match: "/backoffice/training" },
@@ -103,6 +104,14 @@ function EyeIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 110-8 4 4 0 010 8z" />
+    </svg>
+  );
+}
+
+function CvDynamicIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15h8v2H8v-2zm0-4h8v2H8v-2z" />
     </svg>
   );
 }

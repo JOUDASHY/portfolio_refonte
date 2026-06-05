@@ -68,14 +68,17 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2 rounded-full bg-[#f68c09] overflow-hidden">
+        <div className="relative flex h-[200px] w-[200px] xs:h-[240px] xs:w-[240px] sm:h-[320px] sm:w-[320px] lg:h-[380px] lg:w-[380px] items-center justify-center order-1 lg:order-2 lg:justify-self-end lg:translate-x-16">
           <div className="relative z-10 h-[88%] w-[88%]">
             <Image
               src="/logo_nil.png"
               alt="Nilsen eagle logo"
               fill
               sizes="(max-width: 475px) 176px, (max-width: 640px) 211px, (max-width: 1024px) 282px, 334px"
-              className="object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
+              className="object-contain transition-transform duration-300 hover:scale-105 ease-out"
+              style={{
+                filter: "drop-shadow(2px 0px 0px #f68c09) drop-shadow(-2px 0px 0px #f68c09) drop-shadow(0px 2px 0px #f68c09) drop-shadow(0px -2px 0px #f68c09) drop-shadow(0 0 8px rgba(246, 140, 9, 0.85)) drop-shadow(0 0 24px rgba(246, 140, 9, 0.6)) drop-shadow(0 4px 24px rgba(0,0,0,0.4))"
+              }}
               priority
             />
           </div>

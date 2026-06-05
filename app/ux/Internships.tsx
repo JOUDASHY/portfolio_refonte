@@ -54,7 +54,7 @@ export default function Internships() {
           {duplicatedIcons.map((icon, idx) => (
             <div
               key={`${icon.name}-${idx}`}
-              className="flex-shrink-0 w-40 h-40 sm:w-48 sm:h-48 mx-6 rounded-3xl bg-white border-2 border-[#000b31]/10 flex items-center justify-center shadow-lg hover:shadow-2xl hover:border-[#f68c09]/50 hover:scale-110 transition-all duration-300 group"
+              className="flex-shrink-0 w-40 h-40 sm:w-48 sm:h-48 mx-6 rounded-3xl bg-white border-2 border-[#000b31]/10 flex flex-col items-center justify-center gap-2 sm:gap-3 shadow-lg hover:shadow-2xl hover:border-[#f68c09]/50 hover:scale-110 transition-all duration-300 group"
               title={icon.name}
             >
               <Image
@@ -64,6 +64,9 @@ export default function Internships() {
                 height={80}
                 className="w-20 h-20 sm:w-24 sm:h-24 object-contain group-hover:brightness-0 group-hover:saturate-100 group-hover:sepia group-hover:saturate-5000% group-hover:hue-rotate-15deg transition-all"
               />
+              <span className="text-xs sm:text-sm font-semibold text-[#000b31]/80 group-hover:text-[#f68c09] transition-colors duration-300">
+                {icon.name}
+              </span>
             </div>
           ))}
         </div>

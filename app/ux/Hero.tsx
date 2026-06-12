@@ -77,7 +77,7 @@ export default function Hero() {
               sizes="(max-width: 475px) 176px, (max-width: 640px) 211px, (max-width: 1024px) 282px, 334px"
               className="object-contain transition-transform duration-300 hover:scale-105 ease-out"
               style={{
-                filter: "drop-shadow(2px 0px 0px rgba(246,140,9,0.4)) drop-shadow(-2px 0px 0px rgba(246,140,9,0.4)) drop-shadow(0px 2px 0px rgba(246,140,9,0.4)) drop-shadow(0px -2px 0px rgba(246,140,9,0.4)) drop-shadow(0 0 8px rgba(246, 140, 9, 0.3)) drop-shadow(0 0 24px rgba(246, 140, 9, 0.2)) drop-shadow(0 4px 24px rgba(0,0,0,0.4))"
+                filter: "drop-shadow(2px 0px 0px rgba(246,140,9,0.65)) drop-shadow(-2px 0px 0px rgba(246,140,9,0.65)) drop-shadow(0px 2px 0px rgba(246,140,9,0.65)) drop-shadow(0px -2px 0px rgba(246,140,9,0.65)) drop-shadow(0 0 8px rgba(246, 140, 9, 0.5)) drop-shadow(0 0 24px rgba(246, 140, 9, 0.3)) drop-shadow(0 4px 24px rgba(0,0,0,0.4))"
               }}
               priority
             />

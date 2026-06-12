@@ -6,6 +6,7 @@ import { ThemeProvider } from "../components/ThemeProvider";
 import { LanguageProvider } from "../hooks/LanguageProvider";
 import KeepAliveGate from "../components/KeepAliveGate";
 import ToastProvider from "../components/ToastProvider";
+import Maintenance from "../ux/Maintenance";
 
 const siteUrl = "https://portfolio.unityfianar.site";
 
@@ -112,6 +113,21 @@ export async function generateMetadata({
   return metaByLang[lang] ?? metaByLang["fr"];
 }
 
+async function isBackendUp(): Promise<boolean> {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/";
+  try {
+    const res = await fetch(`${baseUrl}health/`, {
+      method: "GET",
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export default async function LangLayout({
   children,
   params,
@@ -121,6 +137,16 @@ export default async function LangLayout({
 }) {
   const { lang } = await params;
   const initialLang = lang === "fr" ? "fr" : "en";
+
+  const backendUp = await isBackendUp();
+  if (!backendUp) {
+    return (
+      <ThemeProvider>
+        <Maintenance />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <LanguageProvider initialLang={initialLang}>

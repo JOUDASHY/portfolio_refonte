@@ -45,21 +45,35 @@
   },
   about: {
     title: "À propos de moi",
-    subtitle: "Développeur Full‑Stack",
+    subtitle: "Développeur Full‑Stack & DevOps",
     description:
       "Développeur fullstack et administrateur système avec 3 ans d'expérience, je conçois des solutions web performantes, sécurisées et évolutives. J'interviens aussi bien sur le front-end que le back-end, tout en assurant l'optimisation des systèmes. Rigoureux et autonome, je m'attache à produire un code de qualité et à répondre efficacement aux besoins des projets.",
+    eyebrow: "À propos de moi",
+    available: "Disponible",
+    location: "Madagascar",
+    stats: {
+      years: "ans d'expérience",
+      projects: "projets livrés",
+      satisfaction: "satisfaction",
+    },
+    stack: {
+      title: "Stack technique",
+      frontend: "Front-end",
+      backend: "Back-end",
+      devops: "DevOps",
+      database: "Base de données",
+    },
+    cv: {
+      view: "Voir CV",
+      download: "Télécharger CV",
+    },
+    error: "Erreur lors du chargement du profil",
+    retry: "Réessayer",
     profile: {
       label: "Profil",
       location: "Localisation",
       status: "Disponible pour des missions",
       years: "+ années d'expérience",
-    },
-    stack: {
-      title: "Ce que je fais",
-      frontend: "Front‑end: React, Next.js, Tailwind CSS",
-      backend: "Back‑end: Node.js, Express, API REST/GraphQL",
-      database: "Base de données: PostgreSQL, MongoDB, Prisma",
-      tooling: "CI/CD, Tests, Performance et Accessibilité",
     },
     ctaContact: "Me contacter",
   },

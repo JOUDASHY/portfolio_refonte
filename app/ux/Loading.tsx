@@ -15,7 +15,9 @@ export default function Loading() {
             alt="Loading logo"
             width={96}
             height={96}
-            className="drop-shadow-[0_4px_18px_rgba(0,0,0,0.45)]"
+            style={{
+              filter: "drop-shadow(2px 0px 0px rgba(246,140,9,0.65)) drop-shadow(-2px 0px 0px rgba(246,140,9,0.65)) drop-shadow(0px 2px 0px rgba(246,140,9,0.65)) drop-shadow(0px -2px 0px rgba(246,140,9,0.65)) drop-shadow(0 0 8px rgba(246,140,9,0.5)) drop-shadow(0 0 24px rgba(246,140,9,0.3))"
+            }}
             priority
           />
         </div>

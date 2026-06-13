@@ -45,21 +45,35 @@
   },
   about: {
     title: "About Me",
-    subtitle: "Full‑Stack Developer",
+    subtitle: "Full‑Stack Developer & DevOps",
     description:
       "Full-stack developer and system administrator with 3 years of experience, I design performant, secure and scalable web solutions. I work across both front-end and back-end, while ensuring system optimization. Detail-oriented and autonomous, I focus on delivering quality code and effectively meeting project requirements.",
+    eyebrow: "About Me",
+    available: "Available",
+    location: "Madagascar",
+    stats: {
+      years: "years of exp.",
+      projects: "projects delivered",
+      satisfaction: "satisfaction",
+    },
+    stack: {
+      title: "Tech Stack",
+      frontend: "Front-end",
+      backend: "Back-end",
+      devops: "DevOps",
+      database: "Database",
+    },
+    cv: {
+      view: "View CV",
+      download: "Download CV",
+    },
+    error: "Error loading profile",
+    retry: "Retry",
     profile: {
       label: "Profile",
       location: "Location",
       status: "Open to work",
       years: "+ years of experience",
-    },
-    stack: {
-      title: "What I do",
-      frontend: "Front‑end: React, Next.js, Tailwind CSS",
-      backend: "Back‑end: Node.js, Express, REST/GraphQL APIs",
-      database: "Databases: PostgreSQL, MongoDB, Prisma",
-      tooling: "CI/CD, Testing, Performance & Accessibility",
     },
     ctaContact: "Contact Me",
   },

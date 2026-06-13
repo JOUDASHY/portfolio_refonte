@@ -7,7 +7,7 @@ import { useLanguage } from "../../hooks/LanguageProvider";
 export default function MaintenancePage() {
   const { t } = useLanguage();
   return (
-    <main className="relative min-h-[90vh] flex items-center justify-center px-4">
+    <main className="relative min-h-[90vh] flex items-center justify-center px-4 bg-navy">
       {/* Ambient accent glows */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute -left-10 top-20 h-56 w-56 rounded-full bg-accent/15 blur-3xl" />
@@ -21,10 +21,17 @@ export default function MaintenancePage() {
         <div className="absolute inset-x-10 -top-[1px] h-[2px] bg-accent opacity-80" />
 
         {/* Brand logo */}
-        <div className="mx-auto mb-5 inline-flex items-center justify-center rounded-full bg-accent/25 ring-1 ring-accent p-3 animate-pulse">
-          <div className="relative h-14 w-14">
-            <Image src="/logo_nil.png" alt="Logo" fill sizes="56px" className="object-contain" />
-          </div>
+        <div className="mx-auto mb-5 relative h-16 w-16">
+          <Image
+            src="/logo_nil.png"
+            alt="Logo"
+            fill
+            sizes="64px"
+            className="object-contain"
+            style={{
+              filter: "drop-shadow(2px 0px 0px rgba(246,140,9,0.65)) drop-shadow(-2px 0px 0px rgba(246,140,9,0.65)) drop-shadow(0px 2px 0px rgba(246,140,9,0.65)) drop-shadow(0px -2px 0px rgba(246,140,9,0.65)) drop-shadow(0 0 8px rgba(246,140,9,0.5)) drop-shadow(0 0 24px rgba(246,140,9,0.3))"
+            }}
+          />
         </div>
         <p className="text-xs sm:text-sm font-semibold tracking-wide text-accent uppercase">{t("maintenance.by")} Nilsen</p>
 

@@ -19,7 +19,7 @@ function TechExpertBanner({ title, subtitle }: { title: string; subtitle: string
   const row1 = ["React", "Next.js", "TypeScript", "Tailwind", "Laravel", "Django", "Docker", "Nginx", "MySQL", "PostgreSQL", "Git", "SSL"];
   const row2 = ["Node.js", "Python", "PHP", "Linux", "IIS", "Redis", "REST API", "CI/CD", "Webpack", "Prisma", "JWT", "DevOps"];
   return (
-    <section className="relative overflow-hidden border-y border-white/10 bg-navy py-14 sm:py-20">
+    <section className="relative overflow-hidden border-y border-white/10 bg-navy py-8 sm:py-14 lg:py-20">
       <div className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
         style={{ backgroundImage: "url('https://wallpapercave.com/wp/wp10599480.jpg')" }} />
       <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/95 to-navy/80" />
@@ -28,15 +28,15 @@ function TechExpertBanner({ title, subtitle }: { title: string; subtitle: string
 
       <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-0 items-center mx-auto max-w-7xl px-6 lg:px-12">
         <div className="lg:pr-12 lg:border-r lg:border-white/10">
-          <div className="flex items-center gap-2 mb-5">
-            <span className="font-mono text-accent text-sm">~/portfolio</span>
-            <span className="font-mono text-white/30 text-sm">$</span>
-            <span className="font-mono text-white/50 text-sm animate-pulse">_</span>
+          <div className="flex items-center gap-2 mb-3 sm:mb-5">
+            <span className="font-mono text-accent text-xs sm:text-sm">~/portfolio</span>
+            <span className="font-mono text-white/30 text-xs sm:text-sm">$</span>
+            <span className="font-mono text-white/50 text-xs sm:text-sm animate-pulse">_</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight">{title}</h2>
-          <div className="mt-3 w-16 h-1 rounded-full bg-accent" />
-          <p className="mt-4 text-sm sm:text-base text-white/50 max-w-md leading-relaxed">{subtitle}</p>
-          <div className="mt-6 inline-flex items-center gap-2 rounded-xl border border-accent/20 bg-accent/5 px-4 py-2">
+          <h2 className="text-xl sm:text-3xl lg:text-5xl font-black text-white leading-tight tracking-tight">{title}</h2>
+          <div className="mt-2 sm:mt-3 w-12 sm:w-16 h-1 rounded-full bg-accent" />
+          <p className="mt-3 sm:mt-4 text-xs sm:text-base text-white/50 max-w-md leading-relaxed">{subtitle}</p>
+          <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 rounded-xl border border-accent/20 bg-accent/5 px-3 sm:px-4 py-1.5 sm:py-2">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-accent">
               <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
             </svg>
@@ -44,7 +44,7 @@ function TechExpertBanner({ title, subtitle }: { title: string; subtitle: string
           </div>
         </div>
 
-        <div className="lg:pl-12 flex flex-col gap-4 overflow-hidden">
+        <div className="lg:pl-12 flex flex-col gap-3 sm:gap-4 overflow-hidden">
           <div className="flex gap-3 animate-scroll whitespace-nowrap">
             {[...row1, ...row1].map((tech, i) => (
               <span key={i} className="inline-flex items-center gap-1.5 shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/70">
@@ -84,18 +84,18 @@ function CollaborationBanner({ title, subtitle }: { title: string; subtitle: str
         <span className="absolute right-8 top-1/2 -translate-y-1/2 text-[160px] sm:text-[220px] font-black text-white/[0.025] leading-none select-none pointer-events-none">&</span>
       </div>
 
-      <div className="relative grid grid-cols-1 lg:grid-cols-2 min-h-[320px] sm:min-h-[380px]">
+      <div className="relative grid grid-cols-1 lg:grid-cols-2 min-h-[260px] sm:min-h-[320px] lg:min-h-[380px]">
         {/* LEFT — with bg image */}
-        <div className="relative flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-14 sm:py-20 overflow-hidden">
+        <div className="relative flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-8 sm:py-14 lg:py-20 overflow-hidden">
           {/* BG image on left column */}
           <div className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: "url('https://wallpaperaccess.com/full/5675692.jpg')" }} />
           <div className="absolute inset-0 bg-navy/75" />
           <div className="absolute left-0 top-12 bottom-12 w-1 rounded-full bg-gradient-to-b from-transparent via-accent to-transparent" />
-          <span className="relative z-10 text-[10px] sm:text-xs font-bold tracking-[0.3em] text-accent/70 uppercase mb-4">Open to collaboration</span>
-          <h2 className="relative z-10 text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight">{title}</h2>
-          <p className="relative z-10 mt-4 text-sm sm:text-base text-white/60 max-w-sm leading-relaxed">{subtitle}</p>
-          <div className="relative z-10 mt-8 flex flex-wrap gap-3">
+          <span className="relative z-10 text-[9px] sm:text-xs font-bold tracking-[0.3em] text-accent/70 uppercase mb-3 sm:mb-4">Open to collaboration</span>
+          <h2 className="relative z-10 text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight">{title}</h2>
+          <p className="relative z-10 mt-3 sm:mt-4 text-xs sm:text-base text-white/60 max-w-sm leading-relaxed">{subtitle}</p>
+          <div className="relative z-10 mt-5 sm:mt-8 flex flex-wrap gap-2 sm:gap-3">
             <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-black text-navy hover:brightness-110 shadow-lg shadow-accent/25 transition-all duration-200 hover:scale-105">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
               Me contacter
@@ -114,13 +114,13 @@ function CollaborationBanner({ title, subtitle }: { title: string; subtitle: str
             { num: "100%", label: "Satisfaction client", icon: "✦", desc: "Qualité garantie",      bg: "https://www.advancia-teleservices.com/wp-content/uploads/2025/05/satisfaction-client-croissance-entreprise-1.jpg" },
             { num: "∞",    label: "Passion du code",    icon: "💡", desc: "Always learning",       bg: "https://assets.content.technologyadvice.com/635831819349231309_9ba5c39c6c.webp" },
           ].map(({ num, label, icon, desc, bg }) => (
-            <div key={label} className="group relative flex flex-col justify-center px-6 sm:px-8 py-8 sm:py-10 overflow-hidden cursor-default min-h-[140px] sm:min-h-[160px]">
+            <div key={label} className="group relative flex flex-col justify-center px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 overflow-hidden cursor-default min-h-[110px] sm:min-h-[140px] lg:min-h-[160px]">
               <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${bg}')` }} />
               <div className="absolute inset-0 bg-navy/70 group-hover:bg-navy/60 transition-colors duration-300" />
-              <span className="text-xl mb-2 relative z-10">{icon}</span>
-              <p className="text-2xl sm:text-3xl lg:text-4xl font-black text-accent leading-none relative z-10">{num}</p>
-              <p className="text-xs sm:text-sm font-semibold text-white/90 mt-1 relative z-10">{label}</p>
-              <p className="text-[10px] sm:text-xs text-white/50 mt-0.5 relative z-10">{desc}</p>
+              <span className="text-base sm:text-xl mb-1 sm:mb-2 relative z-10">{icon}</span>
+              <p className="text-xl sm:text-3xl lg:text-4xl font-black text-accent leading-none relative z-10">{num}</p>
+              <p className="text-[10px] sm:text-sm font-semibold text-white/90 mt-1 relative z-10">{label}</p>
+              <p className="hidden sm:block text-[10px] sm:text-xs text-white/50 mt-0.5 relative z-10">{desc}</p>
             </div>
           ))}
         </div>

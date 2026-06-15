@@ -1,4 +1,4 @@
-﻿const en = {
+const en = {
   lang: "en",
   brand: "Portfolio",
   nav: {
@@ -31,6 +31,7 @@
     sysAdminSubtitle: "Management and security of your technical environments",
     collaboration: "Let's build something exceptional",
     collaborationSubtitle: "Available for missions and collaborations",
+    techExpertBadge: "technologies mastered",
   },
   maintenance: {
     by: "by",

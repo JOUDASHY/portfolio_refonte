@@ -15,14 +15,14 @@ import { useVisitTracker } from "../hooks/useVisitTracker";
 import { useLanguage } from "../hooks/LanguageProvider";
 
 /* ── TechExpert Banner ─────────────────────────────────────── */
-function TechExpertBanner({ title, subtitle }: { title: string; subtitle: string }) {
+function TechExpertBanner({ title, subtitle, badgeLabel }: { title: string; subtitle: string; badgeLabel: string }) {
   const row1 = ["React", "Next.js", "TypeScript", "Tailwind", "Laravel", "Django", "Docker", "Nginx", "MySQL", "PostgreSQL", "Git", "SSL"];
   const row2 = ["Node.js", "Python", "PHP", "Linux", "IIS", "Redis", "REST API", "CI/CD", "Webpack", "Prisma", "JWT", "DevOps"];
   return (
     <section className="relative overflow-hidden border-y border-white/10 bg-navy py-8 sm:py-14 lg:py-20">
-      <div className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
+      <div className="absolute inset-0 bg-cover bg-center bg-fixed opacity-55"
         style={{ backgroundImage: "url('https://wallpapercave.com/wp/wp10599480.jpg')" }} />
-      <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/95 to-navy/80" />
+      <div className="absolute inset-0 bg-gradient-to-r from-navy/60 via-navy/50 to-navy/30" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
 
@@ -40,7 +40,7 @@ function TechExpertBanner({ title, subtitle }: { title: string; subtitle: string
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-accent">
               <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
             </svg>
-            <span className="text-xs font-semibold text-accent">{row1.length + row2.length}+ technologies maîtrisées</span>
+            <span className="text-xs font-semibold text-accent">{row1.length + row2.length}+ {badgeLabel}</span>
           </div>
         </div>
 
@@ -88,7 +88,7 @@ function CollaborationBanner({ title, subtitle }: { title: string; subtitle: str
         {/* LEFT — with bg image */}
         <div className="relative flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-8 sm:py-14 lg:py-20 overflow-hidden">
           {/* BG image on left column */}
-          <div className="absolute inset-0 bg-cover bg-center"
+          <div className="absolute inset-0 bg-cover bg-center bg-fixed"
             style={{ backgroundImage: "url('https://wallpaperaccess.com/full/5675692.jpg')" }} />
           <div className="absolute inset-0 bg-navy/75" />
           <div className="absolute left-0 top-12 bottom-12 w-1 rounded-full bg-gradient-to-b from-transparent via-accent to-transparent" />
@@ -140,7 +140,7 @@ export default function Home() {
       <About />
       <CollaborationBanner title={t("banner.collaboration")} subtitle={t("banner.collaborationSubtitle")} />
       <Skills />
-      <TechExpertBanner title={t("banner.techExpert")} subtitle={t("banner.techExpertSubtitle")} />
+      <TechExpertBanner title={t("banner.techExpert")} subtitle={t("banner.techExpertSubtitle")} badgeLabel={t("banner.techExpertBadge")} />
       <Experience />
       <Projects />
       <Gallery />

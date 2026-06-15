@@ -1,4 +1,4 @@
-﻿const fr = {
+const fr = {
   lang: "fr",
   brand: "Portfolio",
   nav: {
@@ -31,6 +31,7 @@
     sysAdminSubtitle: "Gestion et sécurisation de vos environnements techniques",
     collaboration: "Construisons quelque chose d'exceptionnel",
     collaborationSubtitle: "Disponible pour des missions et collaborations",
+    techExpertBadge: "technologies maîtrisées",
   },
   maintenance: {
     by: "par",

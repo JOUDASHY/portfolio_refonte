@@ -100,7 +100,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="relative bg-white py-10 sm:py-20 lg:py-32 border-b-2 overflow-hidden"
+    <section id="about" className="relative bg-white py-8 sm:py-12 lg:py-16 border-b-2 overflow-hidden"
       style={{ borderColor: getAdaptiveBorderColor(isDark), boxShadow: getAdaptiveShadow(isDark) }}>
 
       {/* Background blobs */}

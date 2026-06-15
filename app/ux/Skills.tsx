@@ -196,7 +196,7 @@ export default function Skills() {
   return (
     <section 
       id="skills" 
-      className="relative py-20 sm:py-24 lg:py-32 border-b-2 overflow-hidden bg-white"
+      className="relative py-10 sm:py-16 lg:py-20 border-b-2 overflow-hidden bg-white"
       style={{ 
         borderColor: getAdaptiveBorderColor(isDark), 
         boxShadow: getAdaptiveShadow(isDark)

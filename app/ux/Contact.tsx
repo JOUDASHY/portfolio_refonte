@@ -201,7 +201,7 @@ export default function Contact() {
   return (
     <section 
       id="contact" 
-      className="relative py-16 sm:py-20 lg:py-24 border-b-2 border-slate-200 bg-cover bg-center bg-fixed"
+      className="relative pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-12 border-b-2 border-slate-200 bg-cover bg-center bg-fixed"
       style={{ backgroundImage: 'url(https://wallpaperaccess.com/full/829031.jpg)' }}
     >
       {/* Overlay for better readability */}

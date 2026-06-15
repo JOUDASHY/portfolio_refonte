@@ -73,6 +73,7 @@ function TechExpertBanner({ title, subtitle, badgeLabel }: { title: string; subt
 
 /* ── Collaboration Banner ──────────────────────────────────── */
 function CollaborationBanner({ title, subtitle }: { title: string; subtitle: string }) {
+  const { t } = useLanguage();
   return (
     <section className="relative overflow-hidden bg-navy border-y border-white/10">
       <div aria-hidden className="pointer-events-none absolute inset-0 select-none">
@@ -91,16 +92,16 @@ function CollaborationBanner({ title, subtitle }: { title: string; subtitle: str
             style={{ backgroundImage: "url('https://wallpaperaccess.com/full/5675692.jpg')" }} />
           <div className="absolute inset-0 bg-navy/75" />
           <div className="absolute left-0 top-12 bottom-12 w-1 rounded-full bg-gradient-to-b from-transparent via-accent to-transparent" />
-          <span className="relative z-10 text-[9px] sm:text-xs font-bold tracking-[0.3em] text-accent/70 uppercase mb-3 sm:mb-4">Open to collaboration</span>
+          <span className="relative z-10 text-[9px] sm:text-xs font-bold tracking-[0.3em] text-accent/70 uppercase mb-3 sm:mb-4">{t("banner.openCollaboration")}</span>
           <h2 className="relative z-10 text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight">{title}</h2>
           <p className="relative z-10 mt-3 sm:mt-4 text-xs sm:text-base text-white/60 max-w-sm leading-relaxed">{subtitle}</p>
           <div className="relative z-10 mt-5 sm:mt-8 flex flex-wrap gap-2 sm:gap-3">
             <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-black text-navy hover:brightness-110 shadow-lg shadow-accent/25 transition-all duration-200 hover:scale-105">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-              Me contacter
+              {t("banner.contactMe")}
             </a>
             <a href="#projects" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-semibold text-white/80 hover:border-accent/40 hover:text-white transition-all duration-200">
-              Voir projets →
+              {t("banner.viewProjects")}
             </a>
           </div>
         </div>
@@ -108,10 +109,10 @@ function CollaborationBanner({ title, subtitle }: { title: string; subtitle: str
         {/* RIGHT — 4 stats cards */}
         <div className="relative grid grid-cols-2 divide-x divide-y divide-white/[0.07] overflow-hidden">
           {[
-            { num: "3+",   label: "Ans d'expérience",   icon: "⚡", desc: "Full-Stack & DevOps",  bg: "https://wallpaperaccess.com/full/5675692.jpg" },
-            { num: "20+",  label: "Projets livrés",     icon: "🚀", desc: "Web · Mobile · Infra", bg: "https://53.fs1.hubspotusercontent-na1.net/hubfs/53/Projet%20web-1.webp" },
-            { num: "100%", label: "Satisfaction client", icon: "✦", desc: "Qualité garantie",      bg: "https://www.advancia-teleservices.com/wp-content/uploads/2025/05/satisfaction-client-croissance-entreprise-1.jpg" },
-            { num: "∞",    label: "Passion du code",    icon: "💡", desc: "Always learning",       bg: "https://assets.content.technologyadvice.com/635831819349231309_9ba5c39c6c.webp" },
+            { num: "3+",   label: t("banner.stats.yearsExpLabel"),   icon: "⚡", desc: t("banner.stats.yearsExpDesc"),  bg: "/nilclass2.jpg" },
+            { num: "20+",  label: t("banner.stats.projectsLabel"),     icon: "🚀", desc: t("banner.stats.projectsDesc"), bg: "https://53.fs1.hubspotusercontent-na1.net/hubfs/53/Projet%20web-1.webp" },
+            { num: "100%", label: t("banner.stats.satisfactionLabel"), icon: "✦", desc: t("banner.stats.satisfactionDesc"),      bg: "https://www.advancia-teleservices.com/wp-content/uploads/2025/05/satisfaction-client-croissance-entreprise-1.jpg" },
+            { num: "∞",    label: t("banner.stats.passionLabel"),    icon: "💡", desc: t("banner.stats.passionDesc"),       bg: "https://assets.content.technologyadvice.com/635831819349231309_9ba5c39c6c.webp" },
           ].map(({ num, label, icon, desc, bg }) => (
             <div key={label} className="group relative flex flex-col justify-center px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 overflow-hidden cursor-default min-h-[110px] sm:min-h-[140px] lg:min-h-[160px]">
               <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${bg}')` }} />

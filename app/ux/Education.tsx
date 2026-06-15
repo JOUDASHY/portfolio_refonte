@@ -225,7 +225,7 @@ export default function Education() {
         {/* Image - Stuck to the right side */}
         <div className="hidden lg:flex absolute right-0 top-0 h-[700px] items-center justify-center bg-[#000b31]">
           <Image
-            src="/bann.jpg"
+            src="/nilclass.jpg"
             alt="Education"
             height={550}
             width={400}

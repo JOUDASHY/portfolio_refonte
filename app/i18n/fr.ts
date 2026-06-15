@@ -32,6 +32,19 @@ const fr = {
     collaboration: "Construisons quelque chose d'exceptionnel",
     collaborationSubtitle: "Disponible pour des missions et collaborations",
     techExpertBadge: "technologies maîtrisées",
+    openCollaboration: "Ouvert à la collaboration",
+    contactMe: "Me contacter",
+    viewProjects: "Voir projets →",
+    stats: {
+      yearsExpLabel: "Ans d'expérience",
+      yearsExpDesc: "Full-Stack & DevOps",
+      projectsLabel: "Projets livrés",
+      projectsDesc: "Web · Mobile · Infra",
+      satisfactionLabel: "Satisfaction client",
+      satisfactionDesc: "Qualité garantie",
+      passionLabel: "Passion du code",
+      passionDesc: "Toujours en apprentissage",
+    }
   },
   maintenance: {
     by: "par",

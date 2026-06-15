@@ -37,7 +37,7 @@ export default function Gallery() {
     }
 
     return (
-        <section id="gallery" className="relative overflow-hidden py-10 sm:py-28 bg-[#000b31]">
+        <section id="gallery" className="relative overflow-hidden pt-16 pb-10 sm:pt-24 sm:pb-16 bg-[#000b31]">
             {/* Decorative background elements */}
             <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
             <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />

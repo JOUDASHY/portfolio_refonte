@@ -99,7 +99,7 @@ export default function Experience() {
         <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-[#000b31]/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-5xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10">
+      <div className="relative mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10">
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8">
             <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-2 sm:mb-3">

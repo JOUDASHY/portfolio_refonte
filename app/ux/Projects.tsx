@@ -28,10 +28,10 @@ export default function Projects() {
 
       {/* Brand blue wavy header for the title only */}
       <div
-        className="relative pt-20 sm:pt-24 lg:pt-32 pb-32 sm:pb-40 mb-16 z-10 w-full"
+        className="relative pt-12 sm:pt-16 lg:pt-20 pb-24 sm:pb-32 mb-8 z-10 w-full"
         style={{ backgroundColor: 'var(--blue)' }}
       >
-        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pb-8">
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pb-4">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 shadow-sm mb-6 backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-[#f68c09] animate-pulse" />
             <span className="text-sm font-medium" style={{ color: 'var(--jaune)' }}>{t("projects.subtitle")}</span>
@@ -84,7 +84,7 @@ function ProjectGrid() {
             }
           });
         },
-        { threshold: 0.15 }
+        { threshold: 0.05 }
       );
       observer.observe(el);
       return () => observer.disconnect();
@@ -112,7 +112,7 @@ function ProjectGrid() {
   }
 
   return (
-    <ul className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-3 xl:gap-8">
+    <ul className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-3 xl:gap-6">
       {loading
         ? Array.from({ length: 6 }).map((_, i) => (
           <li key={i} className="group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
@@ -128,7 +128,7 @@ function ProjectGrid() {
           </li>
         ))
         : items.map((p, idx) => (
-          <AnimatedCard key={p.id} delayMs={idx * 100}>
+          <AnimatedCard key={p.id} delayMs={(idx % 3) * 75}>
             <ProjectCard project={p} lang={lang} />
           </AnimatedCard>
         ))}
@@ -254,7 +254,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
             alt={project.title}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-            className={`object-contain p-2 sm:p-3 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+            className={`object-contain p-1 sm:p-1.5 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
           />
 
           {/* Rating Badge */}
@@ -272,11 +272,11 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
         </div>
 
         {/* Content */}
-        <div className="p-1.5 sm:p-2 lg:p-3 flex-1 flex flex-col">
+        <div className="p-1 sm:p-1.5 lg:p-2 flex-1 flex flex-col">
           <h3 className="text-[10px] sm:text-sm text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
 
           {/* Rating Section */}
-          <div className="mt-1 sm:mt-2 flex items-center justify-between">
+          <div className="mt-0.5 sm:mt-1 flex items-center justify-between">
             <div className="flex items-center gap-0.5">
               <Stars value={currentRating} size="sm" />
             </div>
@@ -284,7 +284,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
           </div>
 
           {/* Rate buttons */}
-          <div className="mt-1 sm:mt-2 flex items-center justify-between">
+          <div className="mt-0.5 sm:mt-1 flex items-center justify-between">
             <span className="text-[8px] sm:text-xs text-[#000b31]/40">{t("projects.rateProject")}:</span>
             <div className="flex gap-0.5">
               {[1, 2, 3, 4, 5].map((score) => (
@@ -314,7 +314,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
               href={project.href}
               target="_blank"
               rel="noreferrer noopener"
-              className="mt-2 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31] text-white text-[9px] sm:text-xs font-semibold hover:bg-[#f68c09] transition-colors duration-200"
+              className="mt-1.5 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31] text-white text-[9px] sm:text-xs font-semibold hover:bg-[#f68c09] transition-colors duration-200"
               onClick={(e) => e.stopPropagation()}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" /></svg>
@@ -325,7 +325,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
           {/* Détails page */}
           <Link
             href={`/${lang}/projects/${project.id}`}
-            className="mt-1 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31]/10 text-[#000b31] text-[9px] sm:text-xs font-semibold hover:bg-[#000b31]/20 transition-colors duration-200"
+            className="mt-0.5 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31]/10 text-[#000b31] text-[9px] sm:text-xs font-semibold hover:bg-[#000b31]/20 transition-colors duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>

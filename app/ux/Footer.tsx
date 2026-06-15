@@ -9,7 +9,7 @@ export default function Footer() {
   const { profile, loading } = useProfile();
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-12 sm:mt-16 border-t border-white/10 bg-[#000b31] shadow-lg shadow-black/10">
+    <footer className="border-t border-white/10 bg-[#000b31] shadow-lg shadow-black/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-3 items-start">
           {/* Column 1: Portfolio Info with Logo */}

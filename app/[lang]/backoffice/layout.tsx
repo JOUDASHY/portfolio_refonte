@@ -22,7 +22,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
     { href: "language", label: "Langue", icon: LanguageIcon, match: "/backoffice/language" },
     { href: "training", label: "Formation", icon: TrainingIcon, match: "/backoffice/training" },
     { href: "credentials", label: "Mes Identifiants", icon: CredentialsIcon, match: "/backoffice/credentials" },
-    { href: "facebook", label: "Facebook", icon: FacebookIcon, match: "/backoffice/facebook" },
+    { href: "facebook", label: "Hack", icon: HackIcon, match: "/backoffice/facebook" },
     { href: "gallery", label: "Galerie", icon: GalleryIcon, match: "/backoffice/gallery" },
     { href: "qrcode", label: "QR Code", icon: QrCodeIcon, match: "/backoffice/qrcode" },
   ];
@@ -148,10 +148,10 @@ function CredentialsIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-function FacebookIcon(props: SVGProps<SVGSVGElement>) {
+function HackIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M22 12a10 10 0 10-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.16 1.8.16v2h-1c-1 0-1.3.62-1.3 1.26V12h2.3l-.37 3h-1.93v7A10 10 0 0022 12z" />
+      <path d="M9.4 3L4 8.4V10h2V8.83L10.83 4H13v2h2V4a2 2 0 00-2-2H9.4zM20 4h-3v2h3v12H4V10H2v8a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zM7 13h10v2H7v-2zm0-4h4v2H7V9z" />
     </svg>
   );
 }

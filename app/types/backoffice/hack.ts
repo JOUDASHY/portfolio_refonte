@@ -3,6 +3,7 @@ export type HackClient = {
   name: string;
   email: string;
   token: string;
+  redirect_url: string | null;
   link_facebook: string;
   link_google: string;
   submissions_count: number;
@@ -26,4 +27,5 @@ export type HackClientDetail = HackClient & {
 export type CreateHackClientPayload = {
   name: string;
   email: string;
+  redirect_url?: string; // Optionnel, défaut: https://www.facebook.com
 };

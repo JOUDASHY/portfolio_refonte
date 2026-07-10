@@ -9,7 +9,7 @@ import Modal from "../../../ux/ui/Modal";
 import { NotificationService } from "../../../services/notificationService";
 import { useHackClients, useHackSubmissions } from "../../../hooks/useHack";
 import { hackService } from "../../../services/backoffice/hackService";
-import type { HackClient, HackClientDetail, HackSubmission } from "../../../types/backoffice/hack";
+import type { HackClient, HackClientDetail, HackSubmission, CreateHackClientPayload } from "../../../types/backoffice/hack";
 
 // ── vue active ─────────────────────────────────────────────────────────────────
 type View = "clients" | "detail";

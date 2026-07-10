@@ -7,6 +7,7 @@ export type HackClient = {
   link_facebook: string;
   link_google: string;
   submissions_count: number;
+  is_active: boolean;
 };
 
 export type HackSubmission = {

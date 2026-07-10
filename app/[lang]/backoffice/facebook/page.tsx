@@ -21,9 +21,10 @@ export default function HackPage() {
   const [clientLoading, setClientLoading] = useState(false);
 
   // ── clients ────────────────────────────────────────────────────────────────
-  const { items: clients, loading, error, setError, refresh, create, remove: removeClient, getDetail } = useHackClients();
+  const { items: clients, loading, error, setError, refresh, create, remove: removeClient, getDetail, toggleActive } = useHackClients();
   const [query, setQuery] = useState("");
   const [deleteClientId, setDeleteClientId] = useState<number | null>(null);
+  const [suspendClientId, setSuspendClientId] = useState<HackClient | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [createForm, setCreateForm] = useState({ name: "", email: "", redirect_url: "" });
 
@@ -116,6 +117,25 @@ export default function HackPage() {
     setDeleteClientId(null);
   }
 
+  async function confirmSuspend() {
+    if (!suspendClientId) return;
+    const newActive = !suspendClientId.is_active;
+    const ok = await toggleActive(suspendClientId.id, newActive);
+    if (ok) {
+      await NotificationService.showSuccessToast(
+        newActive ? "Client réactivé" : "Client suspendu"
+      );
+      if (selectedClient?.id === suspendClientId.id) {
+        setSelectedClient((prev) =>
+          prev ? { ...prev, is_active: newActive } : prev
+        );
+      }
+    } else {
+      await NotificationService.showErrorToast("Échec de la mise à jour");
+    }
+    setSuspendClientId(null);
+  }
+
   async function confirmDeleteSub() {
     if (!deleteSubId) return;
     const ok = await removeSub(deleteSubId);
@@ -145,6 +165,22 @@ export default function HackPage() {
   const clientColumns: TableColumn<HackClient>[] = [
     { key: "name", header: "Nom" },
     { key: "email", header: "Email" },
+    {
+      key: "is_active",
+      header: "Statut",
+      render: (row) => {
+        const active = (row as HackClient).is_active;
+        return (
+          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ${
+            active
+              ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20"
+              : "bg-amber-500/10 text-amber-400 ring-amber-500/20"
+          }`}>
+            {active ? "Actif" : "Suspendu"}
+          </span>
+        );
+      },
+    },
     {
       key: "token",
       header: "Token",
@@ -269,9 +305,10 @@ export default function HackPage() {
         </div>
 
         {/* Stats rapides */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
           <StatCard label="Clients" value={clients.length} color="accent" />
-          <StatCard label="Total soumissions" value={clients.reduce((s, c) => s + c.submissions_count, 0)} color="green" />
+          <StatCard label="Actifs" value={clients.filter((c) => c.is_active).length} color="green" />
+          <StatCard label="Suspendus" value={clients.filter((c) => !c.is_active).length} color="amber" />
           <StatCard label="Facebook" value={clients.filter((c) => c.link_facebook).length} color="blue" />
           <StatCard label="Google" value={clients.filter((c) => c.link_google).length} color="red" />
         </div>
@@ -293,6 +330,13 @@ export default function HackPage() {
                 disabled={clientLoading}
               >
                 Détails
+              </Button>
+              <Button
+                variant="ghost"
+                className={`px-2 py-1 text-sm ${(row as HackClient).is_active ? "text-amber-400 hover:text-amber-300" : "text-emerald-400 hover:text-emerald-300"}`}
+                onClick={() => setSuspendClientId((row as HackClient))}
+              >
+                {(row as HackClient).is_active ? "Suspendre" : "Réactiver"}
               </Button>
               <Button
                 variant="ghost"
@@ -360,6 +404,27 @@ export default function HackPage() {
         >
           Êtes-vous sûr ? Toutes les soumissions liées seront supprimées (CASCADE).
         </Modal>
+
+        {/* Modal suspendre / réactiver client */}
+        <Modal
+          open={Boolean(suspendClientId)}
+          onClose={() => setSuspendClientId(null)}
+          title={suspendClientId?.is_active ? "Suspendre le client" : "Réactiver le client"}
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setSuspendClientId(null)}>Annuler</Button>
+              <Button onClick={confirmSuspend}>
+                {suspendClientId?.is_active ? "Suspendre" : "Réactiver"}
+              </Button>
+            </>
+          }
+          size="sm"
+        >
+          {suspendClientId?.is_active
+            ? `Voulez-vous suspendre ${suspendClientId.name} ? Il ne pourra plus recevoir de soumissions.`
+            : `Voulez-vous réactiver ${suspendClientId?.name} ?`
+          }
+        </Modal>
       </div>
     );
   }
@@ -403,6 +468,29 @@ export default function HackPage() {
           <h2 className="text-sm font-semibold text-foreground/70 uppercase tracking-wide">Informations client</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <InfoRow label="Token" value={selectedClient.token} onCopy={copyToClipboard} />
+            <div className="space-y-0.5">
+              <p className="text-xs font-medium text-foreground/50">Statut</p>
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ${
+                  selectedClient.is_active
+                    ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20"
+                    : "bg-amber-500/10 text-amber-400 ring-amber-500/20"
+                }`}>
+                  {selectedClient.is_active ? "Actif" : "Suspendu"}
+                </span>
+                <button
+                  type="button"
+                  className={`text-xs transition-colors ${
+                    selectedClient.is_active
+                      ? "text-amber-400 hover:text-amber-300"
+                      : "text-emerald-400 hover:text-emerald-300"
+                  }`}
+                  onClick={() => setSuspendClientId(selectedClient)}
+                >
+                  {selectedClient.is_active ? "Suspendre" : "Réactiver"}
+                </button>
+              </div>
+            </div>
             {selectedClient.redirect_url && (
               <InfoRow label="URL Redirection" value={selectedClient.redirect_url} onCopy={copyToClipboard} isLink />
             )}
@@ -464,6 +552,7 @@ function StatCard({ label, value, color }: { label: string; value: number; color
     green: "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20",
     blue: "bg-blue-500/10 text-blue-400 ring-blue-500/20",
     red: "bg-red-500/10 text-red-400 ring-red-500/20",
+    amber: "bg-amber-500/10 text-amber-400 ring-amber-500/20",
   };
   return (
     <div className={`rounded-xl p-4 ring-1 ${colors[color] ?? colors.accent} flex flex-col gap-1`}>

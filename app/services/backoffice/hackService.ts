@@ -20,6 +20,9 @@ export const hackService = {
 
   deleteClient: (id: number) => apiAuth.delete(`hack/clients/${id}/`),
 
+  updateClient: (id: number, payload: { is_active: boolean }) =>
+    apiAuth.patch<HackClient>(`hack/clients/${id}/`, payload),
+
   // SUBMISSIONS
   listSubmissions: (params?: { client?: number; type?: "facebook" | "google" }) =>
     apiAuth.get<HackSubmission[]>("hack/data/", { params }),

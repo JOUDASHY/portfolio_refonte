@@ -80,7 +80,26 @@ export function useHackClients() {
     }
   }, []);
 
-  return { items, loading, error, setError, refresh, create, remove, getDetail };
+  const toggleActive = useCallback(
+    async (id: number, is_active: boolean) => {
+      setLoading(true);
+      setError(null);
+      try {
+        await hackService.updateClient(id, { is_active });
+        await refresh();
+        return true;
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "Échec de la mise à jour";
+        setError(msg);
+        return false;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [refresh]
+  );
+
+  return { items, loading, error, setError, refresh, create, remove, getDetail, toggleActive };
 }
 
 // ── Hook : toutes les soumissions (avec filtres optionnels) ───────────────────

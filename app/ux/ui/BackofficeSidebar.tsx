@@ -28,14 +28,14 @@ function SidebarLink({ href, label, icon: Icon, active }: {
   return (
     <Link
       href={href}
-      className={`group flex items-center gap-0.5 sm:gap-2 rounded-lg px-1.5 sm:px-3 py-0.5 sm:py-2 text-xs ${active ? "text-black shadow" : "text-white/80 hover:bg-white/10 hover:text-white"
+      className={`group flex items-center gap-2.5 sm:gap-2 rounded-lg px-3 sm:px-3 py-3 sm:py-2 text-sm ${active ? "text-black shadow" : "text-white/80 hover:bg-white/10 hover:text-white"
         }`}
       style={active ? { backgroundColor: '#f68c09' } : {}}
     >
-      <span className={`flex h-4 w-4 sm:h-8 sm:w-8 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
+      <span className={`flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-lg ${active ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"}`}>
         <Icon className="icon-responsive" />
       </span>
-      <span className="text-xs sm:text-xs font-normal leading-tight" style={{ fontSize: '0.625rem' }}>{label}</span>
+      <span className="text-sm sm:text-xs font-normal leading-tight">{label}</span>
     </Link>
   );
 }

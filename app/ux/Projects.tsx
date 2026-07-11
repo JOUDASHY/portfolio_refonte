@@ -144,6 +144,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
   const [isHovered, setIsHovered] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
 
   const allImages = project.images.length > 0 ? project.images : [project.image];
   const total = allImages.length;
@@ -172,14 +173,14 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
       {/* Lightbox Modal */}
       <Modal
         open={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
+        onClose={() => { setLightboxOpen(false); setFullscreen(false); }}
         size="xl"
         className="!p-0 !bg-[#0a0a0a] overflow-hidden"
       >
         <div className="relative flex flex-col items-center justify-center p-6 pt-10">
           {/* Bouton X fermer */}
           <button
-            onClick={() => setLightboxOpen(false)}
+            onClick={() => { setLightboxOpen(false); setFullscreen(false); }}
             className="absolute top-3 right-3 z-20 h-9 w-9 flex items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all"
             aria-label="Fermer"
           >
@@ -187,6 +188,19 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
             </svg>
           </button>
+
+          {/* Bouton fullscreen */}
+          {!fullscreen && (
+            <button
+              onClick={() => setFullscreen(true)}
+              className="absolute top-3 right-14 z-20 h-9 w-9 flex items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all"
+              aria-label="Plein écran"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+              </svg>
+            </button>
+          )}
 
           {/* Image + nav */}
           <div className="relative flex items-center justify-center w-full">
@@ -200,7 +214,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
               alt={`${project.title} ${imgIndex + 1}`}
               width={900}
               height={700}
-              className="object-contain max-h-[65vh] w-auto rounded-lg mx-12"
+              className={`object-contain rounded-lg mx-12 ${fullscreen ? 'max-h-[85vh] max-w-[95vw]' : 'max-h-[65vh] w-auto'}`}
               unoptimized
             />
             {total > 1 && (
@@ -211,7 +225,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
           </div>
 
           {/* Dots */}
-          {total > 1 && (
+          {total > 1 && !fullscreen && (
             <div className="flex gap-1.5 mt-3">
               {allImages.map((_, i) => (
                 <button key={i} onClick={() => setImgIndex(i)}
@@ -221,10 +235,14 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
             </div>
           )}
 
-          <p className="mt-3 text-white font-bold text-lg text-center">{project.title}</p>
-          {total > 1 && <p className="text-white/40 text-xs mt-1">{imgIndex + 1} / {total}</p>}
+          {!fullscreen && (
+            <>
+              <p className="mt-3 text-white font-bold text-lg text-center">{project.title}</p>
+              {total > 1 && <p className="text-white/40 text-xs mt-1">{imgIndex + 1} / {total}</p>}
+            </>
+          )}
 
-          {project.href && (
+          {project.href && !fullscreen && (
             <a
               href={project.href}
               target="_blank"
@@ -234,6 +252,19 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" /></svg>
               {t("projects.view")}
             </a>
+          )}
+
+          {/* Bouton quitter le plein écran */}
+          {fullscreen && (
+            <button
+              onClick={() => setFullscreen(false)}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-medium hover:bg-white/20 transition-all"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+              </svg>
+              Quitter le plein écran
+            </button>
           )}
         </div>
       </Modal>
@@ -271,8 +302,11 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-1 sm:p-1.5 lg:p-2 flex-1 flex flex-col">
+        {/* Content — clic redirige vers la page détail */}
+        <Link
+          href={`/${lang}/projects/${project.id}`}
+          className="p-1 sm:p-1.5 lg:p-2 flex-1 flex flex-col hover:bg-[#000b31]/5 transition-colors duration-200"
+        >
           <h3 className="text-[10px] sm:text-sm text-[#000b31] font-bold tracking-tight line-clamp-1">{project.title}</h3>
 
           {/* Rating Section */}
@@ -294,7 +328,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
                     ? 'bg-[#f68c09] text-[#000b31]'
                     : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
                     } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
-                  onClick={() => handleRating(score)}
+                  onClick={(e) => { e.stopPropagation(); handleRating(score); }}
                   disabled={submitting}
                   title={`Rate ${score} star${score > 1 ? 's' : ''}`}
                 >
@@ -310,28 +344,21 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
 
           {/* Voir projet button */}
           {project.href && (
-            <a
-              href={project.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="mt-1.5 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31] text-white text-[9px] sm:text-xs font-semibold hover:bg-[#f68c09] transition-colors duration-200"
-              onClick={(e) => e.stopPropagation()}
+            <span
+              className="mt-1.5 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31] text-white text-[9px] sm:text-xs font-semibold hover:bg-[#f68c09] transition-colors duration-200 cursor-pointer"
+              onClick={(e) => { e.stopPropagation(); window.open(project.href, '_blank', 'noreferrer,noopener'); }}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" /></svg>
               {t("projects.view")}
-            </a>
+            </span>
           )}
 
-          {/* Détails page */}
-          <Link
-            href={`/${lang}/projects/${project.id}`}
-            className="mt-0.5 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31]/10 text-[#000b31] text-[9px] sm:text-xs font-semibold hover:bg-[#000b31]/20 transition-colors duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
+          {/* Détails */}
+          <span className="mt-0.5 inline-flex items-center justify-center gap-1 w-full py-1 sm:py-1.5 rounded-lg bg-[#000b31]/10 text-[#000b31] text-[9px] sm:text-xs font-semibold">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
             {t("projects.details")}
-          </Link>
-        </div>
+          </span>
+        </Link>
       </div>
     </>
   );

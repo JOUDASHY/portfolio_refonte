@@ -53,6 +53,7 @@ export default function ProjectDetailPage() {
   const [ratingsCount, setRatingsCount] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [ratingError, setRatingError] = useState<string | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -147,8 +148,12 @@ export default function ProjectDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
           {/* Gallery */}
           <div className="space-y-3">
-            {/* Main image */}
-            <div className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#f5f7ff] border border-[#000b31]/10 shadow-md sm:shadow-lg" style={{ minHeight: "220px" }}>
+            {/* Main image — clic ouvre plein écran */}
+            <div
+              className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#f5f7ff] border border-[#000b31]/10 shadow-md sm:shadow-lg cursor-zoom-in"
+              style={{ minHeight: "220px" }}
+              onClick={() => setFullscreen(true)}
+            >
               <Image
                 src={allImages[imgIndex]}
                 alt={`${project.nom} ${imgIndex + 1}`}
@@ -160,13 +165,13 @@ export default function ProjectDetailPage() {
               {total > 1 && (
                 <>
                   <button
-                    onClick={() => setImgIndex((i) => (i - 1 + total) % total)}
+                    onClick={(e) => { e.stopPropagation(); setImgIndex((i) => (i - 1 + total) % total); }}
                     className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 sm:h-10 sm:w-10 flex items-center justify-center rounded-full bg-white/80 text-[#000b31] shadow hover:bg-white transition-all"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 sm:h-5 sm:w-5"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></svg>
                   </button>
                   <button
-                    onClick={() => setImgIndex((i) => (i + 1) % total)}
+                    onClick={(e) => { e.stopPropagation(); setImgIndex((i) => (i + 1) % total); }}
                     className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 sm:h-10 sm:w-10 flex items-center justify-center rounded-full bg-white/80 text-[#000b31] shadow hover:bg-white transition-all"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 sm:h-5 sm:w-5"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /></svg>
@@ -177,6 +182,72 @@ export default function ProjectDetailPage() {
                 </>
               )}
             </div>
+
+            {/* Fullscreen overlay */}
+            {fullscreen && (
+              <div
+                className="fixed inset-0 z-50 bg-[#0a0a0a] flex flex-col items-center justify-center"
+                onClick={() => setFullscreen(false)}
+              >
+                {/* Bouton fermer */}
+                <button
+                  onClick={() => setFullscreen(false)}
+                  className="absolute top-4 right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                  </svg>
+                </button>
+
+                {/* Image + nav */}
+                <div className="relative flex items-center justify-center w-full h-full" onClick={(e) => e.stopPropagation()}>
+                  {total > 1 && (
+                    <button
+                      onClick={() => setImgIndex((i) => (i - 1 + total) % total)}
+                      className="absolute left-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-all"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></svg>
+                    </button>
+                  )}
+                  <Image
+                    src={allImages[imgIndex]}
+                    alt={`${project.nom} ${imgIndex + 1}`}
+                    width={1200}
+                    height={900}
+                    className="object-contain max-h-[85vh] max-w-[95vw] rounded-lg"
+                    unoptimized
+                  />
+                  {total > 1 && (
+                    <button
+                      onClick={() => setImgIndex((i) => (i + 1) % total)}
+                      className="absolute right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-all"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /></svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* Dots */}
+                {total > 1 && (
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {allImages.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setImgIndex(i)}
+                        className={`h-2 rounded-full transition-all ${i === imgIndex ? 'w-5 bg-[#f68c09]' : 'w-2 bg-white/30'}`}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Compteur */}
+                {total > 1 && (
+                  <p className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/40 text-xs">
+                    {imgIndex + 1} / {total}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Thumbnails */}
             {total > 1 && (

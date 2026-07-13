@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AssistantService } from "../../../../services/assistantService";
+import { AssistantService } from "../../../services/assistantService";
 
 export default function AssistantPage() {
   const [question, setQuestion] = useState("");

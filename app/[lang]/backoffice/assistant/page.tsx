@@ -547,7 +547,7 @@ export default function AssistantPage() {
                       : "bg-white/[0.02] border-y border-white/[0.04]"
                   }`}
                 >
-                  <div className="max-w-3xl mx-auto">
+                  <div className="w-full">
                     {msg.role === "user" ? (
                       <div className="flex justify-end">
                         <div className="max-w-[80%] bg-accent/15 border border-accent/20 rounded-2xl rounded-br-sm px-4 py-3">
@@ -577,7 +577,7 @@ export default function AssistantPage() {
               {/* Typing */}
               {sending && (
                 <div className="px-4 sm:px-6 py-4 bg-white/[0.02] border-y border-white/[0.04]">
-                  <div className="max-w-3xl mx-auto flex gap-3">
+                  <div className="w-full flex gap-3">
                     <BotAvatar />
                     <div className="flex-1">
                       <p className="text-[11px] font-semibold text-accent/60 mb-3 uppercase tracking-wider">Assistant</p>

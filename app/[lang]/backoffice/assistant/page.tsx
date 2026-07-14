@@ -96,14 +96,51 @@ function LetterBlock({ children, rawText }: { children: React.ReactNode; rawText
 function extractText(node: any): string {
   if (!node) return "";
   if (node.type === "text") return node.value ?? "";
-  if (node.children) return node.children.map(extractText).join("");
-  return "";
+  
+  const childrenText = node.children ? node.children.map(extractText).join("") : "";
+  
+  switch (node.type) {
+    case "paragraph":
+      return childrenText + "\n\n";
+    case "heading":
+      return childrenText + "\n\n";
+    case "listItem":
+      return "• " + childrenText + "\n";
+    case "list":
+      return childrenText + "\n";
+    case "blockquote":
+      return childrenText;
+    default:
+      return childrenText;
+  }
+}
+
+function preprocessContent(text: string): string {
+  if (!text) return "";
+
+  let result = text;
+  
+  // Remplacer les guillemets français et smart par des guillemets normaux
+  result = result.replace(/[«“]([\s\S]{80,}?)[»”]/g, '"$1"');
+  
+  // Trouver les blocs de textes de plus de 80 caractères entourés de guillemets contenant au moins un retour à la ligne
+  result = result.replace(/"([\s\S]{80,}?)"/g, (match, p1) => {
+    if (!p1.includes("\n")) return match;
+    const blockquoted = p1
+      .split("\n")
+      .map((line: string) => `> ${line}`)
+      .join("\n");
+    return `\n\n${blockquoted}\n\n`;
+  });
+
+  return result;
 }
 
 /* ═══════════════════════════════════════════════════════════
    MARKDOWN RENDERER
 ═══════════════════════════════════════════════════════════ */
 function MarkdownMessage({ content }: { content: string }) {
+  const processed = preprocessContent(content);
   return (
     <ReactMarkdown
       components={{
@@ -132,8 +169,8 @@ function MarkdownMessage({ content }: { content: string }) {
           </li>
         ),
         code: ({ children, className }) => {
-          const isBlock = !!className?.includes("language-");
           const text = String(children).replace(/\n$/, "");
+          const isBlock = !!className?.includes("language-") || text.includes("\n");
           if (isBlock) return <CodeBlock language={className}>{text}</CodeBlock>;
           return (
             <code className="bg-white/10 border border-white/10 rounded px-1.5 py-0.5 text-xs font-mono text-accent/90">
@@ -143,7 +180,7 @@ function MarkdownMessage({ content }: { content: string }) {
         },
         pre: ({ children }) => <>{children}</>,
         blockquote: ({ children, node }) => {
-          const rawText = node ? extractText(node) : String(children);
+          const rawText = node ? extractText(node).trim() : String(children).trim();
           return <LetterBlock rawText={rawText}>{children}</LetterBlock>;
         },
         hr: () => <hr className="border-white/10 my-4" />,
@@ -167,7 +204,7 @@ function MarkdownMessage({ content }: { content: string }) {
         ),
       }}
     >
-      {content}
+      {processed}
     </ReactMarkdown>
   );
 }

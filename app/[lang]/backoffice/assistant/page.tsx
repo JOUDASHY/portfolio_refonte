@@ -7,6 +7,7 @@ import {
   ChatMessage,
   Conversation,
 } from "../../../services/assistantService";
+import Modal from "../../../ux/ui/Modal";
 
 /* ═══════════════════════════════════════════════════════════
    COPY BUTTON
@@ -305,6 +306,8 @@ export default function AssistantPage() {
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
+  const [jobOfferText, setJobOfferText] = useState("");
 
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -343,6 +346,52 @@ export default function AssistantPage() {
     setActiveConvId(null);
     setMessages([]);
     inputRef.current?.focus();
+  }
+
+  const handleSuggestionClick = (s: string) => {
+    if (s === "Rédigez-moi un message pour répondre à une offre d'emploi") {
+      setIsOfferModalOpen(true);
+    } else {
+      setQuestion(s);
+      inputRef.current?.focus();
+    }
+  };
+
+  async function handleGenerateFromOffer() {
+    if (!jobOfferText.trim() || sending) return;
+    setIsOfferModalOpen(false);
+
+    const rawOffer = jobOfferText.trim();
+    const formattedPrompt = `Voici une offre d'emploi à laquelle je souhaite postuler :\n\n${rawOffer}\n\nEn te basant sur mon CV, rédige-moi un message d'accompagnement/de motivation sur-mesure pour postuler à cette offre (mail, message LinkedIn ou lettre de motivation). Fais ressortir mes compétences les plus pertinentes pour ce poste.`;
+
+    const userMsg: ChatMessage = { role: "user", content: `Rédigez-moi un message pour répondre à cette offre d'emploi :\n\n${rawOffer}` };
+    setMessages((prev) => [...prev, userMsg]);
+    setJobOfferText("");
+    setSending(true);
+
+    try {
+      const res = await AssistantService.chat(formattedPrompt, activeConvId ?? undefined);
+
+      if (!activeConvId) {
+        setActiveConvId(res.conversation_id);
+        AssistantService.getConversations().then(setConversations).catch(() => {});
+      } else {
+        setConversations((prev) =>
+          prev.map((c) =>
+            c.id === activeConvId ? { ...c, message_count: c.message_count + 2 } : c
+          )
+        );
+      }
+
+      setMessages((prev) => [...prev, { role: "assistant", content: res.reponse }]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Erreur : impossible de contacter l'assistant." },
+      ]);
+    } finally {
+      setSending(false);
+    }
   }
 
   /* ── Envoyer un message ── */
@@ -504,7 +553,7 @@ export default function AssistantPage() {
 
               {/* Suggestion vedette */}
               <button
-                onClick={() => { setQuestion("Rédigez-moi un message pour répondre à une offre d'emploi"); inputRef.current?.focus(); }}
+                onClick={() => handleSuggestionClick("Rédigez-moi un message pour répondre à une offre d'emploi")}
                 className="group flex items-center gap-3 rounded-xl border border-accent/25 bg-accent/5 px-4 py-3.5 text-left hover:border-accent/50 hover:bg-accent/10 transition-all max-w-sm w-full"
               >
                 <span className="shrink-0 w-9 h-9 rounded-lg bg-accent/15 border border-accent/20 flex items-center justify-center group-hover:bg-accent/25 transition-colors">
@@ -527,7 +576,7 @@ export default function AssistantPage() {
               <div className="flex flex-wrap justify-center gap-2 max-w-lg">
                 {suggestions.slice(0, 4).map((s) => (
                   <button key={s}
-                    onClick={() => { setQuestion(s); inputRef.current?.focus(); }}
+                    onClick={() => handleSuggestionClick(s)}
                     className="text-xs rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-foreground/60 hover:border-accent/30 hover:text-foreground hover:bg-accent/5 transition-all"
                   >
                     {s}
@@ -604,7 +653,7 @@ export default function AssistantPage() {
             <div className="flex flex-wrap gap-1.5 mb-2.5">
               {suggestions.map((s) => (
                 <button key={s}
-                  onClick={() => { setQuestion(s); inputRef.current?.focus(); }}
+                  onClick={() => handleSuggestionClick(s)}
                   className="text-xs rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-foreground/50 hover:border-accent/30 hover:text-foreground hover:bg-accent/5 transition-all"
                 >
                   {s}
@@ -639,9 +688,6 @@ export default function AssistantPage() {
               </svg>
             </button>
           </div>
-          <p className="text-center text-[10px] text-foreground/20 mt-2">
-            Les conversations sont sauvegardées automatiquement · L&apos;assistant peut faire des erreurs
-          </p>
         </div>
       </div>
 
@@ -693,6 +739,48 @@ export default function AssistantPage() {
           )}
         </div>
       </aside>
+
+      {/* Modal pour coller l'offre d'emploi */}
+      <Modal
+        open={isOfferModalOpen}
+        onClose={() => setIsOfferModalOpen(false)}
+        title="Répondre à une offre d'emploi"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-xs text-foreground/60 leading-relaxed">
+            Collez la description ou le texte de l&apos;offre d&apos;emploi ci-dessous. L&apos;assistant va générer un message d&apos;accompagnement personnalisé (mail, lettre ou message LinkedIn) basé sur votre profil et votre CV.
+          </p>
+          <textarea
+            value={jobOfferText}
+            onChange={(e) => setJobOfferText(e.target.value)}
+            placeholder="Exemple : Karytis IT recrute un(e) DevOps Java Full Stack... (Collez toute la description de poste ici)"
+            className="w-full min-h-[250px] resize-y rounded-xl border border-white/10 bg-black/30 p-4 text-sm text-foreground placeholder-foreground/30 focus:outline-none focus:ring-1 focus:ring-accent/40 leading-relaxed font-sans"
+          />
+          <div className="flex justify-end gap-2.5">
+            <button
+              onClick={() => setIsOfferModalOpen(false)}
+              className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-foreground/75 hover:bg-white/10 hover:text-foreground transition-all"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={handleGenerateFromOffer}
+              disabled={sending || !jobOfferText.trim()}
+              className="rounded-lg bg-accent px-4 py-2 text-xs font-bold text-white shadow-lg shadow-accent/25 hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
+            >
+              {sending ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                  Génération...
+                </>
+              ) : (
+                "Générer la réponse"
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

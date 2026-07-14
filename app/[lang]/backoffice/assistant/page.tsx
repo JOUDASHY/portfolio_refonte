@@ -399,7 +399,7 @@ export default function AssistantPage() {
     setIsOfferModalOpen(false);
 
     const rawOffer = jobOfferText.trim();
-    const formattedPrompt = `Voici une offre d'emploi à laquelle je souhaite postuler :\n\n${rawOffer}\n\nEn te basant sur mon CV, rédige-moi un message d'accompagnement/de motivation sur-mesure pour postuler à cette offre (mail, message LinkedIn ou lettre de motivation). Fais ressortir mes compétences les plus pertinentes pour ce poste.`;
+    const formattedPrompt = `Voici une offre d'emploi à laquelle je souhaite postuler :\n\n${rawOffer}\n\nEn te basant sur mon CV, rédige-moi un message d'accompagnement/de motivation sur-mesure pour postuler à cette offre (mail, message LinkedIn ou lettre de motivation). Fais ressortir mes compétences les plus pertinentes pour ce poste. Réponds en 100 mots maximum, de façon très concise et percutante.`;
 
     const userMsg: ChatMessage = { role: "user", content: `Rédigez-moi un message pour répondre à cette offre d'emploi :\n\n${rawOffer}` };
     setMessages((prev) => [...prev, userMsg]);

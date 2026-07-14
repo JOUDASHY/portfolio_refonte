@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { AssistantService } from "../../../services/assistantService";
+import { AssistantService, ChatMessage } from "../../../services/assistantService";
 
 /* ── Markdown renderer for assistant messages ─────────────────── */
 function MarkdownMessage({ content }: { content: string }) {
@@ -112,9 +112,27 @@ function BotAvatar() {
 /* ── Page ─────────────────────────────────────────────────────── */
 export default function AssistantPage() {
   const [question, setQuestion] = useState("");
-  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chargement, setChargement] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
+
+  /* ── Charger l'historique depuis la BDD au montage ── */
+  useEffect(() => {
+    async function loadHistory() {
+      try {
+        const history = await AssistantService.getHistory();
+        if (history.length > 0) {
+          setMessages(history);
+        }
+      } catch {
+        // Pas connecté ou pas d'historique → état vide normal
+      } finally {
+        setHistoryLoading(false);
+      }
+    }
+    loadHistory();
+  }, []);
 
   useEffect(() => {
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -124,7 +142,7 @@ export default function AssistantPage() {
     e.preventDefault();
     if (!question.trim()) return;
 
-    const nouveauMessage = { role: "user" as const, content: question };
+    const nouveauMessage: ChatMessage = { role: "user", content: question };
     setMessages((prev) => [...prev, nouveauMessage]);
     setQuestion("");
     setChargement(true);
@@ -148,6 +166,7 @@ export default function AssistantPage() {
     "Parle-moi de ses expériences",
     "Quels projets a-t-il réalisé ?",
     "Quelle est sa formation ?",
+    "Rédigez-moi un message pour répondre à une offre d'emploi",
   ];
 
   return (
@@ -172,7 +191,7 @@ export default function AssistantPage() {
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
               <path d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12z" />
             </svg>
-            Effacer
+            Effacer la session
           </button>
         )}
       </div>
@@ -181,8 +200,17 @@ export default function AssistantPage() {
       <div className="flex-1 rounded-xl border border-white/10 bg-white/5 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
 
-          {/* Empty state */}
-          {messages.length === 0 ? (
+          {/* History loading skeleton */}
+          {historyLoading ? (
+            <div className="h-full flex flex-col items-center justify-center gap-3 text-foreground/40">
+              <span className="flex gap-1">
+                <span className="w-2 h-2 rounded-full bg-foreground/30 animate-bounce" />
+                <span className="w-2 h-2 rounded-full bg-foreground/30 animate-bounce" style={{ animationDelay: "0.2s" }} />
+                <span className="w-2 h-2 rounded-full bg-foreground/30 animate-bounce" style={{ animationDelay: "0.4s" }} />
+              </span>
+              <p className="text-xs">Chargement de l&apos;historique...</p>
+            </div>
+          ) : messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center gap-6 text-foreground/60">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center">
@@ -195,6 +223,27 @@ export default function AssistantPage() {
                   <p className="text-sm mt-1">Posez votre première question ci-dessous</p>
                 </div>
               </div>
+
+              {/* Featured action suggestion */}
+              <button
+                onClick={() => setQuestion("Rédigez-moi un message pour répondre à une offre d'emploi")}
+                className="group flex items-center gap-3 rounded-xl border border-accent/25 bg-accent/5 px-4 py-3 text-left hover:border-accent/50 hover:bg-accent/10 transition-all duration-200 max-w-sm w-full"
+              >
+                <span className="shrink-0 w-8 h-8 rounded-lg bg-accent/15 border border-accent/20 flex items-center justify-center group-hover:bg-accent/25 transition-colors">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-accent">
+                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                  </svg>
+                </span>
+                <div>
+                  <p className="text-xs font-semibold text-accent">✦ Suggestion</p>
+                  <p className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">
+                    Rédigez-moi un message pour répondre à une offre d&apos;emploi
+                  </p>
+                </div>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-foreground/30 group-hover:text-accent/60 ml-auto shrink-0 transition-colors">
+                  <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+                </svg>
+              </button>
 
               {/* Suggestion chips */}
               <div className="flex flex-wrap justify-center gap-2 max-w-md">

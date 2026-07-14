@@ -427,57 +427,11 @@ export default function AssistantPage() {
      RENDER
   ════════════════════════════════════════════════════════ */
   return (
-    <div className="flex h-[calc(100vh-8rem)] overflow-hidden rounded-xl border border-white/10 bg-[#080e1c]">
+    <div className="flex h-[calc(100vh-8rem)] overflow-hidden">
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR
       ══════════════════════════════════════════════════ */}
-      <aside
-        className={`flex flex-col border-r border-white/10 bg-white/[0.02] transition-all duration-300 ${
-          sidebarOpen ? "w-64 min-w-[200px]" : "w-0 overflow-hidden"
-        }`}
-      >
-        {/* Sidebar header */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
-          <span className="text-xs font-bold text-foreground/50 uppercase tracking-wider">Conversations</span>
-          <button
-            onClick={newConversation}
-            title="Nouvelle conversation"
-            className="w-7 h-7 rounded-lg bg-accent/15 border border-accent/25 hover:bg-accent/25 transition-colors flex items-center justify-center"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-accent">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Conversations list */}
-        <div className="flex-1 overflow-y-auto py-2 px-2 space-y-0.5">
-          {loadingConvs ? (
-            <div className="flex flex-col gap-2 p-2 pt-4">
-              {[80, 65, 90, 55].map((w, i) => (
-                <div key={i} className="h-8 rounded-lg bg-white/5 animate-pulse" style={{ width: `${w}%` }} />
-              ))}
-            </div>
-          ) : conversations.length === 0 ? (
-            <p className="text-xs text-foreground/30 text-center py-8 px-4">
-              Aucune conversation.<br />Commencez à écrire !
-            </p>
-          ) : (
-            conversations.map((conv) => (
-              <ConvItem
-                key={conv.id}
-                conv={conv}
-                active={conv.id === activeConvId}
-                onSelect={() => selectConv(conv.id)}
-                onDelete={() => deleteConv(conv.id)}
-                onRename={(title) => renameConv(conv.id, title)}
-              />
-            ))
-          )}
-        </div>
-      </aside>
-
       {/* ══════════════════════════════════════════════════
           ZONE PRINCIPALE
       ══════════════════════════════════════════════════ */}
@@ -690,6 +644,56 @@ export default function AssistantPage() {
           </p>
         </div>
       </div>
+
+      {/* ══════════════════════════════════════════════════
+          SIDEBAR — droite
+      ══════════════════════════════════════════════════ */}
+      <aside
+        className={`flex flex-col border-l border-white/10 bg-white/[0.02] transition-all duration-300 overflow-hidden ${
+          sidebarOpen ? "w-64 min-w-[200px]" : "w-0"
+        }`}
+      >
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
+          <span className="text-xs font-bold text-foreground/50 uppercase tracking-wider">Conversations</span>
+          <button
+            onClick={newConversation}
+            title="Nouvelle conversation"
+            className="w-7 h-7 rounded-lg bg-accent/15 border border-accent/25 hover:bg-accent/25 transition-colors flex items-center justify-center"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-accent">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Conversations list */}
+        <div className="flex-1 overflow-y-auto py-2 px-2 space-y-0.5">
+          {loadingConvs ? (
+            <div className="flex flex-col gap-2 p-2 pt-4">
+              {[80, 65, 90, 55].map((w, i) => (
+                <div key={i} className="h-8 rounded-lg bg-white/5 animate-pulse" style={{ width: `${w}%` }} />
+              ))}
+            </div>
+          ) : conversations.length === 0 ? (
+            <p className="text-xs text-foreground/30 text-center py-8 px-4">
+              Aucune conversation.<br />Commencez à écrire !
+            </p>
+          ) : (
+            conversations.map((conv) => (
+              <ConvItem
+                key={conv.id}
+                conv={conv}
+                active={conv.id === activeConvId}
+                onSelect={() => selectConv(conv.id)}
+                onDelete={() => deleteConv(conv.id)}
+                onRename={(title) => renameConv(conv.id, title)}
+              />
+            ))
+          )}
+        </div>
+      </aside>
     </div>
   );
 }
+

@@ -363,9 +363,17 @@ export default function AssistantPage() {
       else setSidebarOpen(true);
     };
 
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+
     onResize();
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, []);
 
   /* ── Auto-scroll ── */
@@ -381,6 +389,7 @@ export default function AssistantPage() {
   /* ── Sélectionner une conversation ── */
   async function selectConv(id: number) {
     if (id === activeConvId) return;
+    if (window.innerWidth < 768) setSidebarOpen(false);
     setActiveConvId(id);
     setMessages([]);
     setLoadingMsgs(true);
@@ -755,6 +764,15 @@ export default function AssistantPage() {
           </div>
         </div>
       </div>
+
+      {sidebarOpen && (
+        <button
+          type="button"
+          aria-label="Fermer l’historique"
+          className="absolute inset-0 z-20 bg-black/30 backdrop-blur-[1px] md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR — droite

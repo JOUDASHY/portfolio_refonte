@@ -37,9 +37,9 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
-      <div className="lg:pl-64">
+      <div className="lg:pl-64 min-h-screen">
         <BackofficeNavbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <main className={isAssistantPage ? "p-0 pt-0 lg:pt-0" : "p-6 pt-20 lg:pt-20"}>{children}</main>
+        <main className={isAssistantPage ? "h-[calc(100vh-3rem)] overflow-hidden" : "p-6 pt-20 lg:pt-20"}>{children}</main>
       </div>
     </div>
   );

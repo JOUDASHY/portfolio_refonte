@@ -538,7 +538,7 @@ export default function AssistantPage() {
      RENDER
   ════════════════════════════════════════════════════════ */
   return (
-    <div className="relative flex h-full w-full overflow-hidden rounded-none border-0 bg-transparent shadow-none">
+    <div className="relative flex h-full w-full overflow-hidden rounded-none border-0 bg-transparent shadow-none pt-14 sm:pt-14">
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR
@@ -619,7 +619,7 @@ export default function AssistantPage() {
                   </svg>
                 </div>
                 <div className="text-center">
-                  <p className="text-base font-semibold text-foreground/80">Assistant CV</p>
+                  <p className="text-base font-semibold text-foreground/80">Assistant IA</p>
                   <p className="text-sm mt-1 text-foreground/50">Posez votre première question</p>
                 </div>
               </div>

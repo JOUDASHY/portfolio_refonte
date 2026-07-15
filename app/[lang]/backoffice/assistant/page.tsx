@@ -538,7 +538,7 @@ export default function AssistantPage() {
      RENDER
   ════════════════════════════════════════════════════════ */
   return (
-    <div className="relative flex h-[calc(100dvh-8rem)] sm:h-[calc(100vh-8rem)] overflow-hidden">
+    <div className="relative flex h-[calc(100dvh-4rem)] sm:h-[calc(100vh-3rem)] overflow-hidden rounded-[28px] border assistant-border assistant-surface shadow-2xl shadow-black/10">
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR
@@ -549,7 +549,7 @@ export default function AssistantPage() {
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Top bar */}
-        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b assistant-border assistant-surface-muted">
+        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 sm:py-4 border-b assistant-border assistant-surface-muted">
           <button
             onClick={() => setSidebarOpen((v) => !v)}
             title={sidebarOpen ? "Masquer le panneau" : "Afficher le panneau"}
@@ -611,7 +611,7 @@ export default function AssistantPage() {
 
           ) : messages.length === 0 ? (
             /* ── Empty state ── */
-            <div className="h-full flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 sm:px-6 text-foreground/60">
+            <div className="h-full flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 sm:px-8 lg:px-12 text-foreground/60">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-accent/70">
@@ -627,7 +627,7 @@ export default function AssistantPage() {
               {/* Suggestion vedette */}
               <button
                 onClick={() => handleSuggestionClick("Rédigez-moi un message pour répondre à une offre d'emploi")}
-                className="group flex items-center gap-3 rounded-xl border border-accent/25 bg-accent/5 px-4 py-3.5 text-left hover:border-accent/50 hover:bg-accent/10 transition-all max-w-sm w-full"
+                className="group flex items-center gap-3 rounded-2xl border border-accent/25 bg-accent/5 px-4 sm:px-5 py-4 sm:py-5 text-left hover:border-accent/50 hover:bg-accent/10 transition-all max-w-lg w-full"
               >
                 <span className="shrink-0 w-9 h-9 rounded-lg bg-accent/15 border border-accent/20 flex items-center justify-center group-hover:bg-accent/25 transition-colors">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-accent">
@@ -660,10 +660,10 @@ export default function AssistantPage() {
 
           ) : (
             /* ── Messages ── */
-            <div className="py-4 space-y-0">
+            <div className="py-4 sm:py-6 space-y-0">
               {messages.map((msg, i) => (
                 <div key={i}
-                  className={`px-3 sm:px-6 py-3 sm:py-4 ${
+                  className={`px-3 sm:px-8 lg:px-10 py-3 sm:py-5 ${
                     msg.role === "user"
                       ? "bg-transparent"
                       : "assistant-surface-muted border-y assistant-border"
@@ -721,9 +721,9 @@ export default function AssistantPage() {
         </div>
 
         {/* ── Input ── */}
-        <div className="sticky bottom-0 z-10 shrink-0 px-3 sm:px-4 pb-3 sm:pb-4 pt-2.5 sm:pt-3 border-t assistant-border assistant-surface-muted bg-background/95 backdrop-blur">
+        <div className="sticky bottom-0 z-10 shrink-0 px-2 sm:px-3 pb-2 sm:pb-2 pt-2 border-t assistant-border assistant-surface-muted bg-background/95 backdrop-blur">
           {!loadingMsgs && messages.length > 0 && messages.length < 4 && (
-            <div className="flex flex-wrap gap-1.5 mb-2.5">
+            <div className="flex flex-wrap gap-1.5 mb-1.5">
               {suggestions.map((s) => (
                 <button key={s}
                   onClick={() => handleSuggestionClick(s)}
@@ -735,7 +735,7 @@ export default function AssistantPage() {
             </div>
           )}
 
-          <div className="relative rounded-2xl border assistant-border assistant-input focus-within:border-accent/40 transition-all duration-200 shadow-lg">
+          <div className="relative rounded-xl border assistant-border assistant-input focus-within:border-accent/40 transition-all duration-200 shadow-sm">
             <textarea
               ref={inputRef}
               rows={1}
@@ -745,13 +745,13 @@ export default function AssistantPage() {
               placeholder="Envoyer un message… (Entrée pour envoyer, Maj+Entrée = nouvelle ligne)"
               disabled={sending}
               autoFocus
-              className="w-full resize-none bg-transparent px-3 sm:px-5 py-3 sm:py-4 pr-12 sm:pr-16 text-sm text-foreground placeholder-foreground/30 focus:outline-none leading-relaxed max-h-40 overflow-y-auto"
-              style={{ minHeight: "52px" }}
+              className="w-full resize-none bg-transparent px-3 sm:px-4 py-2.5 sm:py-3 pr-12 sm:pr-14 text-sm text-foreground placeholder-foreground/30 focus:outline-none leading-relaxed max-h-40 overflow-y-auto"
+              style={{ minHeight: "44px" }}
             />
             <button
               onClick={() => envoyer()}
               disabled={sending || !question.trim()}
-              className={`absolute right-2 sm:right-3 bottom-2 sm:bottom-3 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+              className={`absolute right-1.5 sm:right-2 bottom-1.5 sm:bottom-1.5 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
                 question.trim() && !sending
                   ? "bg-accent hover:brightness-110 shadow-lg shadow-accent/25"
                   : "bg-white/10 opacity-40 cursor-not-allowed"

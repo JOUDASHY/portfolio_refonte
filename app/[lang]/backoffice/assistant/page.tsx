@@ -538,7 +538,7 @@ export default function AssistantPage() {
      RENDER
   ════════════════════════════════════════════════════════ */
   return (
-    <div className="relative flex h-[calc(100dvh-3.5rem)] sm:h-[calc(100vh-3.5rem)] w-full overflow-hidden rounded-none border-0 bg-transparent shadow-none">
+    <div className="relative flex h-[calc(100dvh-3rem)] sm:h-[calc(100vh-3rem)] w-full overflow-hidden rounded-none border-0 bg-transparent shadow-none">
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR
@@ -721,7 +721,7 @@ export default function AssistantPage() {
         </div>
 
         {/* ── Input ── */}
-        <div className="sticky bottom-0 z-10 shrink-0 px-2 sm:px-3 pb-2 sm:pb-2 pt-2 border-t assistant-border assistant-surface-muted bg-background/95 backdrop-blur">
+        <div className="sticky bottom-0 z-10 shrink-0 px-1.5 sm:px-2 pb-1.5 sm:pb-1.5 pt-1.5 border-t assistant-border assistant-surface-muted bg-background/95 backdrop-blur">
           {!loadingMsgs && messages.length > 0 && messages.length < 4 && (
             <div className="flex flex-wrap gap-1.5 mb-1.5">
               {suggestions.map((s) => (
@@ -735,7 +735,7 @@ export default function AssistantPage() {
             </div>
           )}
 
-          <div className="relative rounded-xl border assistant-border assistant-input focus-within:border-accent/40 transition-all duration-200 shadow-sm">
+          <div className="relative rounded-lg border assistant-border assistant-input focus-within:border-accent/40 transition-all duration-200 shadow-sm">
             <textarea
               ref={inputRef}
               rows={1}
@@ -745,13 +745,13 @@ export default function AssistantPage() {
               placeholder="Envoyer un message… (Entrée pour envoyer, Maj+Entrée = nouvelle ligne)"
               disabled={sending}
               autoFocus
-              className="w-full resize-none bg-transparent px-3 sm:px-4 py-2.5 sm:py-3 pr-12 sm:pr-14 text-sm text-foreground placeholder-foreground/30 focus:outline-none leading-relaxed max-h-40 overflow-y-auto"
-              style={{ minHeight: "44px" }}
+              className="w-full resize-none bg-transparent px-3 sm:px-4 py-2 sm:py-2.5 pr-12 sm:pr-14 text-sm text-foreground placeholder-foreground/30 focus:outline-none leading-relaxed max-h-40 overflow-y-auto"
+              style={{ minHeight: "40px" }}
             />
             <button
               onClick={() => envoyer()}
               disabled={sending || !question.trim()}
-              className={`absolute right-1.5 sm:right-2 bottom-1.5 sm:bottom-1.5 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+              className={`absolute right-1.5 sm:right-2 bottom-1.5 sm:bottom-1.5 w-8 h-8 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                 question.trim() && !sending
                   ? "bg-accent hover:brightness-110 shadow-lg shadow-accent/25"
                   : "bg-white/10 opacity-40 cursor-not-allowed"

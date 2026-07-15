@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { prospectService } from "../services/backoffice/prospectService";
 import type {
   Prospect,
@@ -15,6 +15,7 @@ export function useProspects() {
   const [items, setItems] = useState<Prospect[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const itemsRef = useRef<Prospect[]>([]);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -28,6 +29,10 @@ export function useProspects() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   useEffect(() => {
     refresh();
@@ -79,15 +84,26 @@ export function useProspects() {
   }, [refresh]);
 
   const updateStatus = useCallback(async (id: number, status: string) => {
+    const previousItems = itemsRef.current;
+
+    setItems((prev) => {
+      const next = prev.map((item) =>
+        item.id === id ? { ...item, status: status as Prospect["status"] } : item
+      );
+      itemsRef.current = next;
+      return next;
+    });
+
     try {
       await prospectService.updateStatus(id, status);
-      await refresh();
       return true;
     } catch (e: unknown) {
+      setItems(previousItems);
+      itemsRef.current = previousItems;
       setError(e instanceof Error ? e.message : "Échec de la mise à jour du statut");
       return false;
     }
-  }, [refresh]);
+  }, []);
 
   const getDetail = useCallback(async (id: number): Promise<ProspectDetail | null> => {
     try {

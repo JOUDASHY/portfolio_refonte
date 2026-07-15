@@ -538,7 +538,7 @@ export default function AssistantPage() {
      RENDER
   ════════════════════════════════════════════════════════ */
   return (
-    <div className="relative flex h-[calc(100dvh-3rem)] sm:h-[calc(100vh-3rem)] w-full overflow-hidden rounded-none border-0 bg-transparent shadow-none">
+    <div className="relative flex  sm:h-[calc(100vh-3rem)] w-full overflow-hidden rounded-none border-0 bg-transparent shadow-none">
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR

@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import type { SVGProps } from "react";
+import { usePathname } from "next/navigation";
 import BackofficeSidebar from "../../ux/ui/BackofficeSidebar";
 import BackofficeNavbar from "../../ux/ui/BackofficeNavbar";
 
 export default function BackofficeLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const isAssistantPage = pathname?.includes("/backoffice/assistant");
   const links = [
     { href: "dashboard", label: "Accueil", icon: HomeIcon, match: "/backoffice/dashboard" },
     { href: "prospects", label: "Prospection", icon: ProspectIcon, match: "/backoffice/prospects" },
@@ -36,7 +39,7 @@ export default function BackofficeLayout({ children }: { children: React.ReactNo
       />
       <div className="lg:pl-64">
         <BackofficeNavbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <main className="p-6 pt-20 lg:pt-20">{children}</main>
+        <main className={isAssistantPage ? "p-0 pt-0 lg:pt-0" : "p-6 pt-20 lg:pt-20"}>{children}</main>
       </div>
     </div>
   );

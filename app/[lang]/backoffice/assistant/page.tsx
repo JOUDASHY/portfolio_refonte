@@ -342,7 +342,7 @@ export default function AssistantPage() {
   const [sending, setSending] = useState(false);
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
   const [jobOfferText, setJobOfferText] = useState("");
 
@@ -357,10 +357,26 @@ export default function AssistantPage() {
       .finally(() => setLoadingConvs(false));
   }, []);
 
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth < 768) setSidebarOpen(false);
+      else setSidebarOpen(true);
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   /* ── Auto-scroll ── */
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, sending]);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => inputRef.current?.focus(), 100);
+    return () => window.clearTimeout(id);
+  }, []);
 
   /* ── Sélectionner une conversation ── */
   async function selectConv(id: number) {
@@ -513,7 +529,7 @@ export default function AssistantPage() {
      RENDER
   ════════════════════════════════════════════════════════ */
   return (
-    <div className="flex h-[calc(100vh-8rem)] overflow-hidden">
+    <div className="relative flex h-[calc(100dvh-8rem)] sm:h-[calc(100vh-8rem)] overflow-hidden">
 
       {/* ══════════════════════════════════════════════════
           SIDEBAR
@@ -524,7 +540,7 @@ export default function AssistantPage() {
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Top bar */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b assistant-border assistant-surface-muted">
+        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b assistant-border assistant-surface-muted">
           <button
             onClick={() => setSidebarOpen((v) => !v)}
             title={sidebarOpen ? "Masquer le panneau" : "Afficher le panneau"}
@@ -549,15 +565,26 @@ export default function AssistantPage() {
           </div>
 
           {activeConvId && (
-            <button
-              onClick={newConversation}
-              className="inline-flex items-center gap-1.5 rounded-lg border assistant-border assistant-pill px-3 py-1.5 text-xs text-foreground/70 hover:text-foreground transition-all"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-              </svg>
-              Nouveau chat
-            </button>
+            <>
+              <button
+                onClick={newConversation}
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border assistant-border assistant-pill px-3 py-1.5 text-xs text-foreground/70 hover:text-foreground transition-all"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                Nouveau chat
+              </button>
+              <button
+                onClick={newConversation}
+                className="inline-flex sm:hidden items-center justify-center rounded-lg border assistant-border assistant-pill p-2 text-foreground/70 hover:text-foreground transition-all"
+                title="Nouveau chat"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+              </button>
+            </>
           )}
         </div>
 
@@ -575,7 +602,7 @@ export default function AssistantPage() {
 
           ) : messages.length === 0 ? (
             /* ── Empty state ── */
-            <div className="h-full flex flex-col items-center justify-center gap-8 px-6 text-foreground/60">
+            <div className="h-full flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 sm:px-6 text-foreground/60">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-accent/70">
@@ -610,7 +637,7 @@ export default function AssistantPage() {
               </button>
 
               {/* Chips */}
-              <div className="flex flex-wrap justify-center gap-2 max-w-lg">
+              <div className="flex flex-wrap justify-center gap-2 max-w-full sm:max-w-lg">
                 {suggestions.slice(0, 4).map((s) => (
                   <button key={s}
                     onClick={() => handleSuggestionClick(s)}
@@ -627,7 +654,7 @@ export default function AssistantPage() {
             <div className="py-4 space-y-0">
               {messages.map((msg, i) => (
                 <div key={i}
-                  className={`px-4 sm:px-6 py-4 ${
+                  className={`px-3 sm:px-6 py-3 sm:py-4 ${
                     msg.role === "user"
                       ? "bg-transparent"
                       : "assistant-surface-muted border-y assistant-border"
@@ -636,7 +663,7 @@ export default function AssistantPage() {
                   <div className="w-full">
                     {msg.role === "user" ? (
                       <div className="flex justify-end">
-                        <div className="max-w-[80%] assistant-user-bubble border rounded-2xl rounded-br-sm px-4 py-3">
+                        <div className="max-w-[92%] sm:max-w-[80%] assistant-user-bubble border rounded-2xl rounded-br-sm px-3 sm:px-4 py-3">
                           <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
                             {msg.content}
                           </p>
@@ -662,7 +689,7 @@ export default function AssistantPage() {
 
               {/* Typing */}
               {sending && (
-                <div className="px-4 sm:px-6 py-4 assistant-surface-muted border-y assistant-border">
+                <div className="px-3 sm:px-6 py-3 sm:py-4 assistant-surface-muted border-y assistant-border">
                   <div className="w-full flex gap-3">
                     <BotAvatar />
                     <div className="flex-1">
@@ -685,13 +712,13 @@ export default function AssistantPage() {
         </div>
 
         {/* ── Input ── */}
-        <div className="px-4 pb-4 pt-3 border-t assistant-border assistant-surface-muted">
+        <div className="sticky bottom-0 z-10 shrink-0 px-3 sm:px-4 pb-3 sm:pb-4 pt-2.5 sm:pt-3 border-t assistant-border assistant-surface-muted bg-background/95 backdrop-blur">
           {!loadingMsgs && messages.length > 0 && messages.length < 4 && (
             <div className="flex flex-wrap gap-1.5 mb-2.5">
               {suggestions.map((s) => (
                 <button key={s}
                   onClick={() => handleSuggestionClick(s)}
-                  className="text-xs rounded-full border assistant-border assistant-pill px-2.5 py-1 text-foreground/70 hover:border-accent/30 hover:text-foreground hover:bg-accent/5 transition-all"
+                  className="text-[11px] sm:text-xs rounded-full border assistant-border assistant-pill px-2.5 py-1 text-foreground/70 hover:border-accent/30 hover:text-foreground hover:bg-accent/5 transition-all"
                 >
                   {s}
                 </button>
@@ -708,13 +735,14 @@ export default function AssistantPage() {
               onKeyDown={handleKeyDown}
               placeholder="Envoyer un message… (Entrée pour envoyer, Maj+Entrée = nouvelle ligne)"
               disabled={sending}
-              className="w-full resize-none bg-transparent px-5 py-4 pr-16 text-sm text-foreground placeholder-foreground/30 focus:outline-none leading-relaxed max-h-40 overflow-y-auto"
-              style={{ minHeight: "56px" }}
+              autoFocus
+              className="w-full resize-none bg-transparent px-3 sm:px-5 py-3 sm:py-4 pr-12 sm:pr-16 text-sm text-foreground placeholder-foreground/30 focus:outline-none leading-relaxed max-h-40 overflow-y-auto"
+              style={{ minHeight: "52px" }}
             />
             <button
               onClick={() => envoyer()}
               disabled={sending || !question.trim()}
-              className={`absolute right-3 bottom-3 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+              className={`absolute right-2 sm:right-3 bottom-2 sm:bottom-3 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
                 question.trim() && !sending
                   ? "bg-accent hover:brightness-110 shadow-lg shadow-accent/25"
                   : "bg-white/10 opacity-40 cursor-not-allowed"
@@ -732,12 +760,12 @@ export default function AssistantPage() {
           SIDEBAR — droite
       ══════════════════════════════════════════════════ */}
       <aside
-        className={`flex flex-col border-l assistant-border assistant-surface-muted transition-all duration-300 overflow-hidden ${
-          sidebarOpen ? "w-64 min-w-[200px]" : "w-0"
+        className={`absolute right-0 top-0 bottom-0 z-30 flex flex-col border-l assistant-border assistant-surface-muted transition-all duration-300 overflow-hidden bg-background/95 backdrop-blur md:relative md:bg-transparent md:backdrop-blur-none ${
+          sidebarOpen ? "w-[85vw] max-w-[320px] translate-x-0 md:w-64 md:min-w-[200px]" : "w-0 translate-x-full md:w-0 md:min-w-0"
         }`}
       >
         {/* Sidebar header */}
-        <div className="flex items-center justify-between px-4 py-4 border-b assistant-border assistant-surface">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 border-b assistant-border assistant-surface">
           <span className="text-xs font-bold text-foreground/50 uppercase tracking-wider">Conversations</span>
           <button
             onClick={newConversation}

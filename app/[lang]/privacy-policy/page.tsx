@@ -82,7 +82,7 @@ export default function PrivacyPolicyPage() {
               {t("privacyPolicy.sections.use.content")}
             </p>
             <ul className="space-y-2 ml-6">
-              {t("privacyPolicy.sections.use.list").map((item: string, index: number) => (
+              {(t("privacyPolicy.sections.use.list") as unknown as string[]).map((item: string, index: number) => (
                 <li key={index} className="text-white/70 flex items-start gap-3">
                   <span className="text-accent mt-1">•</span>
                   <span>{item}</span>

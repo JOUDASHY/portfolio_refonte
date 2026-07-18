@@ -10,6 +10,7 @@ const fr = {
     gallery: "Galerie",
     experience: "Expérience",
     contact: "Contact",
+    privacyPolicy: "Politique de confidentialité",
   },
   hero: {
     welcome: "Bienvenue dans mon univers !",
@@ -321,6 +322,57 @@ const fr = {
       hideAll: "Masquer tous les mots de passe",
     }
   },
+  privacyPolicy: {
+    title: "Politique de Confidentialité",
+    subtitle: "Dernière mise à jour",
+    intro: "Cette politique de confidentialité décrit comment vos informations personnelles sont collectées, utilisées et partagées lorsque vous visitez ou effectuez un achat sur ce site.",
+    sections: {
+      collection: {
+        title: "1. Collecte des Informations",
+        content: "Lorsque vous visitez le site, nous collectons automatiquement certaines informations sur votre appareil, notamment des informations sur votre navigateur web, votre adresse IP, votre fuseau horaire et certains des cookies installés sur votre appareil. De plus, lorsque vous parcourez le site, nous collectons des informations sur les pages web ou les produits que vous consultez, les sites web ou les termes de recherche qui vous ont renvoyé au site, et des informations sur la manière dont vous interagissez avec le site."
+      },
+      use: {
+        title: "2. Utilisation des Informations",
+        content: "Nous utilisons les informations que nous collectons pour :",
+        list: [
+          "Communiquer avec vous",
+          "Améliorer et optimiser notre site",
+          "Analyser les statistiques d'utilisation",
+          "Répondre à vos demandes de contact",
+          "Personnaliser votre expérience utilisateur"
+        ]
+      },
+      cookies: {
+        title: "3. Cookies et Technologies de Suivi",
+        content: "Nous utilisons des cookies et des technologies similaires pour suivre l'activité sur notre site et conserver certaines informations. Les cookies sont des fichiers contenant une petite quantité de données qui peuvent inclure un identifiant unique anonyme. Vous pouvez demander à votre navigateur de refuser tous les cookies ou d'indiquer quand un cookie est envoyé."
+      },
+      sharing: {
+        title: "4. Partage des Informations",
+        content: "Nous ne partageons vos informations personnelles avec des tiers que pour nous aider à utiliser vos informations personnelles, comme décrit ci-dessus. Nous pouvons également partager vos informations personnelles pour nous conformer aux lois et réglementations applicables, répondre à une assignation à comparaître, un mandat de perquisition ou toute autre demande légale d'informations que nous recevons."
+      },
+      rights: {
+        title: "5. Vos Droits",
+        content: "Si vous êtes un résident européen, vous avez le droit d'accéder aux informations personnelles que nous détenons sur vous et de demander que vos informations personnelles soient corrigées, mises à jour ou supprimées. Si vous souhaitez exercer ce droit, veuillez nous contacter."
+      },
+      security: {
+        title: "6. Sécurité des Données",
+        content: "Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre tout accès, modification, divulgation ou destruction non autorisés. Cependant, aucune méthode de transmission sur Internet ou de stockage électronique n'est totalement sécurisée."
+      },
+      thirdParty: {
+        title: "7. Services Tiers",
+        content: "Nous pouvons utiliser des services tiers qui collectent, surveillent et analysent ce type d'informations afin d'améliorer la fonctionnalité de notre service. Ces services tiers ont leurs propres politiques de confidentialité concernant la manière dont ils utilisent ces informations."
+      },
+      contact: {
+        title: "8. Nous Contacter",
+        content: "Pour plus d'informations sur nos pratiques de confidentialité, si vous avez des questions ou si vous souhaitez déposer une plainte, veuillez nous contacter par e-mail à l'adresse suivante :"
+      },
+      changes: {
+        title: "9. Modifications de la Politique",
+        content: "Nous nous réservons le droit de modifier cette politique de confidentialité à tout moment. Les modifications entreront en vigueur immédiatement après leur publication sur cette page. Nous vous encourageons à consulter régulièrement cette page pour rester informé de toute mise à jour."
+      }
+    },
+    backToHome: "Retour à l'accueil"
+  }
 } as const;
 
 export type FrDict = typeof fr;

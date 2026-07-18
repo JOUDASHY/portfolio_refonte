@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "../hooks/LanguageProvider";
 import { useProfile } from "../hooks/useProfile";
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { profile, loading } = useProfile();
   const year = new Date().getFullYear();
   return (
@@ -57,6 +58,13 @@ export default function Footer() {
                   {link.label}
                 </a>
               ))}
+              <Link
+                href={`/${lang}/privacy-policy`}
+                className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs sm:text-sm"
+              >
+                <span className="text-[#f68c09]">{'>'}</span>
+                {t("nav.privacyPolicy")}
+              </Link>
             </div>
           </div>
 

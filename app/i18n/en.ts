@@ -10,6 +10,7 @@ const en = {
     gallery: "Gallery",
     experience: "Experience",
     contact: "Contact",
+    privacyPolicy: "Privacy Policy",
   },
   hero: {
     welcome: "Welcome to my world!",
@@ -321,6 +322,57 @@ const en = {
       hideAll: "Hide all passwords",
     }
   },
+  privacyPolicy: {
+    title: "Privacy Policy",
+    subtitle: "Last updated",
+    intro: "This privacy policy describes how your personal information is collected, used, and shared when you visit or make a purchase on this site.",
+    sections: {
+      collection: {
+        title: "1. Information Collection",
+        content: "When you visit the site, we automatically collect certain information about your device, including information about your web browser, IP address, time zone, and some of the cookies that are installed on your device. Additionally, as you browse the site, we collect information about the individual web pages or products that you view, what websites or search terms referred you to the site, and information about how you interact with the site."
+      },
+      use: {
+        title: "2. Use of Information",
+        content: "We use the information we collect to:",
+        list: [
+          "Communicate with you",
+          "Improve and optimize our site",
+          "Analyze usage statistics",
+          "Respond to your contact requests",
+          "Personalize your user experience"
+        ]
+      },
+      cookies: {
+        title: "3. Cookies and Tracking Technologies",
+        content: "We use cookies and similar tracking technologies to track the activity on our site and hold certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent."
+      },
+      sharing: {
+        title: "4. Information Sharing",
+        content: "We only share your personal information with third parties to help us use your personal information, as described above. We may also share your personal information to comply with applicable laws and regulations, to respond to a subpoena, search warrant or other lawful request for information we receive."
+      },
+      rights: {
+        title: "5. Your Rights",
+        content: "If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted. If you would like to exercise this right, please contact us."
+      },
+      security: {
+        title: "6. Data Security",
+        content: "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is completely secure."
+      },
+      thirdParty: {
+        title: "7. Third-Party Services",
+        content: "We may employ third-party services that collect, monitor and analyze this type of information in order to improve the functionality of our service. These third-party services have their own privacy policies addressing how they use such information."
+      },
+      contact: {
+        title: "8. Contact Us",
+        content: "For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at:"
+      },
+      changes: {
+        title: "9. Policy Changes",
+        content: "We reserve the right to modify this privacy policy at any time. Changes will become effective immediately upon posting on this page. We encourage you to review this page regularly to stay informed about any updates."
+      }
+    },
+    backToHome: "Back to home"
+  }
 } as const;
 
 export type EnDict = typeof en;

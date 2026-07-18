@@ -333,14 +333,7 @@ const fr = {
       },
       use: {
         title: "2. Utilisation des Informations",
-        content: "Nous utilisons les informations que nous collectons pour :",
-        list: [
-          "Communiquer avec vous",
-          "Améliorer et optimiser notre site",
-          "Analyser les statistiques d'utilisation",
-          "Répondre à vos demandes de contact",
-          "Personnaliser votre expérience utilisateur"
-        ]
+        content: "Nous utilisons les informations que nous collectons pour :"
       },
       cookies: {
         title: "3. Cookies et Technologies de Suivi",

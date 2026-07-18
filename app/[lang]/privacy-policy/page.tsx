@@ -82,12 +82,26 @@ export default function PrivacyPolicyPage() {
               {t("privacyPolicy.sections.use.content")}
             </p>
             <ul className="space-y-2 ml-6">
-              {(t("privacyPolicy.sections.use.list") as unknown as string[]).map((item: string, index: number) => (
-                <li key={index} className="text-white/70 flex items-start gap-3">
-                  <span className="text-accent mt-1">•</span>
-                  <span>{item}</span>
-                </li>
-              ))}
+              <li className="text-white/70 flex items-start gap-3">
+                <span className="text-accent mt-1">•</span>
+                <span>{lang === "fr" ? "Communiquer avec vous" : "Communicate with you"}</span>
+              </li>
+              <li className="text-white/70 flex items-start gap-3">
+                <span className="text-accent mt-1">•</span>
+                <span>{lang === "fr" ? "Améliorer et optimiser notre site" : "Improve and optimize our site"}</span>
+              </li>
+              <li className="text-white/70 flex items-start gap-3">
+                <span className="text-accent mt-1">•</span>
+                <span>{lang === "fr" ? "Analyser les statistiques d'utilisation" : "Analyze usage statistics"}</span>
+              </li>
+              <li className="text-white/70 flex items-start gap-3">
+                <span className="text-accent mt-1">•</span>
+                <span>{lang === "fr" ? "Répondre à vos demandes de contact" : "Respond to your contact requests"}</span>
+              </li>
+              <li className="text-white/70 flex items-start gap-3">
+                <span className="text-accent mt-1">•</span>
+                <span>{lang === "fr" ? "Personnaliser votre expérience utilisateur" : "Personalize your user experience"}</span>
+              </li>
             </ul>
           </div>
 

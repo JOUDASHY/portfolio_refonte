@@ -333,14 +333,7 @@ const en = {
       },
       use: {
         title: "2. Use of Information",
-        content: "We use the information we collect to:",
-        list: [
-          "Communicate with you",
-          "Improve and optimize our site",
-          "Analyze usage statistics",
-          "Respond to your contact requests",
-          "Personalize your user experience"
-        ]
+        content: "We use the information we collect to:"
       },
       cookies: {
         title: "3. Cookies and Tracking Technologies",

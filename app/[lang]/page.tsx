@@ -16,7 +16,7 @@ import { useLanguage } from "../hooks/LanguageProvider";
 /* ── TechExpert Banner ─────────────────────────────────────── */
 function TechExpertBanner({ title, subtitle, badgeLabel }: { title: string; subtitle: string; badgeLabel: string }) {
   const row1 = ["React", "Next.js", "TypeScript", "Tailwind", "Laravel", "Django", "Docker", "Nginx", "MySQL", "PostgreSQL", "Git", "SSL"];
-  const row2 = ["Node.js", "Python", "PHP", "Linux", "IIS", "Redis", "REST API", "CI/CD", "Webpack", "Prisma", "JWT", "DevOps"];
+  const row2 = ["Python", "PHP", "Linux", "IIS", "Redis", "REST API", "CI/CD", "Webpack", "JWT", "DevOps"];
   return (
     <section className="relative overflow-hidden border-y border-white/10 bg-navy py-8 sm:py-14 lg:py-20">
       <div className="absolute inset-0 bg-cover bg-center bg-fixed opacity-55"

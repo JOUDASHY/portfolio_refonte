@@ -99,7 +99,7 @@ export default function OGImage() {
 
           {/* Tags */}
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            {["React", "Next.js", "Node.js", "DevOps", "Madagascar"].map((tag) => (
+            {["React", "Next.js", "DevOps", "Madagascar"].map((tag) => (
               <div key={tag} style={{
                 padding: "6px 16px",
                 borderRadius: "999px",

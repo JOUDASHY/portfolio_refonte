@@ -78,13 +78,13 @@ export default function About() {
   const stats = [
     { num: "3+",   sub: t("about.stats.years")        },
     { num: "20+",  sub: t("about.stats.projects")     },
-    { num: "100%", sub: t("about.stats.satisfaction") },
+    { num: "90%", sub: t("about.stats.satisfaction") },
   ];
 
   const stack = [
-    { label: t("about.stack.frontend"), items: ["React", "Next.js", "Tailwind"] },
-    { label: t("about.stack.backend"),  items: ["Laravel", "Django", "Node.js"] },
-    { label: t("about.stack.devops"),   items: ["Docker", "Nginx", "Git", "SSL"] },
+    { label: t("about.stack.frontend"), items: ["React", "Next.js", "Tailwind", "Bootstrap"] },
+    { label: t("about.stack.backend"),  items: ["Laravel", "Django"] },
+    { label: t("about.stack.devops"),   items: ["Docker", "Nginx", "Git", "SSL" , "iis"] },
     { label: t("about.stack.database"), items: ["MySQL", "PostgreSQL"]           },
   ];
 

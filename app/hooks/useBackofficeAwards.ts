@@ -53,7 +53,7 @@ export function useBackofficeAwards() {
     refresh();
   }, [refresh]);
 
-  const create = useCallback(async (form: Omit<BackofficeAward, "id" | "updatedAt">) => {
+  const create = useCallback(async (form: Omit<BackofficeAward, "id" | "updatedAt" | "education_name">) => {
     const payload: Partial<AwardModel> = {
       education: form.education_id ? Number(form.education_id) : null,
       titre: form.title,
@@ -65,7 +65,7 @@ export function useBackofficeAwards() {
     await refresh();
   }, [refresh]);
 
-  const update = useCallback(async (id: string, form: Omit<BackofficeAward, "id" | "updatedAt">) => {
+  const update = useCallback(async (id: string, form: Omit<BackofficeAward, "id" | "updatedAt" | "education_name">) => {
     const payload: Partial<AwardModel> = {
       education: form.education_id ? Number(form.education_id) : null,
       titre: form.title,

@@ -6,10 +6,12 @@ import type { Award as AwardModel } from "../types/models";
 
 export type BackofficeAward = {
   id: string;
+  education_id: string | null; // ID de l'éducation parente (null pour certifications indépendantes)
+  education_name: string | null; // Nom affiché de l'éducation
   year: string; // annee
   title: string; // titre
   organization: string; // institution
-  kind: string; // type
+  kind: 'diplome' | 'certification' | 'attestation' | 'brevet' | 'autre'; // type
   description?: string; // optional extra description (not in API schema)
   updatedAt: string;
 };
@@ -17,6 +19,8 @@ export type BackofficeAward = {
 function toUi(model: AwardModel): BackofficeAward {
   return {
     id: String(model.id),
+    education_id: model.education != null ? String(model.education) : null,
+    education_name: model.education_name || null,
     year: String(model.annee ?? ""),
     title: model.titre,
     organization: model.institution,
@@ -51,6 +55,7 @@ export function useBackofficeAwards() {
 
   const create = useCallback(async (form: Omit<BackofficeAward, "id" | "updatedAt">) => {
     const payload: Partial<AwardModel> = {
+      education: form.education_id ? Number(form.education_id) : null,
       titre: form.title,
       institution: form.organization,
       type: form.kind,
@@ -62,6 +67,7 @@ export function useBackofficeAwards() {
 
   const update = useCallback(async (id: string, form: Omit<BackofficeAward, "id" | "updatedAt">) => {
     const payload: Partial<AwardModel> = {
+      education: form.education_id ? Number(form.education_id) : null,
       titre: form.title,
       institution: form.organization,
       type: form.kind,

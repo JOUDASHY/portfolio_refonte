@@ -66,8 +66,22 @@ export default function Projects() {
 }
 
 function ProjectGrid() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const { items, loading, error } = useProjects();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"title" | "rating">("rating");
+
+  // Filtrer et trier les projets
+  const filteredAndSortedItems = items
+    .filter((project) =>
+      project.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === "rating") {
+        return b.initialStars - a.initialStars;
+      }
+      return a.title.localeCompare(b.title);
+    });
 
   function AnimatedCard({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
     const ref = useRef<HTMLLIElement | null>(null);
@@ -112,9 +126,95 @@ function ProjectGrid() {
   }
 
   return (
-    <ul className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-3 xl:gap-6">
-      {loading
-        ? Array.from({ length: 6 }).map((_, i) => (
+    <>
+      {/* Barre de recherche et filtres */}
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+        {/* Recherche */}
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder={t("projects.search") || "Rechercher un projet..."}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-4 py-2.5 sm:py-3 pl-11 pr-10 rounded-xl border-2 border-[#000b31]/10 bg-white text-[#000b31] placeholder:text-[#000b31]/40 focus:outline-none focus:border-[#f68c09] focus:ring-2 focus:ring-[#f68c09]/20 transition-all"
+          />
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#000b31]/40"
+          >
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+          </svg>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#000b31]/40 hover:text-[#f68c09] transition-colors"
+              aria-label="Effacer"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Tri */}
+        <div className="flex items-center gap-2 sm:w-auto">
+          <span className="text-sm text-[#000b31]/60 font-medium whitespace-nowrap">
+            {t("projects.sortBy") || "Trier par"}:
+          </span>
+          <div className="flex rounded-lg border-2 border-[#000b31]/10 bg-white overflow-hidden">
+            <button
+              onClick={() => setSortBy("rating")}
+              className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                sortBy === "rating"
+                  ? "bg-[#f68c09] text-white"
+                  : "bg-white text-[#000b31]/60 hover:bg-[#000b31]/5"
+              }`}
+            >
+              <span className="flex items-center gap-1.5">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                <span className="hidden sm:inline">Note</span>
+              </span>
+            </button>
+            <button
+              onClick={() => setSortBy("title")}
+              className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                sortBy === "title"
+                  ? "bg-[#f68c09] text-white"
+                  : "bg-white text-[#000b31]/60 hover:bg-[#000b31]/5"
+              }`}
+            >
+              <span className="flex items-center gap-1.5">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
+                </svg>
+                <span className="hidden sm:inline">A-Z</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Compteur de résultats */}
+      {!loading && searchQuery && (
+        <div className="mb-4 text-sm text-[#000b31]/60">
+          {filteredAndSortedItems.length === 0 ? (
+            <span>Aucun projet trouvé pour &quot;{searchQuery}&quot;</span>
+          ) : (
+            <span>
+              {filteredAndSortedItems.length} projet{filteredAndSortedItems.length > 1 ? "s" : ""}{" "}
+              trouvé{filteredAndSortedItems.length > 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+      )}
+
+      <ul className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-3 xl:gap-6">
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => (
           <li key={i} className="group rounded-xl overflow-hidden bg-white border border-[#000b31]/10 shadow-sm">
             <div className="relative h-28 sm:h-40 lg:h-56 xl:h-64 w-full bg-[#000b31]/5">
               <div className="absolute inset-0 p-2 sm:p-3">
@@ -127,12 +227,34 @@ function ProjectGrid() {
             </div>
           </li>
         ))
-        : items.map((p, idx) => (
-          <AnimatedCard key={p.id} delayMs={(idx % 3) * 75}>
-            <ProjectCard project={p} lang={lang} />
-          </AnimatedCard>
-        ))}
-    </ul>
+        : filteredAndSortedItems.length === 0 ? (
+          <div className="col-span-full py-12 text-center">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-16 h-16 mx-auto text-[#000b31]/20 mb-4"
+            >
+              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <p className="text-[#000b31]/60 text-lg font-medium">
+              Aucun projet ne correspond à votre recherche
+            </p>
+            <button
+              onClick={() => setSearchQuery("")}
+              className="mt-4 px-4 py-2 rounded-lg bg-[#f68c09] text-white text-sm font-semibold hover:brightness-110 transition-all"
+            >
+              Réinitialiser la recherche
+            </button>
+          </div>
+        ) : (
+          filteredAndSortedItems.map((p, idx) => (
+            <AnimatedCard key={p.id} delayMs={(idx % 3) * 75}>
+              <ProjectCard project={p} lang={lang} />
+            </AnimatedCard>
+          ))
+        )}
+      </ul>
+    </>
   );
 }
 

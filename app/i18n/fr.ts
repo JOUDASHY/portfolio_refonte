@@ -107,6 +107,8 @@ const fr = {
     title: "Projets",
     subtitle: "Quelques réalisations récentes",
     tagline: "Découvrez mes derniers travaux et projets créatifs",
+    search: "Rechercher un projet...",
+    sortBy: "Trier par",
     stars: "étoiles",
     addStar: "Ajouter une étoile",
     view: "Voir le projet",

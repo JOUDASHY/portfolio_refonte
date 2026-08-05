@@ -107,6 +107,8 @@ const en = {
     title: "Projects",
     subtitle: "A few recent works",
     tagline: "Discover my latest work and creative projects",
+    search: "Search a project...",
+    sortBy: "Sort by",
     stars: "stars",
     addStar: "Add a star",
     view: "View project",

@@ -35,7 +35,7 @@ export default function AwardsPage() {
     education_id: null,
     year: "",
     title: "",
-    organization: "",
+    organization: null,
     kind: "diplome",
     description: "",
   });
@@ -72,7 +72,7 @@ export default function AwardsPage() {
         if (!q) return true;
         return (
           a.title.toLowerCase().includes(q) ||
-          a.organization.toLowerCase().includes(q) ||
+          (a.organization || "").toLowerCase().includes(q) ||
           a.year.toLowerCase().includes(q) ||
           (a.education_name || "").toLowerCase().includes(q)
         );
@@ -88,7 +88,11 @@ export default function AwardsPage() {
       header: "Type",
       render: (row) => TYPE_LABELS[row.kind] || row.kind
     },
-    { key: "organization", header: "Institution" },
+    { 
+      key: "organization", 
+      header: "Institution",
+      render: (row) => row.organization || <span className="text-muted-foreground italic">Non spécifié</span>
+    },
     { 
       key: "education_name", 
       header: "Formation",
@@ -101,7 +105,7 @@ export default function AwardsPage() {
       education_id: null,
       year: new Date().getFullYear().toString(), 
       title: "", 
-      organization: "", 
+      organization: null, 
       kind: "diplome", 
       description: "" 
     });
@@ -264,7 +268,7 @@ export default function AwardsPage() {
             </Button>
             <Button 
               onClick={handleSubmit} 
-              disabled={submitting || !form.title || !form.organization}
+              disabled={submitting || !form.title}
             >
               {editingId ? "Enregistrer" : "Ajouter"}
             </Button>
@@ -320,11 +324,10 @@ export default function AwardsPage() {
           />
           
           <Input
-            label="Institution"
+            label="Institution (optionnel)"
             placeholder="Ex: Ministère de l'Éducation, Amazon Web Services"
-            value={form.organization}
-            onChange={(e) => setForm((f) => ({ ...f, organization: e.target.value }))}
-            required
+            value={form.organization || ""}
+            onChange={(e) => setForm((f) => ({ ...f, organization: e.target.value || null }))}
           />
           
           <Input

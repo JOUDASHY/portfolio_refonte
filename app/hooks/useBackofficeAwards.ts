@@ -10,7 +10,7 @@ export type BackofficeAward = {
   education_name: string | null; // Nom affiché de l'éducation
   year: string; // annee
   title: string; // titre
-  organization: string; // institution
+  organization: string | null; // institution (nullable)
   kind: 'diplome' | 'certification' | 'attestation' | 'brevet' | 'autre'; // type
   description?: string; // optional extra description (not in API schema)
   updatedAt: string;
@@ -23,7 +23,7 @@ function toUi(model: AwardModel): BackofficeAward {
     education_name: model.education_name || null,
     year: String(model.annee ?? ""),
     title: model.titre,
-    organization: model.institution,
+    organization: model.institution || null,
     kind: model.type,
     description: undefined,
     updatedAt: new Date().toISOString().slice(0, 10),
@@ -57,7 +57,7 @@ export function useBackofficeAwards() {
     const payload: Partial<AwardModel> = {
       education: form.education_id ? Number(form.education_id) : null,
       titre: form.title,
-      institution: form.organization,
+      institution: form.organization || null,
       type: form.kind,
       annee: Number(form.year) || new Date().getFullYear(),
     };
@@ -69,7 +69,7 @@ export function useBackofficeAwards() {
     const payload: Partial<AwardModel> = {
       education: form.education_id ? Number(form.education_id) : null,
       titre: form.title,
-      institution: form.organization,
+      institution: form.organization || null,
       type: form.kind,
       annee: Number(form.year) || new Date().getFullYear(),
     };

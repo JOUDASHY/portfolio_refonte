@@ -8,7 +8,30 @@ import { getAdaptiveShadow, getAdaptiveBorderColor } from "../lib/shadowUtils";
 import type { Education as EducationModel } from "../types/models";
 import { educationService } from "../services/backoffice/educationService";
 
-type Edu = { period: string; title: string; school: string; detail?: string; image?: string | null };
+type Edu = { 
+  period: string; 
+  title: string; 
+  school: string; 
+  detail?: string; 
+  image?: string | null;
+  diplomes?: Array<{
+    id: number;
+    titre: string;
+    institution: string | null;
+    type: string;
+    type_display?: string;
+    annee: number;
+  }>;
+};
+
+// Award/Certificate icon
+function AwardIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+    </svg>
+  );
+}
 
 // Graduation cap icon
 function GraduationIcon({ className }: { className?: string }) {
@@ -45,6 +68,14 @@ export default function Education() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const [items, setItems] = useState<Edu[]>([]);
+  const [independentAwards, setIndependentAwards] = useState<Array<{
+    id: number;
+    titre: string;
+    institution: string | null;
+    type: string;
+    type_display?: string;
+    annee: number;
+  }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const isDark = theme === "dark";
@@ -62,8 +93,21 @@ export default function Education() {
           school: edu.nom_ecole,
           detail: edu.lieu,
           image: edu.image,
+          diplomes: edu.diplomes || [],
         }));
         setItems(mapped);
+
+        // Charger aussi les awards indépendants (GET /api/awards/ avec filter education=null)
+        try {
+          const { awardService } = await import("../services/backoffice/awardService");
+          const awardsRes = await awardService.list();
+          const allAwards = (awardsRes.data as any[]) || [];
+          // Filtrer ceux sans education (indépendants)
+          const independent = allAwards.filter((award: any) => !award.education);
+          setIndependentAwards(independent);
+        } catch (awardsErr) {
+          console.error("Failed to load independent awards:", awardsErr);
+        }
       } catch (err: unknown) {
         if (!mounted) return;
         setError(err instanceof Error ? err.message : "Failed to load education");
@@ -205,6 +249,32 @@ export default function Education() {
                             <span>{edu.detail}</span>
                           </div>
                         )}
+
+                        {/* Diplômes/Certifications obtenus */}
+                        {edu.diplomes && edu.diplomes.length > 0 && (
+                          <div className="mt-2 pt-2 border-t border-[#f68c09]/20">
+                            <div className="flex items-center gap-1 mb-1">
+                              <AwardIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#f68c09]" />
+                              <span className="text-[10px] sm:text-xs font-semibold text-[#000b31]/70">
+                                Diplômes obtenus
+                              </span>
+                            </div>
+                            <ul className="space-y-1">
+                              {edu.diplomes.map((diplome) => (
+                                <li key={diplome.id} className="flex items-start gap-1 text-[10px] sm:text-xs text-[#000b31]/60">
+                                  <span className="text-[#f68c09] mt-0.5">•</span>
+                                  <div className="flex-1">
+                                    <span className="font-medium text-[#000b31]">{diplome.titre}</span>
+                                    {diplome.institution && (
+                                      <span className="text-[#000b31]/50"> - {diplome.institution}</span>
+                                    )}
+                                    <span className="text-[#f68c09] ml-1">({diplome.annee})</span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -219,6 +289,51 @@ export default function Education() {
                 </AnimatedCard>
               ))}
           </div>
+
+          {/* Certifications indépendantes */}
+          {!loading && independentAwards.length > 0 && (
+            <div className="mt-8 sm:mt-12">
+              <div className="flex items-center justify-center gap-2 mb-4 sm:mb-6">
+                <AwardIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#f68c09]" />
+                <h3 className="text-lg sm:text-xl font-bold text-[#000b31]">
+                  Certifications Professionnelles
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {independentAwards.map((award, idx) => (
+                  <AnimatedCard key={award.id} delayMs={items.length * 100 + idx * 50} index={items.length + idx}>
+                    <div className="bg-gradient-to-br from-white to-[#f68c09]/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-[#f68c09]/20 shadow-sm hover:shadow-md hover:border-[#f68c09]/40 transition-all duration-300 group">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#f68c09]/10 flex items-center justify-center group-hover:bg-[#f68c09]/20 transition-colors">
+                          <AwardIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#f68c09]" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="text-xs sm:text-sm font-bold text-[#000b31] group-hover:text-[#f68c09] transition-colors">
+                              {award.titre}
+                            </h4>
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#f68c09] text-white text-[9px] sm:text-[10px] font-medium">
+                              {award.annee}
+                            </span>
+                          </div>
+                          {award.institution && (
+                            <p className="text-[10px] sm:text-xs text-[#000b31]/60 mb-1">
+                              {award.institution}
+                            </p>
+                          )}
+                          {award.type_display && (
+                            <span className="inline-block px-2 py-0.5 rounded-full bg-[#000b31]/5 text-[#000b31]/70 text-[9px] sm:text-[10px] font-medium">
+                              {award.type_display}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </AnimatedCard>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         </div>
 

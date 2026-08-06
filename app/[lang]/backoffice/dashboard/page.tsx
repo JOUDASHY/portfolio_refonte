@@ -32,10 +32,24 @@ export default function DashboardPage() {
   const latestMonth = useMemo(() => {
     if (monthly && monthly.length > 0) return monthly[monthly.length - 1]?.label || "";
     try {
-      return new Date().toLocaleString("fr-FR", { month: "long" });
+      return new Date().toLocaleString("fr-FR", { month: "long", year: "numeric" });
     } catch {
       return "";
     }
+  }, [monthly]);
+
+  // Calcul de la tendance (variation mois actuel vs mois précédent)
+  const trend = useMemo(() => {
+    if (monthly.length < 2) return null;
+    const current = monthly[monthly.length - 1]?.value || 0;
+    const previous = monthly[monthly.length - 2]?.value || 0;
+    if (previous === 0) return null;
+    const change = ((current - previous) / previous) * 100;
+    return {
+      value: Math.abs(change).toFixed(1),
+      isPositive: change >= 0,
+      raw: change
+    };
   }, [monthly]);
 
   useEffect(() => {
@@ -48,7 +62,8 @@ export default function DashboardPage() {
           competenceService.list(),
         ]);
         const m = Array.isArray(monthlyData) ? monthlyData : [];
-        setMonthly(m.map((x: { month: string; count: number }) => ({ label: x.month, value: x.count })));
+        const sorted = [...m].reverse();
+        setMonthly(sorted.map((x: { month: string; count: number }) => ({ label: x.month, value: x.count })));
         setTotalVisits(Number(totalData?.total_visits || 0));
 
         const projArr = Array.isArray(projects) ? projects : [];
@@ -67,11 +82,40 @@ export default function DashboardPage() {
   }, []);
 
   const kpis = useMemo(() => ([
-    { label: "Visites (total)", value: String(totalVisits), icon: EyeIcon },
-    { label: "Projets", value: String(projectsCount), icon: ProjectIcon },
-    { label: "Compétences", value: String(skillsCount), icon: ContactIcon },
-    { label: "Taux conv.", value: "—", icon: TrendingUpIcon },
-  ]), [totalVisits, projectsCount, skillsCount]);
+    { 
+      label: "Visites totales", 
+      value: String(totalVisits), 
+      icon: EyeIcon,
+      color: "from-blue-500/20 to-blue-600/20",
+      iconBg: "bg-blue-500/15",
+      iconColor: "text-blue-500",
+      trend: trend
+    },
+    { 
+      label: "Projets", 
+      value: String(projectsCount), 
+      icon: ProjectIcon,
+      color: "from-purple-500/20 to-purple-600/20",
+      iconBg: "bg-purple-500/15",
+      iconColor: "text-purple-500"
+    },
+    { 
+      label: "Compétences", 
+      value: String(skillsCount), 
+      icon: CodeIcon,
+      color: "from-green-500/20 to-green-600/20",
+      iconBg: "bg-green-500/15",
+      iconColor: "text-green-500"
+    },
+    { 
+      label: "Taux conversion", 
+      value: "—", 
+      icon: TrendingUpIcon,
+      color: "from-amber-500/20 to-amber-600/20",
+      iconBg: "bg-amber-500/15",
+      iconColor: "text-amber-500"
+    },
+  ]), [totalVisits, projectsCount, skillsCount, trend]);
 
 
   const lineData = monthly.length > 0 ? monthly : [
@@ -84,135 +128,205 @@ export default function DashboardPage() {
   ];
 
   const donutData = [
-    { label: "Web", value: 60, color: "fill-accent" },
-    { label: "Mobile", value: 25, color: "fill-white/40" },
-    { label: "Autres", value: 15, color: "fill-white/20" },
+    { label: "Web", value: 60, color: "fill-indigo-500" },
+    { label: "Mobile", value: 25, color: "fill-purple-500" },
+    { label: "Autres", value: 15, color: "fill-pink-500" },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Tableau de bord</h1>
+          <p className="text-sm text-foreground/60 mt-1">Vue d'ensemble de vos statistiques</p>
+        </div>
+        <div className="hidden sm:flex items-center gap-2 text-sm text-foreground/60">
+          <CalendarIcon className="w-4 h-4" />
+          <span>{new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</span>
+        </div>
+      </div>
+
       {error && (
-        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300 ring-1 ring-red-500/20">
-          {error}
+        <div className="rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300 ring-1 ring-red-500/20 animate-in slide-in-from-top duration-300">
+          <div className="flex items-center gap-2">
+            <AlertIcon className="w-5 h-5 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
         </div>
       )}
 
+      {/* KPIs Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((k) => (
+        {kpis.map((k, idx) => (
           <div
             key={k.label}
-            className="rounded-2xl p-4 ring-1 ring-white/10 border border-black/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10"
+            className="group relative overflow-hidden rounded-2xl p-5 ring-1 ring-white/10 border border-black/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:scale-[1.02] hover:shadow-lg transition-all duration-300 animate-in slide-in-from-bottom"
+            style={{ animationDelay: `${idx * 100}ms`, animationFillMode: "backwards" }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 ring-1 ring-accent/20">
-                <k.icon className="h-5 w-5 text-accent" />
+            <div className={`absolute inset-0 bg-gradient-to-br ${k.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+            
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-3">
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${k.iconBg} ring-1 ring-white/10 group-hover:scale-110 transition-transform duration-300`}>
+                  <k.icon className={`h-6 w-6 ${k.iconColor}`} />
+                </div>
+                {k.trend && (
+                  <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${k.trend.isPositive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                    {k.trend.isPositive ? <TrendUpIcon className="w-3 h-3" /> : <TrendDownIcon className="w-3 h-3" />}
+                    <span>{k.trend.value}%</span>
+                  </div>
+                )}
               </div>
-              <div>
-                <div className="text-sm text-foreground/60">{k.label}</div>
-                <div className="mt-1 text-2xl font-semibold text-foreground">{loading ? <Skeleton w="5rem" /> : k.value}</div>
+              <div className="text-sm font-medium text-foreground/60 mb-1">{k.label}</div>
+              <div className="text-3xl font-bold text-foreground">
+                {loading ? <Skeleton w="5rem" h="2rem" /> : k.value}
               </div>
             </div>
           </div>
         ))}
       </div>
 
+
+      {/* Charts Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10 lg:col-span-2">
-          <div className="mb-3 flex items-center justify-between text-sm text-foreground/70">
-            <span>Visites mensuelles</span>
-            {!loading && (
-              <span className="text-foreground/50">Mois: {latestMonth} • Total: {totalVisits}</span>
+        <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 lg:col-span-2 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-left delay-200">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                <ChartIcon className="w-5 h-5 text-indigo-500" />
+                Visites mensuelles
+              </h3>
+              {!loading && (
+                <p className="text-xs text-foreground/50 mt-1">
+                  {latestMonth} • {totalVisits.toLocaleString()} visites au total
+                </p>
+              )}
+            </div>
+            {trend && !loading && (
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium ${trend.isPositive ? 'bg-green-500/10 text-green-400 ring-1 ring-green-500/20' : 'bg-red-500/10 text-red-400 ring-1 ring-red-500/20'}`}>
+                {trend.isPositive ? <TrendUpIcon className="w-4 h-4" /> : <TrendDownIcon className="w-4 h-4" />}
+                <span>{trend.isPositive ? '+' : ''}{trend.value}% vs mois dernier</span>
+              </div>
             )}
           </div>
           {loading ? <ChartSkeleton /> : (
-            <LineChart
-              data={lineData}
-              width="100%"
-              variant="line"
-              smooth
-              showArea={false}
-              color="#6366f1"
-            />
+            <div className="mt-4">
+              <LineChart
+                data={lineData}
+                width="100%"
+                variant="line"
+                smooth
+                showArea={false}
+                color="#6366f1"
+              />
+            </div>
           )}
         </div>
 
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 border border-black/10 data-[theme=light]:bg-white data-[theme=light]:ring-black/10">
-          <div className="mb-3 text-sm text-foreground/70">Répartition projets</div>
+        <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-right delay-300">
+          <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+            <PieChartIcon className="w-5 h-5 text-purple-500" />
+            Répartition projets
+          </h3>
           <div className="flex items-center justify-center">
             {loading ? <ChartSkeleton /> : <DonutChart data={donutData} />}
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-foreground/70">
+          <div className="mt-4 grid grid-cols-1 gap-2 text-xs">
             {donutData.map((d) => (
-              <div key={d.label} className="flex items-center gap-2">
-                <span className={`h-2 w-2 rounded ${d.color || "bg-accent"}`}></span>
-                <span>{d.label}</span>
+              <div key={d.label} className="flex items-center justify-between p-2 rounded-lg bg-white/5 ring-1 ring-white/10">
+                <div className="flex items-center gap-2">
+                  <span className={`h-3 w-3 rounded-full ${d.color.replace('fill-', 'bg-')}`}></span>
+                  <span className="text-foreground/80 font-medium">{d.label}</span>
+                </div>
+                <span className="text-foreground/60 font-semibold">{d.value}%</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
- 
 
+      {/* Top Lists */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-          <div className="mb-3 text-sm text-foreground/70">Top 10 projets</div>
-          <ul className="divide-y divide-white/10 rounded-xl bg-white/0 ring-1 ring-white/10">
+        <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-left delay-400">
+          <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+            <StarIcon className="w-5 h-5 text-yellow-500" />
+            Top 10 projets
+          </h3>
+          <ul className="divide-y divide-white/5 rounded-xl bg-white/0 ring-1 ring-white/5">
             {(loading ? Array.from({ length: 5 }, (_, i) => ({ id: `loading-${i}`, name: '', stars: null })) : topProjects).map((p, idx: number) => (
-              <li key={p?.id ?? idx} className="flex items-center justify-between px-3 py-2">
+              <li key={p?.id ?? idx} className="flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors group">
                 {loading ? (
                   <Skeleton w="80%" />
                 ) : (
                   <>
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-[0.7rem] font-semibold uppercase text-accent ring-1 ring-accent/20">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-xs font-bold uppercase text-purple-400 ring-1 ring-purple-500/30 group-hover:scale-110 transition-transform">
                         {getInitials(p?.name || "")}
                       </span>
-                      <span className="truncate text-foreground/90">{p?.name}</span>
+                      <span className="truncate text-foreground/90 font-medium">{p?.name}</span>
                     </span>
-                    <span className="ml-3 inline-flex items-center gap-1 text-xs text-foreground/70">
-                      <StarIcon className="h-3.5 w-3.5 text-yellow-400" />
-                      <span>{formatStars(p?.stars)}</span>
-                      <span className="text-foreground/40">#{idx + 1}</span>
+                    <span className="ml-3 inline-flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-yellow-500/10 ring-1 ring-yellow-500/20">
+                        <StarIcon className="h-3.5 w-3.5 text-yellow-400" />
+                        <span className="text-xs font-semibold text-yellow-400">{formatStars(p?.stars)}</span>
+                      </span>
+                      <span className="text-xs font-medium text-foreground/40">#{idx + 1}</span>
                     </span>
                   </>
                 )}
               </li>
             ))}
-            {!loading && topProjects.length === 0 && <li className="px-3 py-2 text-foreground/60">Aucun projet</li>}
+            {!loading && topProjects.length === 0 && (
+              <li className="px-4 py-8 text-center text-foreground/40 text-sm">Aucun projet disponible</li>
+            )}
           </ul>
         </div>
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-          <div className="mb-3 text-sm text-foreground/70">Top 10 compétences</div>
-          <ul className="divide-y divide-white/10 rounded-xl bg-white/0 ring-1 ring-white/10">
+
+        <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-right delay-500">
+          <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+            <CodeIcon className="w-5 h-5 text-green-500" />
+            Top 10 compétences
+          </h3>
+          <ul className="divide-y divide-white/5 rounded-xl bg-white/0 ring-1 ring-white/5">
             {(loading ? Array.from({ length: 5 }, (_, i) => ({ id: `loading-${i}`, name: '', level: null })) : topSkills).map((s, idx: number) => (
-              <li key={s?.id ?? idx} className="flex items-center justify-between px-3 py-2">
+              <li key={s?.id ?? idx} className="flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors group">
                 {loading ? (
                   <Skeleton w="70%" />
                 ) : (
                   <>
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-[0.7rem] font-semibold uppercase text-foreground ring-1 ring-white/20">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 text-xs font-bold uppercase text-green-400 ring-1 ring-green-500/30 group-hover:scale-110 transition-transform">
                         {getInitials(s?.name || "")}
                       </span>
-                      <span className="truncate text-foreground/90">{s?.name}</span>
+                      <span className="truncate text-foreground/90 font-medium">{s?.name}</span>
                     </span>
-                    <span className="ml-3 inline-flex items-center gap-1 text-xs text-foreground/70">
-                      <StarIcon className="h-3.5 w-3.5 text-yellow-400" />
-                      <span>{formatStars(s?.level)}</span>
-                      <span className="text-foreground/40">#{idx + 1}</span>
+                    <span className="ml-3 inline-flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <StarIcon
+                            key={i}
+                            className={`h-3 w-3 ${i < (s?.level || 0) ? 'text-yellow-400' : 'text-white/20'}`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs font-medium text-foreground/40">#{idx + 1}</span>
                     </span>
                   </>
                 )}
               </li>
             ))}
-            {!loading && topSkills.length === 0 && <li className="px-3 py-2 text-foreground/60">Aucune compétence</li>}
+            {!loading && topSkills.length === 0 && (
+              <li className="px-4 py-8 text-center text-foreground/40 text-sm">Aucune compétence disponible</li>
+            )}
           </ul>
         </div>
       </div>
     </div>
   );
 }
+
 
 // Icons
 function EyeIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -231,10 +345,10 @@ function ProjectIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function ContactIcon(props: React.SVGProps<SVGSVGElement>) {
+function CodeIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+      <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
     </svg>
   );
 }
@@ -247,7 +361,69 @@ function TrendingUpIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-// Small skeletons
+function TrendUpIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+      <polyline points="17 6 23 6 23 12" />
+    </svg>
+  );
+}
+
+function TrendDownIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+      <polyline points="17 18 23 18 23 12" />
+    </svg>
+  );
+}
+
+function CalendarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+
+function AlertIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+    </svg>
+  );
+}
+
+function ChartIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+      <path d="M3 3v18h18" />
+      <path d="M18 17V9M13 17V5M8 17v-3" />
+    </svg>
+  );
+}
+
+function PieChartIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+      <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+      <path d="M22 12A10 10 0 0 0 12 2v10z" />
+    </svg>
+  );
+}
+
+function StarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+      <path d="M12 2l2.39 4.84L20 8l-3.5 3.41L17.48 18 12 15.6 6.52 18 7.5 11.41 4 8l5.61-1.16L12 2z" />
+    </svg>
+  );
+}
+
 function Skeleton({ w = "100%", h = "1rem" }: { w?: string; h?: string }) {
   return <span className="inline-block animate-pulse rounded bg-white/10" style={{ width: w, height: h }} />;
 }
@@ -266,17 +442,7 @@ function getInitials(name: string): string {
   return (first + second).toUpperCase();
 }
 
-function StarIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
-      <path d="M12 2l2.39 4.84L20 8l-3.5 3.41L17.48 18 12 15.6 6.52 18 7.5 11.41 4 8l5.61-1.16L12 2z" />
-    </svg>
-  );
-}
-
 function formatStars(value?: number | null): string {
   if (value == null || Number.isNaN(value)) return "—";
   return Number(value).toFixed(1);
 }
-
-

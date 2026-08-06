@@ -86,34 +86,34 @@ export default function DashboardPage() {
       label: "Visites totales", 
       value: String(totalVisits), 
       icon: EyeIcon,
-      color: "from-indigo-500/20 to-indigo-600/20",
-      iconBg: "bg-indigo-500/15",
-      iconColor: "text-indigo-500",
+      color: "from-[#f68c09]/20 to-[#f68c09]/30",
+      iconBg: "bg-[#f68c09]/15",
+      iconColor: "text-[#f68c09]",
       trend: trend
     },
     { 
       label: "Projets", 
       value: String(projectsCount), 
       icon: ProjectIcon,
-      color: "from-indigo-500/20 to-indigo-600/20",
-      iconBg: "bg-indigo-500/15",
-      iconColor: "text-indigo-500"
+      color: "from-[#f68c09]/20 to-[#f68c09]/30",
+      iconBg: "bg-[#f68c09]/15",
+      iconColor: "text-[#f68c09]"
     },
     { 
       label: "Compétences", 
       value: String(skillsCount), 
       icon: CodeIcon,
-      color: "from-indigo-500/20 to-indigo-600/20",
-      iconBg: "bg-indigo-500/15",
-      iconColor: "text-indigo-500"
+      color: "from-[#f68c09]/20 to-[#f68c09]/30",
+      iconBg: "bg-[#f68c09]/15",
+      iconColor: "text-[#f68c09]"
     },
     { 
       label: "Taux conversion", 
       value: "—", 
       icon: TrendingUpIcon,
-      color: "from-indigo-500/20 to-indigo-600/20",
-      iconBg: "bg-indigo-500/15",
-      iconColor: "text-indigo-500"
+      color: "from-[#f68c09]/20 to-[#f68c09]/30",
+      iconBg: "bg-[#f68c09]/15",
+      iconColor: "text-[#f68c09]"
     },
   ]), [totalVisits, projectsCount, skillsCount, trend]);
 
@@ -128,9 +128,9 @@ export default function DashboardPage() {
   ];
 
   const donutData = [
-    { label: "Web", value: 60, color: "fill-indigo-500" },
-    { label: "Mobile", value: 25, color: "fill-indigo-400" },
-    { label: "Autres", value: 15, color: "fill-indigo-300" },
+    { label: "Web", value: 60, color: "fill-[#f68c09]" },
+    { label: "Mobile", value: 25, color: "fill-[#f68c09]/70" },
+    { label: "Autres", value: 15, color: "fill-[#f68c09]/40" },
   ];
 
   return (
@@ -194,7 +194,7 @@ export default function DashboardPage() {
           <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                <ChartIcon className="w-5 h-5 text-indigo-400" />
+                <ChartIcon className="w-5 h-5 text-[#f68c09]" />
                 Visites mensuelles
               </h3>
               {!loading && (
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                 variant="line"
                 smooth
                 showArea={false}
-                color="#6366f1"
+                color="#f68c09"
               />
             </div>
           )}
@@ -226,7 +226,7 @@ export default function DashboardPage() {
 
         <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-right delay-300">
           <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-            <PieChartIcon className="w-5 h-5 text-indigo-400" />
+            <PieChartIcon className="w-5 h-5 text-[#f68c09]" />
             Répartition projets
           </h3>
           <div className="flex items-center justify-center">
@@ -251,7 +251,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-left delay-400">
           <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-            <StarIcon className="w-5 h-5 text-indigo-400" />
+            <StarIcon className="w-5 h-5 text-[#f68c09]" />
             Top 10 projets
           </h3>
           <ul className="divide-y divide-white/5 rounded-xl bg-white/0 ring-1 ring-white/5">
@@ -262,15 +262,15 @@ export default function DashboardPage() {
                 ) : (
                   <>
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 text-xs font-bold uppercase text-indigo-400 ring-1 ring-indigo-500/30 group-hover:scale-110 transition-transform">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#f68c09]/20 to-[#f68c09]/30 text-xs font-bold uppercase text-[#f68c09] ring-1 ring-[#f68c09]/30 group-hover:scale-110 transition-transform">
                         {getInitials(p?.name || "")}
                       </span>
                       <span className="truncate text-foreground/90 font-medium">{p?.name}</span>
                     </span>
                     <span className="ml-3 inline-flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
-                        <StarIcon className="h-3.5 w-3.5 text-indigo-400" />
-                        <span className="text-xs font-semibold text-indigo-400">{formatStars(p?.stars)}</span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#f68c09]/10 ring-1 ring-[#f68c09]/20">
+                        <StarIcon className="h-3.5 w-3.5 text-[#f68c09]" />
+                        <span className="text-xs font-semibold text-[#f68c09]">{formatStars(p?.stars)}</span>
                       </span>
                       <span className="text-xs font-medium text-foreground/40">#{idx + 1}</span>
                     </span>
@@ -286,7 +286,7 @@ export default function DashboardPage() {
 
         <div className="rounded-2xl bg-gradient-to-br from-white/5 to-white/0 p-6 ring-1 ring-white/10 border border-black/10 backdrop-blur data-[theme=light]:bg-white data-[theme=light]:ring-black/10 hover:shadow-xl transition-shadow duration-300 animate-in slide-in-from-right delay-500">
           <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-            <CodeIcon className="w-5 h-5 text-indigo-400" />
+            <CodeIcon className="w-5 h-5 text-[#f68c09]" />
             Top 10 compétences
           </h3>
           <ul className="divide-y divide-white/5 rounded-xl bg-white/0 ring-1 ring-white/5">
@@ -297,7 +297,7 @@ export default function DashboardPage() {
                 ) : (
                   <>
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 text-xs font-bold uppercase text-indigo-400 ring-1 ring-indigo-500/30 group-hover:scale-110 transition-transform">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#f68c09]/20 to-[#f68c09]/30 text-xs font-bold uppercase text-[#f68c09] ring-1 ring-[#f68c09]/30 group-hover:scale-110 transition-transform">
                         {getInitials(s?.name || "")}
                       </span>
                       <span className="truncate text-foreground/90 font-medium">{s?.name}</span>
@@ -307,7 +307,7 @@ export default function DashboardPage() {
                         {[...Array(5)].map((_, i) => (
                           <StarIcon
                             key={i}
-                            className={`h-3 w-3 ${i < (s?.level || 0) ? 'text-indigo-400' : 'text-white/20'}`}
+                            className={`h-3 w-3 ${i < (s?.level || 0) ? 'text-[#f68c09]' : 'text-white/20'}`}
                           />
                         ))}
                       </div>

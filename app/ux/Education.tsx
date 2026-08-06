@@ -97,12 +97,11 @@ export default function Education() {
         }));
         setItems(mapped);
 
-        // Charger aussi les awards indépendants (GET /api/awards/ avec filter education=null)
+        // Charger aussi les awards indépendants
         try {
           const { awardService } = await import("../services/backoffice/awardService");
           const awardsRes = await awardService.list();
           const allAwards = (awardsRes.data as any[]) || [];
-          // Filtrer ceux sans education (indépendants)
           const independent = allAwards.filter((award: any) => !award.education);
           setIndependentAwards(independent);
         } catch (awardsErr) {
@@ -120,7 +119,7 @@ export default function Education() {
     };
   }, []);
 
-  function AnimatedCard({ children, delayMs }: { children: React.ReactNode; delayMs: number }) {
+  function AnimatedCard({ children, delayMs, index }: { children: React.ReactNode; delayMs: number; index: number }) {
     const ref = useRef<HTMLDivElement | null>(null);
     const [visible, setVisible] = useState(false);
 
@@ -145,9 +144,13 @@ export default function Education() {
     return (
       <div
         ref={ref}
-        className={`${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"} transition-all duration-700`}
+        className={`relative ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"} transition-all duration-700`}
         style={visible ? { transitionDelay: `${delayMs}ms` } : undefined}
       >
+        {/* Timeline connector */}
+        {index !== 0 && (
+          <div className="absolute -top-3 left-1/2 w-0.5 h-3 sm:h-4 bg-gradient-to-b from-[#f68c09]/30 to-[#f68c09] -translate-x-1/2" />
+        )}
         {children}
       </div>
     );
@@ -168,7 +171,7 @@ export default function Education() {
 
       <div className="w-full px-3 sm:px-6 lg:px-12 py-6 sm:py-10 lg:py-16">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mb-8 sm:mb-16">
           <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-4 sm:py-2 rounded-full bg-white border border-[#f68c09]/30 shadow-sm mb-3 sm:mb-6">
             <GraduationIcon className="w-3 h-3 sm:w-4 sm:h-4 text-[#f68c09]" />
             <span className="text-xs sm:text-sm font-medium text-[#000b31]">{t("education.subtitle")}</span>
@@ -176,171 +179,183 @@ export default function Education() {
           <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-[#000b31] mb-2 sm:mb-4">
             {t("education.title")}
           </h2>
-          <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-3xl mx-auto">
+          <p className="text-sm sm:text-lg text-[#000b31]/70 max-w-2xl mx-auto">
             {t("education.description")}
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 sm:mb-8 rounded-lg sm:rounded-xl bg-[#f68c09]/10 p-3 sm:p-4 text-[#000b31] border border-[#f68c09]/30 text-center text-xs sm:text-base max-w-4xl mx-auto">
+          <div className="mb-4 sm:mb-8 rounded-lg sm:rounded-xl bg-[#f68c09]/10 p-2 sm:p-4 text-[#000b31] border border-[#f68c09]/30 text-center text-xs sm:text-base">
             {error}
           </div>
         )}
 
-        {/* Two Column Layout: Education | Diplômes */}
-        <div className="space-y-6 sm:space-y-8 lg:space-y-12 max-w-7xl mx-auto">
-          {loading
-            ? Array.from({ length: 3 }).map((_, idx) => (
-              <div key={idx} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                {/* Education skeleton */}
-                <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#000b31]/10 shadow-sm">
-                  <div className="animate-pulse space-y-3">
-                    <div className="h-4 w-24 rounded bg-[#000b31]/10" />
-                    <div className="h-6 w-48 rounded bg-[#000b31]/10" />
-                    <div className="h-4 w-40 rounded bg-[#000b31]/10" />
+        {/* Timeline */}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Center line - desktop only */}
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#f68c09] via-[#f68c09]/50 to-[#f68c09]/20 -translate-x-1/2" />
+
+          <div className="space-y-4 sm:space-y-8">
+            {loading
+              ? Array.from({ length: 3 }).map((_, idx) => (
+                <div key={idx} className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-8`}>
+                  <div className="flex-1" />
+                  <div className="hidden md:flex w-4 h-4 rounded-full bg-[#f68c09] border-4 border-white shadow-lg z-10" />
+                  <div className="flex-1">
+                    <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#000b31]/10 shadow-sm">
+                      <div className="animate-pulse space-y-3">
+                        <div className="h-4 w-24 rounded bg-[#000b31]/10" />
+                        <div className="h-6 w-48 rounded bg-[#000b31]/10" />
+                        <div className="h-4 w-40 rounded bg-[#000b31]/10" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                {/* Diplômes skeleton */}
-                <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#000b31]/10 shadow-sm">
-                  <div className="animate-pulse space-y-2">
-                    <div className="h-4 w-32 rounded bg-[#000b31]/10" />
-                    <div className="h-3 w-full rounded bg-[#000b31]/10" />
-                    <div className="h-3 w-full rounded bg-[#000b31]/10" />
-                  </div>
-                </div>
-              </div>
-            ))
-            : items.map((edu, idx) => (
-              <AnimatedCard key={idx} delayMs={idx * 150}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                  {/* LEFT: Education Card */}
-                  <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#000b31]/10 shadow-md hover:shadow-lg hover:border-[#f68c09]/30 transition-all duration-300 group">
-                    {/* Period badge */}
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-xs sm:text-sm font-semibold mb-4">
-                      <CalendarIcon className="w-4 h-4" />
-                      <span>{edu.period}</span>
+              ))
+              : items.map((edu, idx) => (
+                <AnimatedCard key={idx} delayMs={idx * 150} index={idx}>
+                  <div className={`md:flex ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-8`}>
+                    {/* Empty side for alignment */}
+                    <div className="flex-1" />
+
+                    {/* Center dot */}
+                    <div className="hidden md:flex flex-col items-center justify-center z-10">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#f68c09] border-4 border-white shadow-lg group-hover:scale-125 transition-transform duration-300" />
                     </div>
 
-                    {/* Title */}
-                    <h3 className="text-lg sm:text-xl font-bold text-[#000b31] mb-4 group-hover:text-[#f68c09] transition-colors leading-tight">
-                      {edu.title}
-                    </h3>
+                    {/* Content side - Card with Education + Diplômes inside */}
+                    <div className="flex-1">
+                      <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#000b31]/10 shadow-md hover:shadow-xl hover:border-[#f68c09]/30 transition-all duration-300 group">
+                        {/* Inner grid: Education info | Diplômes */}
+                        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 ${idx % 2 !== 0 ? 'lg:grid-flow-dense' : ''}`}>
+                          {/* Education Info */}
+                          <div className={idx % 2 !== 0 ? 'lg:col-start-2' : ''}>
+                            {/* Period badge */}
+                            <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-xs sm:text-sm font-semibold mb-3">
+                              <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                              <span>{edu.period}</span>
+                            </div>
 
-                    {/* School and Image */}
-                    <div className="flex items-center gap-3 mb-3">
-                      {edu.image && (
-                        <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden border-2 border-[#000b31]/10 flex-shrink-0 bg-white shadow-sm">
-                          <Image src={edu.image} alt={edu.school} fill className="object-contain p-1.5" />
-                        </div>
-                      )}
-                      <p className="text-[#000b31]/80 font-semibold text-sm sm:text-base">{edu.school}</p>
-                    </div>
+                            {/* Title */}
+                            <h3 className="text-base sm:text-lg font-bold text-[#000b31] mb-3 group-hover:text-[#f68c09] transition-colors">
+                              {edu.title}
+                            </h3>
 
-                    {/* Location */}
-                    {edu.detail && (
-                      <div className="flex items-center gap-1.5 text-[#000b31]/60 text-xs sm:text-sm">
-                        <MapPinIcon className="w-4 h-4" />
-                        <span>{edu.detail}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* RIGHT: Diplômes Card */}
-                  <div className="bg-gradient-to-br from-white via-white to-[#f68c09]/5 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-[#f68c09]/20 shadow-md hover:shadow-lg hover:border-[#f68c09]/40 transition-all duration-300">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#f68c09]/10 flex items-center justify-center">
-                        <AwardIcon className="w-5 h-5 text-[#f68c09]" />
-                      </div>
-                      <h4 className="text-base sm:text-lg font-bold text-[#000b31]">
-                        Diplômes obtenus
-                      </h4>
-                    </div>
-
-                    {edu.diplomes && edu.diplomes.length > 0 ? (
-                      <ul className="space-y-4">
-                        {edu.diplomes.map((diplome) => (
-                          <li key={diplome.id} className="flex items-start gap-2.5">
-                            <span className="text-[#f68c09] text-xl font-bold leading-none mt-0.5">•</span>
-                            <div className="flex-1">
-                              <div className="font-bold text-[#000b31] text-sm sm:text-base mb-1.5 leading-tight">
-                                {diplome.titre}
-                              </div>
-                              {diplome.institution && (
-                                <div className="text-[#000b31]/60 text-xs sm:text-sm mb-2">
-                                  {diplome.institution}
+                            {/* School and Image */}
+                            <div className="flex items-center gap-2 mb-2">
+                              {edu.image && (
+                                <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden border border-[#000b31]/10 flex-shrink-0 bg-white">
+                                  <Image src={edu.image} alt={edu.school} fill className="object-contain p-0.5" />
                                 </div>
                               )}
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#f68c09] text-white text-xs font-semibold">
-                                  {diplome.annee}
-                                </span>
-                                {diplome.type_display && (
-                                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#000b31]/10 text-[#000b31]/70 text-xs font-medium">
-                                    {diplome.type_display}
-                                  </span>
-                                )}
-                              </div>
+                              <p className="text-[#000b31]/70 font-medium text-sm sm:text-base">{edu.school}</p>
                             </div>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div className="flex items-center justify-center h-24 text-[#000b31]/30 italic text-sm">
-                        Aucun diplôme enregistré
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </AnimatedCard>
-            ))}
-        </div>
 
-        {/* Certifications indépendantes */}
-        {!loading && independentAwards.length > 0 && (
-          <div className="mt-12 sm:mt-16 lg:mt-20 max-w-7xl mx-auto">
-            <div className="flex items-center justify-center gap-2.5 mb-6 sm:mb-8">
-              <div className="w-10 h-10 rounded-lg bg-[#f68c09]/10 flex items-center justify-center">
-                <AwardIcon className="w-6 h-6 text-[#f68c09]" />
-              </div>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#000b31]">
-                Certifications Professionnelles
-              </h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {independentAwards.map((award, idx) => (
-                <AnimatedCard key={award.id} delayMs={items.length * 150 + idx * 100}>
-                  <div className="bg-gradient-to-br from-white to-[#f68c09]/5 rounded-xl sm:rounded-2xl p-4 sm:p-5 border-2 border-[#f68c09]/20 shadow-md hover:shadow-lg hover:border-[#f68c09]/50 transition-all duration-300 group h-full">
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#f68c09]/10 flex items-center justify-center group-hover:bg-[#f68c09]/20 transition-colors">
-                        <AwardIcon className="w-5 h-5 sm:w-6 sm:h-6 text-[#f68c09]" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <h4 className="text-sm sm:text-base font-bold text-[#000b31] group-hover:text-[#f68c09] transition-colors leading-tight flex-1">
-                            {award.titre}
-                          </h4>
-                          <span className="inline-flex items-center px-2 py-1 rounded-full bg-[#f68c09] text-white text-xs font-bold flex-shrink-0">
-                            {award.annee}
-                          </span>
+                            {/* Location */}
+                            {edu.detail && (
+                              <div className="flex items-center gap-1 text-[#000b31]/50 text-xs sm:text-sm">
+                                <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                                <span>{edu.detail}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Diplômes */}
+                          <div className={`bg-gradient-to-br from-[#f68c09]/5 to-transparent rounded-lg p-3 sm:p-4 border-l-4 border-[#f68c09] ${idx % 2 !== 0 ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+                            <div className="flex items-center gap-1.5 mb-3">
+                              <AwardIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#f68c09]" />
+                              <h4 className="text-sm sm:text-base font-bold text-[#000b31]">
+                                Diplômes
+                              </h4>
+                            </div>
+
+                            {edu.diplomes && edu.diplomes.length > 0 ? (
+                              <ul className="space-y-2.5">
+                                {edu.diplomes.map((diplome) => (
+                                  <li key={diplome.id} className="flex items-start gap-2 text-xs sm:text-sm">
+                                    <span className="text-[#f68c09] text-base mt-0.5">•</span>
+                                    <div className="flex-1">
+                                      <div className="font-semibold text-[#000b31] mb-1">
+                                        {diplome.titre}
+                                      </div>
+                                      {diplome.institution && (
+                                        <div className="text-[#000b31]/60 text-xs mb-1">
+                                          {diplome.institution}
+                                        </div>
+                                      )}
+                                      <div className="flex flex-wrap gap-1.5">
+                                        <span className="inline-block px-2 py-0.5 rounded-full bg-[#f68c09] text-white text-[10px] sm:text-xs font-medium">
+                                          {diplome.annee}
+                                        </span>
+                                        {diplome.type_display && (
+                                          <span className="inline-block px-2 py-0.5 rounded-full bg-[#000b31]/10 text-[#000b31]/70 text-[10px] sm:text-xs">
+                                            {diplome.type_display}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <div className="text-[#000b31]/30 italic text-xs">
+                                Aucun diplôme
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        {award.institution && (
-                          <p className="text-xs sm:text-sm text-[#000b31]/60 mb-2">
-                            {award.institution}
-                          </p>
-                        )}
-                        {award.type_display && (
-                          <span className="inline-block px-2.5 py-1 rounded-full bg-[#000b31]/10 text-[#000b31]/70 text-xs font-medium">
-                            {award.type_display}
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
                 </AnimatedCard>
               ))}
-            </div>
           </div>
-        )}
+
+          {/* Certifications indépendantes */}
+          {!loading && independentAwards.length > 0 && (
+            <div className="mt-12 sm:mt-16">
+              <div className="flex items-center justify-center gap-2 mb-6 sm:mb-8">
+                <AwardIcon className="w-5 h-5 sm:w-6 sm:h-6 text-[#f68c09]" />
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#000b31]">
+                  Certifications Professionnelles
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {independentAwards.map((award, idx) => (
+                  <AnimatedCard key={award.id} delayMs={items.length * 150 + idx * 80} index={items.length + idx}>
+                    <div className="bg-gradient-to-br from-white to-[#f68c09]/5 rounded-lg sm:rounded-xl p-4 sm:p-5 border border-[#f68c09]/20 shadow-sm hover:shadow-md hover:border-[#f68c09]/40 transition-all duration-300 group">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#f68c09]/10 flex items-center justify-center group-hover:bg-[#f68c09]/20 transition-colors">
+                          <AwardIcon className="w-5 h-5 text-[#f68c09]" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <h4 className="text-sm sm:text-base font-bold text-[#000b31] group-hover:text-[#f68c09] transition-colors">
+                              {award.titre}
+                            </h4>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#f68c09] text-white text-xs font-medium flex-shrink-0">
+                              {award.annee}
+                            </span>
+                          </div>
+                          {award.institution && (
+                            <p className="text-xs sm:text-sm text-[#000b31]/60 mb-2">
+                              {award.institution}
+                            </p>
+                          )}
+                          {award.type_display && (
+                            <span className="inline-block px-2 py-0.5 rounded-full bg-[#000b31]/10 text-[#000b31]/70 text-xs">
+                              {award.type_display}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </AnimatedCard>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

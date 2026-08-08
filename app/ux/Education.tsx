@@ -227,9 +227,9 @@ export default function Education() {
                     <div className="flex-1">
                       <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#000b31]/10 shadow-md hover:shadow-xl hover:border-[#f68c09]/30 transition-all duration-300 group">
                         {/* Inner grid: Education info | Diplômes */}
-                        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 ${idx % 2 !== 0 ? 'lg:grid-flow-dense' : ''}`}>
+                        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 ${idx % 2 !== 0 ? 'lg:grid-flow-dense' : ''} lg:divide-x lg:divide-[#f68c09]/20`}>
                           {/* Education Info */}
-                          <div className={idx % 2 !== 0 ? 'lg:col-start-2' : ''}>
+                          <div className={`${idx % 2 !== 0 ? 'lg:col-start-2 lg:pl-6' : 'lg:pr-6'}`}>
                             {/* Period badge */}
                             <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#f68c09]/10 text-[#f68c09] text-xs sm:text-sm font-semibold mb-3">
                               <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -261,7 +261,7 @@ export default function Education() {
                           </div>
 
                           {/* Diplômes */}
-                          <div className={`bg-gradient-to-br from-[#f68c09]/5 to-transparent rounded-lg p-3 sm:p-4 border-l-4 border-[#f68c09] ${idx % 2 !== 0 ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+                          <div className={`bg-gradient-to-br from-[#f68c09]/5 to-transparent rounded-lg p-3 sm:p-4 lg:rounded-none lg:bg-transparent lg:p-0 border-l-4 lg:border-l-0 border-[#f68c09] lg:border-[#f68c09]/0 ${idx % 2 !== 0 ? 'lg:col-start-1 lg:row-start-1 lg:pr-6' : 'lg:pl-6'}`}>
                             <div className="flex items-center gap-1.5 mb-3">
                               <AwardIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#f68c09]" />
                               <h4 className="text-sm sm:text-base font-bold text-[#000b31]">

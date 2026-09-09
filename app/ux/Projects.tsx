@@ -441,7 +441,7 @@ function ProjectCard({ project, lang }: { project: { id: number; title: string; 
                     ? 'bg-[#f68c09] text-[#000b31]'
                     : 'bg-[#000b31]/10 text-[#000b31]/40 hover:bg-[#f68c09]/30'
                     } ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
-                  onClick={(e) => { e.stopPropagation(); handleRating(score); }}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRating(score); }}
                   disabled={submitting}
                   title={`Rate ${score} star${score > 1 ? 's' : ''}`}
                 >

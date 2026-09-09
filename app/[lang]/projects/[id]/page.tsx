@@ -89,11 +89,15 @@ export default function ProjectDetailPage() {
     setSubmitting(true);
     setRatingError(null);
     try {
-      await ratingService.create({ project_id: project.id, score });
-      // Refresh summary to get updated average + count
-      const { data: summary } = await ratingService.summary(project.id);
-      setRating(summary.average_score ?? 0);
-      setRatingsCount(summary.ratings_count ?? 0);
+      const { data } = await ratingService.create({ project_id: project.id, score });
+      setRating(data.score);
+      // Refresh summary (average + count) in background; ignore failures so a
+      // protected summary endpoint can't turn a successful rating into an error.
+      try {
+        const { data: summary } = await ratingService.summary(project.id);
+        setRating(summary.average_score ?? data.score);
+        setRatingsCount(summary.ratings_count ?? 0);
+      } catch { /* keep the value returned by create */ }
     } catch (e: unknown) {
       setRatingError(e instanceof Error ? e.message : "Failed to submit rating");
     } finally {

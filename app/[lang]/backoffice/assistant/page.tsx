@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   AssistantService,
@@ -8,6 +8,7 @@ import {
   Conversation,
 } from "../../../services/assistantService";
 import Modal from "../../../ux/ui/Modal";
+import remarkGfm from "remark-gfm";
 
 /* ═══════════════════════════════════════════════════════════
    COPY BUTTON
@@ -139,10 +140,11 @@ function preprocessContent(text: string): string {
 /* ═══════════════════════════════════════════════════════════
    MARKDOWN RENDERER
 ═══════════════════════════════════════════════════════════ */
-function MarkdownMessage({ content }: { content: string }) {
+const MarkdownMessage = memo(function MarkdownMessage({ content }: { content: string }) {
   const processed = preprocessContent(content);
   return (
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ children }) => (
           <h1 className="text-lg font-bold text-foreground mb-3 mt-4 first:mt-0 pb-2 border-b border-white/10">{children}</h1>
@@ -191,23 +193,45 @@ function MarkdownMessage({ content }: { content: string }) {
           </a>
         ),
         table: ({ children }) => (
-          <div className="my-3 overflow-x-auto rounded-lg border border-white/10">
-            <table className="w-full text-sm">{children}</table>
+          <div className="my-4 overflow-hidden rounded-xl border assistant-border shadow-sm bg-black/20 backdrop-blur-sm">
+            <div className="overflow-x-auto max-w-full">
+              <table className="min-w-full border-collapse text-left text-xs sm:text-sm">
+                {children}
+              </table>
+            </div>
           </div>
         ),
-        thead: ({ children }) => <thead className="bg-white/5">{children}</thead>,
+        thead: ({ children }) => (
+          <thead className="assistant-surface-strong border-b assistant-border bg-white/[0.04]">
+            {children}
+          </thead>
+        ),
+        tbody: ({ children }) => (
+          <tbody className="divide-y assistant-border">
+            {children}
+          </tbody>
+        ),
+        tr: ({ children }) => (
+          <tr className="hover:bg-white/[0.03] transition-colors duration-150">
+            {children}
+          </tr>
+        ),
         th: ({ children }) => (
-          <th className="px-4 py-2 text-left text-xs font-semibold text-foreground/70 border-b border-white/10">{children}</th>
+          <th className="px-3.5 sm:px-4 py-2.5 sm:py-3 text-left text-[11px] sm:text-xs font-semibold text-accent/90 uppercase tracking-wider whitespace-nowrap">
+            {children}
+          </th>
         ),
         td: ({ children }) => (
-          <td className="px-4 py-2 text-xs text-foreground/80 border-b border-white/5">{children}</td>
+          <td className="px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-foreground/85 align-top leading-relaxed whitespace-nowrap sm:whitespace-normal">
+            {children}
+          </td>
         ),
       }}
     >
       {processed}
     </ReactMarkdown>
   );
-}
+});
 
 /* ═══════════════════════════════════════════════════════════
    BOT AVATAR
@@ -686,7 +710,7 @@ export default function AssistantPage() {
                             Assistant
                           </p>
                           <MarkdownMessage content={msg.content} />
-                          <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center gap-1 mt-2 opacity-80 hover:opacity-100 transition-opacity">
                             <CopyButton text={msg.content} label="Copier" />
                           </div>
                         </div>

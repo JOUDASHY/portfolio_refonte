@@ -32,6 +32,13 @@ export const jobService = {
   fetch: (payload: RunFetchPayload) =>
     apiAuth.post<FetchRecap>("jobs/fetch/", payload),
 
+  // Traduction d'un texte (description d'offre) via le LLM du backend
+  translate: (text: string, target_lang: string) =>
+    apiAuth.post<{ translated: string; target_lang: string }>("jobs/translate/", {
+      text,
+      target_lang,
+    }),
+
   // Recherches sauvegardées
   listQueries: () =>
     apiAuth.get<JobSearchQuery[]>("jobs/queries/"),

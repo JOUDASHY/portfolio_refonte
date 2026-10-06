@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Button from "@/app/ux/ui/Button";
 import Input from "@/app/ux/ui/Input";
+import LinkedJobOffers from "@/app/ux/ui/LinkedJobOffers";
 import Textarea from "@/app/ux/ui/Textarea";
 import { useProspects, useMessageTemplates } from "@/app/hooks/useProspects";
 import { prospectService } from "@/app/services/backoffice/prospectService";
@@ -493,6 +494,8 @@ export default function ProspectDetailPage() {
           </Button>
         </div>
       </div>
+
+      <LinkedJobOffers prospectId={prospectId} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Main Info */}

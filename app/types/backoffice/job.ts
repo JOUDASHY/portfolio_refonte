@@ -75,6 +75,7 @@ export interface JobListParams {
   source?: JobSource;
   remote?: "true" | "1";
   search?: string;
+  prospect?: number;
 }
 
 export const JOB_SOURCE_LABELS: Record<JobSource, string> = {

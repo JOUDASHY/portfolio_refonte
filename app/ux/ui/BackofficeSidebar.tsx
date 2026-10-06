@@ -43,6 +43,9 @@ function SidebarLink({ href, label, icon: Icon, active }: {
 export default function BackofficeSidebar({ links, isOpen, onClose }: BackofficeSidebarProps) {
   const pathname = usePathname();
   const { profile, loading } = useProfile();
+  // Langue courante (1er segment de l'URL), pour construire des liens ABSOLUS.
+  // Les liens relatifs (./x) cassaient depuis les pages imbriquées ou à slash final.
+  const lang = pathname?.split("/").filter(Boolean)[0] || "fr";
 
   return (
     <>
@@ -96,7 +99,7 @@ export default function BackofficeSidebar({ links, isOpen, onClose }: Backoffice
               {links.map(({ href, label, icon: Icon, match }) => (
                 <SidebarLink
                   key={href}
-                  href={`./${href}`}
+                  href={`/${lang}/backoffice/${href}`}
                   label={label}
                   icon={Icon}
                   active={Boolean(pathname && (
@@ -112,7 +115,7 @@ export default function BackofficeSidebar({ links, isOpen, onClose }: Backoffice
               <div className="text-sm font-medium text-white">Aide et support</div>
               <p className="mt-1 text-xs text-white/70">Besoin d&apos;aide ? Consultez la documentation.</p>
               <Link
-                href="../"
+                href={`/${lang}`}
                 className="mt-3 inline-flex rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-white ring-1 ring-white/20 hover:bg-white/15"
               >
                 Voir le site public

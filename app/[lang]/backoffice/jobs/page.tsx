@@ -119,32 +119,32 @@ export default function JobsPage() {
         </div>
         <button
           onClick={() => refresh()}
-          className="rounded-lg border border-black/10 px-4 py-2 text-sm font-medium text-foreground hover:bg-black/5"
+          className="rounded-lg border border-input px-4 py-2 text-sm font-medium text-foreground hover:bg-foreground/5"
         >
           Rafraîchir
         </button>
       </div>
 
       {/* Panneau de collecte */}
-      <div className="rounded-xl border border-black/10 bg-white p-4 shadow-sm">
+      <div className="rounded-xl card-border p-4 shadow-sm">
         <div className="mb-3 text-sm font-semibold text-foreground">Lancer une collecte</div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           <input
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             placeholder="Mots-clés (ex. django react)"
-            className="rounded-lg border border-black/15 px-3 py-2 text-sm md:col-span-2"
+            className="rounded-lg border border-input bg-background text-foreground px-3 py-2 text-sm md:col-span-2"
           />
           <input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Lieu (ex. Paris)"
-            className="rounded-lg border border-black/15 px-3 py-2 text-sm"
+            className="rounded-lg border border-input bg-background text-foreground px-3 py-2 text-sm"
           />
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as JobCategory)}
-            className="rounded-lg border border-black/15 px-3 py-2 text-sm"
+            className="rounded-lg border border-input bg-background text-foreground px-3 py-2 text-sm"
           >
             <option value="it">Informatique</option>
             <option value="all">Tous secteurs</option>
@@ -178,7 +178,7 @@ export default function JobsPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as JobStatus | "all")}
-          className="rounded-lg border border-black/15 px-3 py-2 text-sm"
+          className="rounded-lg border border-input bg-background text-foreground px-3 py-2 text-sm"
         >
           {STATUS_FILTERS.map((s) => (
             <option key={s.value} value={s.value}>
@@ -189,7 +189,7 @@ export default function JobsPage() {
         <select
           value={sourceFilter}
           onChange={(e) => setSourceFilter(e.target.value as JobSource | "all")}
-          className="rounded-lg border border-black/15 px-3 py-2 text-sm"
+          className="rounded-lg border border-input bg-background text-foreground px-3 py-2 text-sm"
         >
           <option value="all">Toutes sources</option>
           {(Object.keys(JOB_SOURCE_LABELS) as JobSource[]).map((s) => (
@@ -210,7 +210,7 @@ export default function JobsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Rechercher…"
-          className="flex-1 min-w-[160px] rounded-lg border border-black/15 px-3 py-2 text-sm"
+          className="flex-1 min-w-[160px] rounded-lg border border-input bg-background text-foreground px-3 py-2 text-sm"
         />
         <span className="text-sm text-foreground/50">{visible.length} offre(s)</span>
       </div>
@@ -223,7 +223,7 @@ export default function JobsPage() {
       {loading ? (
         <div className="py-12 text-center text-foreground/50">Chargement…</div>
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-black/15 py-12 text-center text-foreground/50">
+        <div className="rounded-xl border border-dashed border-foreground/20 py-12 text-center text-foreground/50">
           Aucune offre. Lance une collecte ci-dessus pour remplir la liste.
         </div>
       ) : (
@@ -231,7 +231,7 @@ export default function JobsPage() {
           {visible.map((offer) => (
             <div
               key={offer.id}
-              className="rounded-xl border border-black/10 bg-white p-4 shadow-sm"
+              className="rounded-xl card-border p-4 shadow-sm"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
@@ -286,7 +286,7 @@ export default function JobsPage() {
                   <select
                     value={offer.status}
                     onChange={(e) => updateStatus(offer.id, e.target.value as JobStatus)}
-                    className="rounded-lg border border-black/15 px-2 py-1.5 text-xs"
+                    className="rounded-lg border border-input bg-background text-foreground px-2 py-1.5 text-xs"
                   >
                     {(Object.keys(JOB_STATUS_LABELS) as JobStatus[]).map((s) => (
                       <option key={s} value={s}>

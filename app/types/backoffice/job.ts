@@ -5,7 +5,10 @@ export type JobSource =
   | "themuse"
   | "france_travail"
   | "adzuna"
-  | "jooble";
+  | "jooble"
+  | "jobicy"
+  | "himalayas"
+  | "weworkremotely";
 
 export type JobStatus = "new" | "seen" | "saved" | "applied" | "ignored";
 
@@ -22,6 +25,8 @@ export interface JobOffer {
   description: string;
   url: string;
   salary: string;
+  apply_email: string;
+  direct_apply: boolean;
   tags: string[];
   match_score: number;
   published_at: string | null;
@@ -74,6 +79,7 @@ export interface JobListParams {
   status?: JobStatus;
   source?: JobSource;
   remote?: "true" | "1";
+  direct?: "true" | "1";
   search?: string;
   prospect?: number;
 }
@@ -86,6 +92,9 @@ export const JOB_SOURCE_LABELS: Record<JobSource, string> = {
   france_travail: "France Travail",
   adzuna: "Adzuna",
   jooble: "Jooble",
+  jobicy: "Jobicy",
+  himalayas: "Himalayas",
+  weworkremotely: "We Work Remotely",
 };
 
 export const JOB_STATUS_LABELS: Record<JobStatus, { fr: string; color: string }> = {

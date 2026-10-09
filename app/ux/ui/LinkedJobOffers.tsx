@@ -81,6 +81,27 @@ function OfferCard({ offer }: { offer: JobOffer }) {
         {offer.salary ? ` · ${offer.salary}` : ""}
       </div>
 
+      {/* Candidature */}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        {offer.direct_apply ? (
+          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+            ✓ Candidature directe
+          </span>
+        ) : (
+          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+            ⚠ Plateforme — candidature limitée/payante
+          </span>
+        )}
+        {offer.apply_email && (
+          <a
+            href={`mailto:${offer.apply_email}`}
+            className="rounded-full border border-input px-2 py-0.5 text-xs font-medium text-foreground/80 hover:text-foreground"
+          >
+            ✉ {offer.apply_email}
+          </a>
+        )}
+      </div>
+
       <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-foreground/50">
         <span>{JOB_SOURCE_LABELS[offer.source]}</span>
         <span>·</span>

@@ -43,6 +43,7 @@ export default function JobsPage() {
   const [statusFilter, setStatusFilter] = useState<JobStatus | "all">("all");
   const [sourceFilter, setSourceFilter] = useState<JobSource | "all">("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
+  const [directOnly, setDirectOnly] = useState(false);
   const [search, setSearch] = useState("");
 
   // Paramètres de collecte
@@ -56,6 +57,7 @@ export default function JobsPage() {
       if (statusFilter !== "all" && o.status !== statusFilter) return false;
       if (sourceFilter !== "all" && o.source !== sourceFilter) return false;
       if (remoteOnly && !o.is_remote) return false;
+      if (directOnly && !o.direct_apply) return false;
       if (search.trim()) {
         const q = search.toLowerCase();
         const hay = `${o.title} ${o.company} ${o.location}`.toLowerCase();
@@ -63,7 +65,7 @@ export default function JobsPage() {
       }
       return true;
     });
-  }, [items, statusFilter, sourceFilter, remoteOnly, search]);
+  }, [items, statusFilter, sourceFilter, remoteOnly, directOnly, search]);
 
   const handleFetch = async () => {
     const recap = await runFetch({
@@ -206,6 +208,14 @@ export default function JobsPage() {
           />
           Remote
         </label>
+        <label className="flex items-center gap-2 text-sm text-foreground/80">
+          <input
+            type="checkbox"
+            checked={directOnly}
+            onChange={(e) => setDirectOnly(e.target.checked)}
+          />
+          Candidature directe
+        </label>
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -254,6 +264,23 @@ export default function JobsPage() {
                     >
                       {JOB_STATUS_LABELS[offer.status].fr}
                     </span>
+                    {offer.direct_apply ? (
+                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                        ✓ Directe
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        ⚠ Plateforme
+                      </span>
+                    )}
+                    {offer.apply_email && (
+                      <a
+                        href={`mailto:${offer.apply_email}`}
+                        className="rounded-full border border-input px-2 py-0.5 text-xs font-medium text-foreground/80 hover:text-foreground"
+                      >
+                        ✉ Email
+                      </a>
+                    )}
                   </div>
                   <div className="mt-1 text-sm text-foreground/70">
                     {offer.company || "—"}

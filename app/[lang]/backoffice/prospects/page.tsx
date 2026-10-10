@@ -348,13 +348,13 @@ export default function ProspectsPage() {
       </div>
 
       {/* Kanban Board - fixed height, table-like layout */}
-      <div className="h-[70vh] rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.02] p-3 lg:p-4 overflow-x-auto overflow-y-hidden flex flex-col shadow-sm">
+      <div className="h-[70vh] rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.02] p-3 lg:p-4 overflow-x-auto overflow-y-hidden flex flex-col shadow-sm snap-x snap-mandatory">
         {loading ? (
           <div className="flex gap-4 h-full min-h-[400px]">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="w-64 flex-shrink-0 rounded-lg border border-white/10 bg-white/5 p-3 space-y-3 animate-pulse"
+                className="w-[82vw] max-w-[20rem] sm:w-64 flex-shrink-0 rounded-lg border border-white/10 bg-white/5 p-3 space-y-3 animate-pulse"
               >
                 <div className="h-4 w-24 bg-white/10 rounded" />
                 <div className="h-3 w-16 bg-white/10 rounded" />
@@ -378,7 +378,7 @@ export default function ProspectsPage() {
               return (
                 <div
                   key={status}
-                  className="w-72 flex-shrink-0 h-full bg-black/5 flex flex-col min-h-0 rounded-xl backdrop-blur-[1px]"
+                  className="w-[82vw] max-w-[20rem] sm:w-72 flex-shrink-0 snap-start h-full bg-black/5 flex flex-col min-h-0 rounded-xl backdrop-blur-[1px]"
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={() => handleDrop(status)}
                   style={{
@@ -478,6 +478,23 @@ export default function ProspectsPage() {
                               </svg>
                             </button>
                           </div>
+                        </div>
+                        {/* Changement de statut tactile (le drag ne marche pas au doigt) */}
+                        <div className="mt-2 sm:hidden">
+                          <select
+                            value={prospect.status}
+                            onChange={(e) =>
+                              updateStatus(prospect.id, e.target.value as ProspectStatus)
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full rounded-md border border-input bg-background text-foreground px-2 py-1 text-[11px]"
+                          >
+                            {STATUS_ORDER.map((s) => (
+                              <option key={s} value={s}>
+                                {getStatusLabel(s)}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                         {ratings[prospect.id] != null && (
                           <div className="mt-1 flex items-center gap-0.5 text-[10px]">

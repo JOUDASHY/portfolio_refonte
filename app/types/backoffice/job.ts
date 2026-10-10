@@ -8,7 +8,8 @@ export type JobSource =
   | "jooble"
   | "jobicy"
   | "himalayas"
-  | "weworkremotely";
+  | "weworkremotely"
+  | "asako";
 
 export type JobStatus = "new" | "seen" | "saved" | "applied" | "ignored";
 
@@ -95,6 +96,7 @@ export const JOB_SOURCE_LABELS: Record<JobSource, string> = {
   jobicy: "Jobicy",
   himalayas: "Himalayas",
   weworkremotely: "We Work Remotely",
+  asako: "Asako (Madagascar)",
 };
 
 export const JOB_STATUS_LABELS: Record<JobStatus, { fr: string; color: string }> = {
